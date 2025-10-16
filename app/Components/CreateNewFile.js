@@ -63,6 +63,22 @@ export default function CreateNewFile() {
             mobileTeeth: false,
             badBreath: false,
             dryMouth: false,
+            oralHistory: {
+                extractedTeeth: false,
+                bridge: false,
+                denture: false,
+                braces: false,
+                problems: false,
+            },
+            lastDentalAppointment: "",
+            lastDentalAppointmentOperation: "",
+            lastDentalXray: "",
+            smoking: {
+                isSmoking: false,
+                sinceWhen: "",
+                howManyPerDay: ""
+            },
+            comments: ""
         }
     });
 
