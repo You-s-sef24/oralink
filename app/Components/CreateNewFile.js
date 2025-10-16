@@ -3,6 +3,7 @@
 import { useState } from "react";
 import FirstPage from "./FirstPage";
 import SecondPage from "./SecondPage";
+import FourthPage from "./FourthPage";
 
 export default function CreateNewFile() {
     const [step, setStep] = useState(1);
@@ -79,7 +80,17 @@ export default function CreateNewFile() {
                 howManyPerDay: ""
             },
             comments: ""
-        }
+        },
+        radiographicInterpretation: {
+            horizontalBoneLoss: "",
+            verticalBoneLoss: "",
+            furcationInvolvement: "",
+            otherFindings: ""
+        },
+        diagnosis: "",
+        prognosis: "",
+        treatmentPlan: "",
+        maintenancePhase: "",
     });
 
     function handleSave() {
@@ -95,8 +106,10 @@ export default function CreateNewFile() {
                 <FirstPage info={info} setInfo={setInfo} />
             ) : step === 2 ? (
                 <SecondPage info={info} setInfo={setInfo} />
-            ) : (
+            ) : step === 3 ? (
                 ""
+            ) : (
+                <FourthPage info={info} setInfo={setInfo} />
             )
             }
 
