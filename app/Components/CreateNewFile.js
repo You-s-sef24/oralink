@@ -10,7 +10,7 @@ export default function CreateNewFile() {
     const [step, setStep] = useState(1);
     const [info, setInfo] = useState({
         name: "",
-        gender: "",
+        gender: "Male",
         martialStatus: "",
         birthDate: "",
         occupation: "",

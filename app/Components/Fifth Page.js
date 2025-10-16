@@ -47,76 +47,71 @@ export default function FifthPage({ info, setInfo }) {
 
                     <hr />
 
-                    <div>
-                        <h5 className="fw-semibold text-decoration-underline">Gingiva</h5>
-
-                        <div className="d-flex gap-3">
-                            <div className="w-50">
-                                <label className="form-label fw-semibold">Color</label>
-                                <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.color} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, color: e.target.value } } })} />
-                            </div>
-                            <div className="w-50">
-                                <label className="form-label fw-semibold">Size</label>
-                                <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.size} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, size: e.target.value } } })} />
-                            </div>
+                    <div className="row d-flex">
+                        <div className="col-12">
+                            <h5 className="fw-semibold text-decoration-underline">Gingiva</h5>
                         </div>
 
-                        <div className="d-flex gap-3">
-                            <div className="w-50">
-                                <label className="form-label fw-semibold">Shape</label>
-                                <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.shape} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, shape: e.target.value } } })} />
-                            </div>
-                            <div className="w-50">
-                                <label className="form-label fw-semibold">Consistency</label>
-                                <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.consistency} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, consistency: e.target.value } } })} />
-                            </div>
+                        <div className="col-12 col-sm-6 d-flex flex-column">
+                            <label className="form-label fw-semibold">Color</label>
+                            <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.color} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, color: e.target.value } } })} />
                         </div>
 
-                        <div className="d-flex gap-3">
-                            <div className="w-50">
-                                <label className="form-label fw-semibold">Texture</label>
-                                <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.texture} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, texture: e.target.value } } })} />
-                            </div>
-                            <div className="w-50">
-                                <label className="form-label fw-semibold">Recession</label>
-                                <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.recession} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, recession: e.target.value } } })} />
-                            </div>
+                        <div className="col-12 col-sm-6 d-flex flex-column">
+                            <label className="form-label fw-semibold">Size</label>
+                            <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.size} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, size: e.target.value } } })} />
                         </div>
 
-                        <div className="d-flex gap-3">
-                            <div className="w-50">
-                                <label className="form-label fw-semibold">Bleeding on Probing</label>
-                                <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.bleedingOnProbing} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, bleedingOnProbing: e.target.value } } })} />
-                            </div>
-                            <div className="w-50">
-                                <label className="form-label fw-semibold">Suppuration/Exudates</label>
-                                <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.exudate} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, exudate: e.target.value } } })} />
-                            </div>
+                        <div className="col-12 col-sm-6 d-flex flex-column">
+                            <label className="form-label fw-semibold">Shape</label>
+                            <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.shape} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, shape: e.target.value } } })} />
                         </div>
 
-                        <div className="d-flex gap-3">
-                            <div className="w-50">
-                                <label className="form-label fw-semibold">Function Involvment</label>
-                                <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.functionInvolvment} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, functionInvolvment: e.target.value } } })} />
-                            </div>
-
-                            <div className="w-50">
-                                <label className="form-label fw-semibold">Mucogingival Problems</label>
-                                <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.mucogingivalProblems} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, mucogingivalProblems: e.target.value } } })} />
-                            </div>
+                        <div className="col-12 col-sm-6 d-flex flex-column">
+                            <label className="form-label fw-semibold">Consistency</label>
+                            <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.consistency} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, consistency: e.target.value } } })} />
                         </div>
 
-                        <div className="d-flex gap-3">
-                            <div className="w-50">
-                                <label className="form-label fw-semibold">Occlusal Relationship</label>
-                                <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.occlusalRelationship} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, occlusalRelationship: e.target.value } } })} />
-                            </div>
-                            <div className="w-50">
-                                <label className="form-label fw-semibold">Fremitus</label>
-                                <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.fremitus} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, fremitus: e.target.value } } })} />
-                            </div>
+                        <div className="col-12 col-sm-6 d-flex flex-column">
+                            <label className="form-label fw-semibold">Texture</label>
+                            <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.texture} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, texture: e.target.value } } })} />
                         </div>
 
+                        <div className="col-12 col-sm-6 d-flex flex-column">
+                            <label className="form-label fw-semibold">Recession</label>
+                            <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.recession} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, recession: e.target.value } } })} />
+                        </div>
+
+                        <div className="col-12 col-sm-6 d-flex flex-column">
+                            <label className="form-label fw-semibold">Bleeding on Probing</label>
+                            <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.bleedingOnProbing} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, bleedingOnProbing: e.target.value } } })} />
+                        </div>
+
+                        <div className="col-12 col-sm-6 d-flex flex-column">
+                            <label className="form-label fw-semibold">Suppuration/Exudates</label>
+                            <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.exudate} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, exudate: e.target.value } } })} />
+                        </div>
+
+                        <div className="col-12 col-sm-6 d-flex flex-column">
+                            <label className="form-label fw-semibold">Function Involvment</label>
+                            <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.functionInvolvment} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, functionInvolvment: e.target.value } } })} />
+                        </div>
+
+                        <div className="col-12 col-sm-6 d-flex flex-column">
+                            <label className="form-label fw-semibold">Mucogingival Problems</label>
+                            <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.mucogingivalProblems} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, mucogingivalProblems: e.target.value } } })} />
+                        </div>
+
+                        <div className="col-12 col-sm-6 d-flex flex-column">
+                            <label className="form-label fw-semibold">Occlusal Relationship</label>
+                            <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.occlusalRelationship} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, occlusalRelationship: e.target.value } } })} />
+                        </div>
+
+                        <div className="col-12 col-sm-6 d-flex flex-column">
+                            <label className="form-label fw-semibold">Fremitus</label>
+                            <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.fremitus} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, fremitus: e.target.value } } })} />
+                        </div>
+                        
                     </div>
 
                     <TableIndicators />
