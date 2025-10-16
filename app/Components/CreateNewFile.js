@@ -4,6 +4,7 @@ import { useState } from "react";
 import FirstPage from "./FirstPage";
 import SecondPage from "./SecondPage";
 import FourthPage from "./FourthPage";
+import FifthPage from "./Fifth Page";
 
 export default function CreateNewFile() {
     const [step, setStep] = useState(1);
@@ -91,6 +92,29 @@ export default function CreateNewFile() {
         prognosis: "",
         treatmentPlan: "",
         maintenancePhase: "",
+        periodontalExamination: {
+            hygiene: {
+                depositsPlaque: "",
+            },
+            calculus: {
+                supragingival: "",
+                subgingival: "",
+            },
+            gingiva: {
+                color: "",
+                size: "",
+                shape: "",
+                consistency: "",
+                texture: "",
+                recession: "",
+                bleedingOnProbing: "",
+                exudate: "",
+                functionInvolvment: "",
+                mucogingivalProblems: "",
+                occlusalRelationship: "",
+                fremitus: "",
+            },
+        }
     });
 
     function handleSave() {
@@ -108,8 +132,10 @@ export default function CreateNewFile() {
                 <SecondPage info={info} setInfo={setInfo} />
             ) : step === 3 ? (
                 ""
-            ) : (
+            ) : step === 4 ? (
                 <FourthPage info={info} setInfo={setInfo} />
+            ) : (
+                <FifthPage info={info} setInfo={setInfo} />
             )
             }
 
@@ -119,7 +145,7 @@ export default function CreateNewFile() {
                 ) : (
                     <button className="btn btn-secondary me-3">Cancel</button>
                 )}
-                {step === 4 ? (
+                {step === 5 ? (
                     <button className="btn btn-primary" onClick={() => { handleSave() }}>Save</button>
                 ) : (
                     <button className="btn btn-primary" onClick={() => { setStep(step + 1) }}>Next</button>
