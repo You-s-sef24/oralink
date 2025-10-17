@@ -1,9 +1,7 @@
-import CreateNewFile from "./Components/CreateNewFile";
+import Signin from "./Components/Signin";
 
 export default function Home() {
   return (
-    <div className="bg-light p-4">
-      <CreateNewFile />
-    </div>
+    <Signin />
   );
 }
