@@ -1,78 +1,89 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
+import '../globals.css';
+import { StudentsContext } from "../Contexts/UsersContext";
+import { useRouter } from "next/navigation";
 
 export default function Signin() {
     const [data, setData] = useState({
         email: "",
         password: ""
     });
-    const [rememberMe, setRememberMe] = useState(false);
+    const [error, setError] = useState({
+        status: false,
+        msg: "",
+    });
+    const { users } = useContext(StudentsContext);
+    const router = useRouter();
 
     function handleSubmit(e) {
         e.preventDefault();
+        const isFound = users.find((user) => user.email === data.email && user.password === data.password);
+
         if (data.email === "" || data.password === "") {
-            alert("Please fill in all fields.");
+            setError({ status: true, msg: "All fields are required." });
             return;
         }
-        console.log(data);
-        alert("Signed in successfully!");
-        if (rememberMe) {
-            console.log("Remember me is checked.");
+
+        if (!isFound) {
+            setError({ status: true, msg: "Invalid email or password." });
+            return;
         }
+        setError({ status: false, msg: "" });
+        router.push('/dashboard');
     }
 
     return (
         <div className="d-flex justify-content-center align-items-center min-vh-100">
-            <div className="d-flex flex-column border rounded shadow p-4">
+            <div className="d-flex flex-column border rounded shadow bg-white p-4">
 
                 <div className="d-flex justify-content-center align-items-center gap-1 mb-1">
                     <img src="../images/tooth.png" alt="tooth" width={35} height={35} />
                     <h3 className="fw-bold m-0">OraLink</h3>
                 </div>
-                <p className="text-muted text-center mb-2">Clinic Management System</p>
+                <p className="text-muted text-center mb-2">Academic Dental Clinic Management</p>
 
                 <hr className="m-0 mb-3" />
 
-                <h4 className="fw-semibold text-center mb-1">Sign in to OraLink</h4>
-                <p className="text-muted text-center mb-4">Welcome back! Please enter your details.</p>
+                <div className={`${error.status ? '' : 'd-none'} alert alert-danger alert-dismissible fade show`} role="alert">
+                    <button
+                        type="button"
+                        className="btn-close"
+                        onClick={() => { setError({ status: false, msg: "" }) }}
+                        aria-label="Close"
+                    ></button>
+
+                    <strong>{error.msg}</strong>
+                </div>
+
 
                 <form className="d-flex flex-column" action="" onSubmit={(e) => { handleSubmit(e) }}>
-
-                    <div className="input-group mb-2">
-                        <span className="input-group-text bg-white border-end-0 py-0" >
-                            <i className="bi bi-envelope"></i>
-                        </span>
+                    <div className="">
+                        <label htmlFor="email" className="form-label fw-semibold">Email</label>
                         <input
                             type="email"
-                            className="form-control border-start-0"
-                            placeholder="Email address"
-                            required
+                            id="email"
+                            className="form-control mb-2"
                             value={data.email}
                             onChange={(e) => setData({ ...data, email: e.target.value })}
+                            placeholder="123456789@o6u.edu.eg"
                         />
                     </div>
-
-                    <div className="input-group mb-2">
-                        <span className="input-group-text bg-white border-end-0 py-0" >
-                            <i className="bi bi-lock-fill"></i>
-                        </span>
+                    <div className="mb-3">
+                        <label htmlFor="password" className="form-label fw-semibold">Password</label>
                         <input
                             type="password"
-                            className="form-control border-start-0"
-                            placeholder="Enter your password"
-                            required
+                            id="password"
+                            className="form-control mb-2"
                             value={data.password}
                             onChange={(e) => setData({ ...data, password: e.target.value })}
+                            placeholder="********"
                         />
                     </div>
-
-                    <div className="form-check mb-3">
-                        <input type="checkbox" className="form-check-input" id="rememberMe" checked={rememberMe === true} onChange={(e) => { rememberMe ? setRememberMe(false) : setRememberMe(true) }} />
-                        <label className="form-check-label" htmlFor="rememberMe"> Remember me </label>
-                    </div>
                     <button type="submit" className="btn btn-primary w-100">Sign In</button>
-
+                    <hr />
+                    <p className="text-center text-muted m-0">Accounts are pre-registered by administrators</p>
                 </form>
 
             </div>
