@@ -4,13 +4,13 @@ export default function GettingStarted() {
             <h3>Getting Started</h3>
             <p class="text-muted mb-3">Use this system to manage patient files for your dental clinic practice. You can create new patient records, search existing files, and use AI-powered X-ray analysis.</p>
             <ul class="text-muted">
-                <li class="">
+                <li>
                     <span>All patient data is securely stored for your academic work</span>
                 </li>
-                <li class="">
+                <li>
                     <span>Complete both general and department-specific forms for each patient</span>
                 </li>
-                <li class="">
+                <li>
                     <span>Use the AI diagnosis tool to get insights from X-ray images</span>
                 </li>
             </ul>

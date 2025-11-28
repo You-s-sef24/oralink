@@ -26,3 +26,39 @@ body {
   right: 1rem;
   z-index: 1055;
 }
+
+.upload-container {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 25px;
+}
+
+.upload-box {
+  border: 2px dashed #d3d9df;
+  border-radius: 15px;
+  padding: 70px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.25s ease;
+  text-align: center;
+}
+
+.upload-box:hover {
+  border-color: #6c63ff;
+}
+
+.upload-box.dragging {
+  border-color: #0d6efd;
+  background-color: #f0f8ff;
+}
+
+.upload-content i {
+  display: block;
+}
+
+.upload-content p {
+  margin: 0;
+}
