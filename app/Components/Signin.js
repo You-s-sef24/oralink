@@ -2,7 +2,7 @@
 
 import { useContext, useState } from "react";
 import '../globals.css';
-import { StudentsContext } from "../Contexts/UsersContext";
+import { UsersContext } from "../Contexts/UsersContext";
 import { useRouter } from "next/navigation";
 
 export default function Signin() {
@@ -14,7 +14,7 @@ export default function Signin() {
         status: false,
         msg: "",
     });
-    const { users } = useContext(StudentsContext);
+    const { users, setCurrentUser, setIsLoggedIn } = useContext(UsersContext);
     const router = useRouter();
 
     function handleSubmit(e) {
@@ -31,6 +31,9 @@ export default function Signin() {
             return;
         }
         setError({ status: false, msg: "" });
+        setCurrentUser(isFound);
+        console.log(isFound);
+        setIsLoggedIn(true);
         router.push('/dashboard');
     }
 

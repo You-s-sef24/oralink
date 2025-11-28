@@ -9,16 +9,16 @@ import '../globals.css';
 export default function Navbar() {
     const pathname = usePathname();
     const router = useRouter();
-    const { setIsLoggedin, setCurrentUser } = useContext(UsersContext);
+    const { setIsLoggedIn, setCurrentUser } = useContext(UsersContext);
 
     const linkClasses = (href) =>
         `list-group-item list-group-item-action py-3 ${pathname === href ? "active text-white bg-primary" : "text-dark"
         }`;
 
     function handleLogout() {
-        router.push('/');
         setCurrentUser(null);
-        setIsLoggedin(false);
+        setIsLoggedIn(false);
+        router.push('/');
     }
 
     return (
@@ -29,6 +29,7 @@ export default function Navbar() {
                     type="button"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasNavbar"
+                    data-bs-scroll="true"
                     aria-controls="offcanvasNavbar"
                 >
                     <span className="navbar-toggler-icon"></span>
@@ -62,11 +63,19 @@ export default function Navbar() {
                             </Link>
 
                             <Link
-                                href="/profile"
+                                href="/my-files"
                                 className={`d-flex align-items-center ${linkClasses("/profile")} rounded border-0 mb-2 gap-2`}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                <p className="m-0">Profile</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-folder-open w-5 h-5" aria-hidden="true"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"></path></svg>
+                                <p className="m-0">My Files</p>
+                            </Link>
+
+                            <Link
+                                href="/upload-xray"
+                                className={`d-flex align-items-center ${linkClasses("/profile")} rounded border-0 mb-2 gap-2`}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-upload w-5 h-5" aria-hidden="true"><path d="M12 3v12"></path><path d="m17 8-5-5-5 5"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path></svg>
+                                <p className="m-0">Upload X-ray</p>
                             </Link>
 
                             <button

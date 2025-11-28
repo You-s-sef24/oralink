@@ -1,0 +1,18 @@
+.action {
+  border: 1px solid transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.action:hover {
+  border-color: #0d6efd;
+  cursor: pointer;
+  transform: translateY(-3px);
+}
+
+.action span {
+  transition: transform 0.3s ease-in-out;
+}
+
+.action:hover span {
+  transform: scale(1.15);
+}
