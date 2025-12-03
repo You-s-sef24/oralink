@@ -8,6 +8,13 @@ export default function UsersProvider({ children }) {
     const [users, setUsers] = useState([
         {
             id: 1,
+            name: "Reham Hussien",
+            role: "Supervisor",
+            email: "admin@123",
+            password: "123",
+        },
+        {
+            id: 202205658,
             name: "Youssef Mahmoud",
             role: "Student",
             email: "202205658@o6u.edu.eg",
@@ -16,11 +23,40 @@ export default function UsersProvider({ children }) {
                 {
                     fileId: '1764427735465',
                     patientName: 'Youssef Ahmed',
-                    age:'21',
+                    age: '21',
                     nationalId: '12345678910',
                     phone: '012333423223',
                     department: 'Periodontics',
-                    creationDate: '29/11/2025'
+                    creationDate: '29/11/2025',
+                    grade: 0
+                }
+            ],
+        },
+        {
+            id: 2022056534,
+            name: "Youssef Sawy",
+            role: "Student",
+            email: "2022056534@o6u.edu.eg",
+            password: "123",
+            files: [
+                {
+                    fileId: '176442773534',
+                    patientName: 'Youssef Sherif',
+                    age: '21',
+                    nationalId: '12345678910',
+                    phone: '012333423223',
+                    department: 'Periodontics',
+                    creationDate: '29/11/2025',
+                    grade: 0
+                }, {
+                    fileId: '17644277353434',
+                    patientName: 'Mohamed Ragab',
+                    age: '21',
+                    nationalId: '12345678910',
+                    phone: '012333423223',
+                    department: 'Periodontics',
+                    creationDate: '29/11/2025',
+                    grade: 0
                 }
             ],
         },

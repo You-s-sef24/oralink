@@ -1,4 +1,4 @@
-export default function GettingStarted() {
+export default function StudentGettingStarted() {
     return (
         <div className="rounded p-4 my-4" style={{ backgroundColor: "#d1e4feff" }}>
             <h3>Getting Started</h3>
