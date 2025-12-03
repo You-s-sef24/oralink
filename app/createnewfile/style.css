@@ -1,3 +1,22 @@
-.bg-primary-gradient {
-  background: linear-gradient(to bottom, #0d6efd  0%, white 100%);
+.bg-gray{
+  background-color: #c9e3fd71 !important;
+}
+
+.action {
+  border: 1px solid transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.action:hover {
+  border-color: #0d6efd;
+  cursor: pointer;
+  transform: translateY(-3px);
+}
+
+.action span {
+  transition: transform 0.3s ease-in-out;
+}
+
+.action:hover span {
+  transform: scale(1.15);
 }

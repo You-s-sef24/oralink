@@ -9,23 +9,23 @@ export default function TableIndicators() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="">
+                    <tr className="">
                         <td scope="row">0</td>
                         <td>No bleeding</td>
                     </tr>
-                    <tr class="">
+                    <tr className="">
                         <td scope="row">1</td>
                         <td>Only one bleeding point appearing</td>
                     </tr>
-                    <tr class="">
+                    <tr className="">
                         <td scope="row">2</td>
                         <td>Several isolated bleeding points or a small blood area appearing</td>
                     </tr>
-                    <tr class="">
+                    <tr className="">
                         <td scope="row">3</td>
                         <td>Interdental triangle filled with blood soon after probing</td>
                     </tr>
-                    <tr class="">
+                    <tr className="">
                         <td scope="row">4</td>
                         <td>Profuse bleeding when probing blood spreads towards the marginal gingiva</td>
                     </tr>

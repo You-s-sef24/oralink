@@ -12,7 +12,17 @@ export default function UsersProvider({ children }) {
             role: "Student",
             email: "202205658@o6u.edu.eg",
             password: "123",
-            patients: [],
+            files: [
+                {
+                    fileId: '1764427735465',
+                    patientName: 'Youssef Ahmed',
+                    age:'21',
+                    nationalId: '12345678910',
+                    phone: '012333423223',
+                    department: 'Periodontics',
+                    creationDate: '29/11/2025'
+                }
+            ],
         },
     ]);
     const [currentUser, setCurrentUser] = useState(null);
@@ -23,6 +33,7 @@ export default function UsersProvider({ children }) {
         const storedUser = localStorage.getItem("currentUser");
         const storedLoginStatus = localStorage.getItem("isLoggedIn");
         const storedUsers = localStorage.getItem("users");
+
         if (storedUsers) {
             setUsers(JSON.parse(storedUsers));
         }
@@ -32,12 +43,12 @@ export default function UsersProvider({ children }) {
         if (storedLoginStatus === "true") {
             setIsLoggedIn(true);
         }
-        setLoading(true);
+        setLoading(false);
     }, []);
 
 
     useEffect(() => {
-        if (!loading) return;
+        if (loading) return;
 
         localStorage.setItem("users", JSON.stringify(users));
         localStorage.setItem("currentUser", JSON.stringify(currentUser));
