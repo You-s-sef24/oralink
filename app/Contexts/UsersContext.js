@@ -21,8 +21,17 @@ export default function UsersProvider({ children }) {
             password: "123",
             files: [
                 {
-                    fileId: '1764427735465',
+                    id: '1764427735465',
                     patientName: 'Youssef Ahmed',
+                    age: '21',
+                    nationalId: '12345678910',
+                    phone: '012333423223',
+                    department: 'Periodontics',
+                    creationDate: '29/11/2025',
+                    grade: 75
+                }, {
+                    id: '176442773545',
+                    patientName: 'Mohamed Ragab',
                     age: '21',
                     nationalId: '12345678910',
                     phone: '012333423223',
@@ -40,7 +49,7 @@ export default function UsersProvider({ children }) {
             password: "123",
             files: [
                 {
-                    fileId: '176442773534',
+                    id: '176442773534',
                     patientName: 'Youssef Sherif',
                     age: '21',
                     nationalId: '12345678910',
@@ -48,16 +57,7 @@ export default function UsersProvider({ children }) {
                     department: 'Periodontics',
                     creationDate: '29/11/2025',
                     grade: 0
-                }, {
-                    fileId: '17644277353434',
-                    patientName: 'Mohamed Ragab',
-                    age: '21',
-                    nationalId: '12345678910',
-                    phone: '012333423223',
-                    department: 'Periodontics',
-                    creationDate: '29/11/2025',
-                    grade: 0
-                }
+                },
             ],
         },
     ]);
