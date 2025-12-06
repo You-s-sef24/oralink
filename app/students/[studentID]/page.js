@@ -1,13 +1,13 @@
 "use client";
 
+import { useContext, use } from "react";
 import Header from "@/app/Components/Header";
 import StudentCard from "@/app/Components/StudentCard";
 import StudentFiles from "@/app/Components/StudentFiles";
 import { UsersContext } from "@/app/Contexts/UsersContext";
-import { useContext } from "react";
 
 export default function StudentProfile({ params }) {
-    const { studentID } = params;
+    const { studentID } = use(params);
     const { users } = useContext(UsersContext);
     const student = users.find(user => user.id === Number(studentID));
 

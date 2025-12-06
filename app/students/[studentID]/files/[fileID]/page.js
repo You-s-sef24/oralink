@@ -2,10 +2,10 @@
 
 import Header from "@/app/Components/Header";
 import { UsersContext } from "@/app/Contexts/UsersContext";
-import { useContext } from "react";
+import { useContext, use } from "react";
 
 export default function File({ params }) {
-    const { fileID } = params;
+    const { fileID } = use(params);
 
     return (
         <div className="container-fluid pt-5">
