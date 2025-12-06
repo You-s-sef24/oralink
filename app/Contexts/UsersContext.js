@@ -64,6 +64,11 @@ export default function UsersProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [totalStudents, setTotalStudents] = useState(0);
+    const [totalFiles, setTotalFiles] = useState(0);
+    const [gradedFiles, setGradedFiles] = useState(0);
+    const [avgGrade, setAvgGrade] = useState(0);
+
 
     useEffect(() => {
         const storedUser = localStorage.getItem("currentUser");
@@ -89,11 +94,25 @@ export default function UsersProvider({ children }) {
         localStorage.setItem("users", JSON.stringify(users));
         localStorage.setItem("currentUser", JSON.stringify(currentUser));
         localStorage.setItem("isLoggedIn", isLoggedIn.toString());
+
+        setTotalStudents(users.reduce(
+            (count, u) => (u.role === "Student" ? count + 1 : count),
+            0
+        ));
+
+        const allFiles = users.flatMap(user => user.files || []);
+        setTotalFiles(allFiles.length);
+
+        const gradedFilesList = allFiles.filter(file => file.grade > 0);
+        setGradedFiles(gradedFilesList.length);
+
+        setAvgGrade(gradedFilesList.length > 0 ? gradedFilesList.reduce((sum, file) => sum + file.grade, 0) / gradedFilesList.length : 0);
+
     }, [users, currentUser, isLoggedIn, loading]);
 
 
     return (
-        <UsersContext.Provider value={{ users, setUsers, currentUser, setCurrentUser, isLoggedIn, setIsLoggedIn }}>
+        <UsersContext.Provider value={{ users, setUsers, currentUser, setCurrentUser, isLoggedIn, setIsLoggedIn, totalStudents, totalFiles, gradedFiles, avgGrade }}>
             {children}
         </UsersContext.Provider>
     );

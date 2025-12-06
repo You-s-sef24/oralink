@@ -4,20 +4,8 @@ import { useContext } from "react";
 import { UsersContext } from "../Contexts/UsersContext";
 
 export default function SupervisorOverview() {
-    const { users } = useContext(UsersContext);
+    const { avgGrade, totalFiles, totalStudents, gradedFiles } = useContext(UsersContext);
 
-    const totalStudents = users.reduce(
-        (count, u) => (u.role === "Student" ? count + 1 : count),
-        0
-    );
-
-    const allFiles = users.flatMap(user => user.files || []);
-    const totalFiles = allFiles.length;
-
-    const gradedFilesList = allFiles.filter(file => file.grade > 0);
-    const gradedFiles = gradedFilesList.length;
-
-    const averageGrade = gradedFilesList.length > 0 ? gradedFilesList.reduce((sum, file) => sum + file.grade, 0) / gradedFilesList.length : 0;
 
     return (
         <div className="row justify-content-between g-2 mb-5">
@@ -53,7 +41,7 @@ export default function SupervisorOverview() {
                     <span className="w-25 mb-3 text-center bg-warning text-white rounded p-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-trending-up w-6 h-6" aria-hidden="true"><path d="M16 7h6v6"></path><path d="m22 7-8.5 8.5-5-5L2 17"></path></svg>
                     </span>
-                    <p>{averageGrade}</p>
+                    <p>{avgGrade}</p>
                     <p className="text-muted m-0">Average Grade</p>
                 </div>
             </div>
