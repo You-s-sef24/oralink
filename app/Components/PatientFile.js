@@ -2,6 +2,7 @@
 
 import { useContext, useState } from "react";
 import { UsersContext } from "../Contexts/UsersContext";
+import Link from "next/link";
 
 export default function PatientFiles() {
     const [search, setSearch] = useState('');
@@ -18,6 +19,7 @@ export default function PatientFiles() {
                 (student.files || []).forEach(file => {
                     allFiles.push({
                         fileId: file.id,
+                        studentId: student.id,
                         studentName: student.name,
                         patientName: file.patientName,
                         department: file.department,
@@ -71,10 +73,10 @@ export default function PatientFiles() {
                     {file.grade > 0 ? file.grade + '/100' : "—"}
                 </div>
                 <div className="col d-flex justify-content-center text-truncate">
-                    <button className="d-flex align-items-center btn btn-sm btn-primary gap-1" onClick={() => { handleView(file.fileId) }}>
+                    <Link href={`/students/${file.studentId}/files/${file.fileId}`} className="d-flex align-items-center btn btn-sm btn-primary gap-1" onClick={() => { handleView(file.fileId) }}>
                         <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-eye w-75 h-4" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg></span>
                         View
-                    </button>
+                    </Link>
                 </div>
                 <hr className="mt-2" />
             </div>
