@@ -24,7 +24,7 @@ export default function Patients() {
                 <div className="col-2 text-truncate">
                     {file.fileId}
                 </div>
-                <div className="col-2 text-truncate">
+                <div className="col-4 text-truncate">
                     {file.patientName}
                 </div>
                 <div className="col-1 text-truncate">
@@ -73,7 +73,7 @@ export default function Patients() {
                 <div className="col-2 text-truncate">
                     File ID
                 </div>
-                <div className="col-2 text-truncate">
+                <div className="col-4 text-truncate">
                     Patient Name
                 </div>
                 <div className="col-1 text-truncate">

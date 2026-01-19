@@ -6,6 +6,7 @@ import './dashboard.css';
 import Header from "../Components/Header";
 import StudentDashboard from "../Components/StudentDashboard";
 import SupervisorDashboard from "../Components/SupervisorDashboard";
+import Loading from "../loading";
 
 export default function DashboardPage() {
     const { currentUser } = useContext(UsersContext);
@@ -18,8 +19,10 @@ export default function DashboardPage() {
 
             {currentUser?.role === "Student" ? (
                 <StudentDashboard />
-            ) : (
+            ) : currentUser?.role === "Supervisor" ? (
                 <SupervisorDashboard />
+            ) : (
+                <Loading />
             )}
 
         </div>

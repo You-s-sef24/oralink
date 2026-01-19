@@ -19,27 +19,7 @@ export default function UsersProvider({ children }) {
             role: "Student",
             email: "202205658@o6u.edu.eg",
             password: "123",
-            files: [
-                {
-                    id: '1764427735465',
-                    patientName: 'Youssef Ahmed',
-                    age: '21',
-                    nationalId: '12345678910',
-                    phone: '012333423223',
-                    department: 'Periodontics',
-                    creationDate: '29/11/2025',
-                    grade: 75
-                }, {
-                    id: '176442773545',
-                    patientName: 'Mohamed Ragab',
-                    age: '21',
-                    nationalId: '12345678910',
-                    phone: '012333423223',
-                    department: 'Periodontics',
-                    creationDate: '29/11/2025',
-                    grade: 0
-                }
-            ],
+            files: [],
         },
         {
             id: 2022056534,
@@ -47,18 +27,7 @@ export default function UsersProvider({ children }) {
             role: "Student",
             email: "2022056534@o6u.edu.eg",
             password: "123",
-            files: [
-                {
-                    id: '176442773534',
-                    patientName: 'Youssef Sherif',
-                    age: '21',
-                    nationalId: '12345678910',
-                    phone: '012333423223',
-                    department: 'Periodontics',
-                    creationDate: '29/11/2025',
-                    grade: 0
-                },
-            ],
+            files: [],
         },
     ]);
     const [currentUser, setCurrentUser] = useState(null);

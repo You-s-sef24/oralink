@@ -1,8 +1,8 @@
 export default function XrayInfo() {
     return (
         <div className="rounded p-4 my-4" style={{ backgroundColor: "#d1e4feff" }}>
-            <p class="mb-3">About AI X-ray Analysis</p>
-            <ul class="text-muted">
+            <p className="mb-3">About AI X-ray Analysis</p>
+            <ul className="text-muted">
                 <li>
                     The AI model is trained on thousands of dental radiographs
                 </li>

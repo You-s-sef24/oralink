@@ -5,7 +5,7 @@ import { createContext, useState } from "react";
 export const PatientInfoContext = createContext();
 
 export default function PatientInfoProvider({ children }) {
-    const [info, setInfo] = useState({
+    const [generalData, setGeneralData] = useState({
         fileId: Date.now(),
         patientName: "",
         gender: "Male",
@@ -81,6 +81,13 @@ export default function PatientInfoProvider({ children }) {
             },
             comments: ""
         },
+        prePatientImage: null,
+        postPatientImage: null,
+        xRay: null,
+        creationDate: new Date().toLocaleDateString("en-US"),
+    });
+
+    const [periodonticsData, setPeriodonticsData] = useState({
         radiographicInterpretation: {
             horizontalBoneLoss: "",
             verticalBoneLoss: "",
@@ -114,11 +121,140 @@ export default function PatientInfoProvider({ children }) {
                 fremitus: "",
             },
         },
-        creationDate: new Date().toLocaleDateString("en-US"),
+    });
+    
+    const [endodonticsData, setEndodonticsData] = useState({
+        subjectives: {
+            natureOfPain: "",
+            onset: "",
+            location: "",
+            radiatingTo: "",
+            duration: "",
+            intiatedByCold: "",
+            intiatedByHeat: "",
+            intiatedBySweets: "",
+            intiatedBySpontaneousPain: "",
+            intiatedByPalpation: "",
+            intiatedByMastication: "",
+            intiatedBySupination: "",
+            relievedByCold: "",
+            relievedByHeat: "",
+            relievedByOTCMeds: "",
+            relievedByNareMeds: "",
+        },
+        objectives: {
+            extraoral: {
+                facialSwelling: "",
+                lymphNodes: "",
+                swollen: "",
+            },
+            intraoral: {
+                swelling: "",
+                sinusTract: "",
+                softTissues: "",
+                clinicalCrown: {
+                    restoration: "",
+                    caries: "",
+                    fracture: "",
+                    exposure: "",
+                    discoloration: "",
+                }
+            }
+        },
+        radiographic: {
+            crown: {
+                wnl: false,
+                caries: false,
+                restoration: false,
+                crown: false,
+                denseInDente: false,
+            },
+            pulpChamber: {
+                wnl: false,
+                pulpStone: false,
+                exposure: false,
+                resorption: false,
+                perforation: false,
+            },
+            alveolarBone: {
+                wnl: false,
+                apicalRadiolucency: false,
+                lateralRadiolucency: false,
+                apLatOpacity: false,
+                crestalBoneLoss: false,
+            },
+            roots: {
+                wnl: false,
+                curvature: false,
+                dilaceration: false,
+                resorption: false,
+                fracture: false,
+                perforation: false,
+                openApex: false,
+                sinus: false,
+            },
+            rootCanal: {
+                wnl: false,
+                calcification: false,
+                bifurcated: false,
+                resorption: false,
+                perforation: false,
+                furcation: false,
+                priorRCT: false,
+            },
+            laminaDura: {
+                wnl: false,
+                obscure: false,
+                broken: false,
+                widened: false,
+            },
+            tracesTo: ''
+        },
+        assessment: {
+            diagnosis: {
+                pulpal: "",
+                periapical: "",
+            },
+            etiology: {
+                caries: false,
+                restoration: false,
+                priorRCT: false,
+                iatrogenic: false,
+                coronalLeakage: false,
+                trauma: false,
+                perio: false,
+            },
+            prognosis: "",
+        },
+        treatmentPlan: {
+            endodontic: {
+                rct: false,
+                retreatment: false,
+                incisionDrainage: false,
+                apexificationVPT: false,
+                apicoectomy: false,
+                perforationResorptionRepair: false,
+            },
+            periodontal: {
+                scaling: false,
+                curettage: false,
+                crownLengthening: false,
+                rootAmputation: false,
+                hemisection: false,
+                extraction: false,
+            },
+            restorative: {
+                temporary: false,
+                postCore: false,
+                composite: false,
+                onlayCrown: false,
+                bleaching: false,
+            },
+        },
     });
 
     function resetInfo() {
-        setInfo({
+        setGeneralData({
             fileId: Date.now(),
             patientName: "",
             gender: "Male",
@@ -194,6 +330,142 @@ export default function PatientInfoProvider({ children }) {
                 },
                 comments: ""
             },
+            prePatientImage: null,
+            postPatientImage: null,
+            creationDate: new Date().toLocaleDateString("en-US"),
+        });
+
+        setEndodonticsData({
+            subjectives: {
+                natureOfPain: "",
+                onset: "",
+                location: "",
+                radiatingTo: "",
+                duration: "",
+                intiatedByCold: "",
+                intiatedByHeat: "",
+                intiatedBySweets: "",
+                intiatedBySpontaneousPain: "",
+                intiatedByPalpation: "",
+                intiatedByMastication: "",
+                intiatedBySupination: "",
+                relievedByCold: "",
+                relievedByHeat: "",
+                relievedByOTCMeds: "",
+                relievedByNareMeds: "",
+            },
+            objectives: {
+                extraoral: {
+                    facialSwelling: "",
+                    lymphNodes: "",
+                    swollen: "",
+                },
+                intraoral: {
+                    swelling: "",
+                    sinusTract: "",
+                    softTissues: "",
+                    clinicalCrown: {
+                        restoration: "",
+                        caries: "",
+                        fracture: "",
+                        exposure: "",
+                        discoloration: "",
+                    }
+                }
+            },
+            radiographic: {
+                crown: {
+                    wnl: false,
+                    caries: false,
+                    restoration: false,
+                    crown: false,
+                    denseInDente: false,
+                },
+                pulpChamber: {
+                    wnl: false,
+                    pulpStone: false,
+                    exposure: false,
+                    resorption: false,
+                    perforation: false,
+                },
+                alveolarBone: {
+                    wnl: false,
+                    apicalRadiolucency: false,
+                    lateralRadiolucency: false,
+                    apLatOpacity: false,
+                    crestalBoneLoss: false,
+                },
+                roots: {
+                    wnl: false,
+                    curvature: false,
+                    dilaceration: false,
+                    resorption: false,
+                    fracture: false,
+                    perforation: false,
+                    openApex: false,
+                    sinus: false,
+                },
+                rootCanal: {
+                    wnl: false,
+                    calcification: false,
+                    bifurcated: false,
+                    resorption: false,
+                    perforation: false,
+                    furcation: false,
+                    priorRCT: false,
+                },
+                laminaDura: {
+                    wnl: false,
+                    obscure: false,
+                    broken: false,
+                    widened: false,
+                },
+                tracesTo: ''
+            },
+            assessment: {
+                diagnosis: {
+                    pulpal: "",
+                    periapical: "",
+                },
+                etiology: {
+                    caries: false,
+                    restoration: false,
+                    priorRCT: false,
+                    iatrogenic: false,
+                    coronalLeakage: false,
+                    trauma: false,
+                    perio: false,
+                },
+                prognosis: "",
+            },
+            treatmentPlan: {
+                endodontic: {
+                    rct: false,
+                    retreatment: false,
+                    incisionDrainage: false,
+                    apexificationVPT: false,
+                    apicoectomy: false,
+                    perforationResorptionRepair: false,
+                },
+                periodontal: {
+                    scaling: false,
+                    curettage: false,
+                    crownLengthening: false,
+                    rootAmputation: false,
+                    hemisection: false,
+                    extraction: false,
+                },
+                restorative: {
+                    temporary: false,
+                    postCore: false,
+                    composite: false,
+                    onlayCrown: false,
+                    bleaching: false,
+                },
+            },
+        });
+
+        setPeriodonticsData({
             radiographicInterpretation: {
                 horizontalBoneLoss: "",
                 verticalBoneLoss: "",
@@ -227,12 +499,11 @@ export default function PatientInfoProvider({ children }) {
                     fremitus: "",
                 },
             },
-            creationDate: new Date().toLocaleDateString("en-US"),
         });
     }
 
     return (
-        <PatientInfoContext.Provider value={{ info, setInfo, resetInfo }}>
+        <PatientInfoContext.Provider value={{ generalData, setGeneralData, endodonticsData, setEndodonticsData, periodonticsData, setPeriodonticsData, resetInfo }}>
             {children}
         </PatientInfoContext.Provider>
     );

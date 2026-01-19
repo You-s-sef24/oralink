@@ -5,12 +5,13 @@ import GeneralForm from "../Components/GeneralForm";
 import Header from "../Components/Header";
 import './style.css';
 import DepartmentSelection from "../Components/DepartmentSelection";
-import PeriodonticsFile from "../Components/PeriodonticsFile";
+import PeriodonticsFile from "../Components/Periodontics/PeriodonticsFile";
 import { StatesContext } from "../Contexts/StatesContext";
 import { PatientInfoContext } from "../Contexts/PatientInfoContext";
+import EndodonticsFile from "../Components/Endodontics/EndodonticsFile";
 
 export default function CreateNewFilePage() {
-    const { info, setInfo } = useContext(PatientInfoContext);
+    const { generalData } = useContext(PatientInfoContext);
     const { state, setState } = useContext(StatesContext);
 
     return (
@@ -48,16 +49,16 @@ export default function CreateNewFilePage() {
                 </>
             ) : (
                 <>
-                    {info.department === 'Periodontics' ?
+                    {generalData.department === 'Periodontics' ?
                         (
                             <PeriodonticsFile />
                         )
-                        : info.department === 'Restorations & Prosthodontics' ? (
-                            <>
-                            </>
+                        : generalData.department === 'Restorations & Prosthodontics' ? (
+                            <></>
+                        ) : generalData.department === 'Endodontics' ? (
+                            <EndodonticsFile />
                         ) : (
-                            <>
-                            </>
+                            <></>
                         )
                     }
                 </>

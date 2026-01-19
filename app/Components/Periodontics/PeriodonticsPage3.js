@@ -1,6 +1,6 @@
 import TableIndicators from "./TableIndicators";
 
-export default function PeriodonticsPage4({ info, setInfo }) {
+export default function PeriodonticsPage3({ info, setInfo }) {
     return (
         <div className="p-3">
 
@@ -111,7 +111,7 @@ export default function PeriodonticsPage4({ info, setInfo }) {
                             <label className="form-label fw-semibold">Fremitus</label>
                             <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.fremitus} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, fremitus: e.target.value } } })} />
                         </div>
-                        
+
                     </div>
 
                     <TableIndicators />

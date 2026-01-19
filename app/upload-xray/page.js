@@ -1,5 +1,5 @@
 import Header from "../Components/Header";
-import UploadBox from "../Components/UploadBox";
+import XrayUploadBox from "../Components/XrayUploadBox";
 import XrayInfo from "../Components/Xray Info";
 
 export default function UploadXrayPage() {
@@ -9,7 +9,7 @@ export default function UploadXrayPage() {
 
             <hr className="m-0" />
 
-            <UploadBox />
+            <XrayUploadBox />
 
             <XrayInfo />
         </div>

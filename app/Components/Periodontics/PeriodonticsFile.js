@@ -2,12 +2,11 @@
 
 import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
-import { UsersContext } from "../Contexts/UsersContext";
-import { StatesContext } from "../Contexts/StatesContext";
-import { PatientInfoContext } from "../Contexts/PatientInfoContext";
-import PeriodonticsPage1 from "./PeriodonticsPage1";
+import { UsersContext } from "../../Contexts/UsersContext";
+import { StatesContext } from "../../Contexts/StatesContext";
+import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
+import PeriodonticsPage2 from "./PeriodonticsPage2";
 import PeriodonticsPage3 from "./PeriodonticsPage3";
-import PeriodonticsPage4 from "./PeriodonticsPage4";
 
 export default function PeriodonticsFile() {
     const { info, setInfo, resetInfo } = useContext(PatientInfoContext);
@@ -45,13 +44,13 @@ export default function PeriodonticsFile() {
             <p className="text-center">Faculty of Dentistry</p>
             <hr />
             {step === 1 ? (
-                <PeriodonticsPage1 info={info} setInfo={setInfo} />
+                <></>
             ) : step === 2 ? (
-                ""
+                <PeriodonticsPage2 info={info} setInfo={setInfo} />
             ) : step === 3 ? (
                 <PeriodonticsPage3 info={info} setInfo={setInfo} />
             ) : (
-                <PeriodonticsPage4 info={info} setInfo={setInfo} />
+                <></>
             )
             }
 

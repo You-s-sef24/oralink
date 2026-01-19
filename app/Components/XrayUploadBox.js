@@ -4,7 +4,7 @@ import { useState } from "react";
 import AIResults from "./AIResults";
 import LoadingResult from "./LoadingResult";
 
-export default function UploadBox() {
+export default function XrayUploadBox() {
     const [isDragging, setIsDragging] = useState(false);
     const [isAnalyzed, setIsAnalyzed] = useState(false);
     const [loading, setLoading] = useState(false);

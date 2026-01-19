@@ -1,4 +1,4 @@
-export default function PeriodonticsPage3({ info, setInfo }) {
+export default function PeriodonticsPage2({ info, setInfo }) {
     return (
         <div className="p-3">
 

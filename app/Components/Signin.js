@@ -38,11 +38,10 @@ export default function Signin() {
 
     return (
         <div className="d-flex justify-content-center align-items-center min-vh-100">
-            <div className="d-flex flex-column border rounded shadow bg-white p-4">
+            <div className="d-flex flex-column border rounded shadow bg-white w-50 p-4">
 
-                <div className="d-flex justify-content-center align-items-center gap-1 mb-1">
-                    <img src="../images/tooth.png" alt="tooth" width={35} height={35} />
-                    <h3 className="fw-bold m-0">OraLink</h3>
+                <div className="d-flex justify-content-center">
+                    <img className="w-50" src="/OraLink (1).png" alt="OraLink" loading="lazy"/>
                 </div>
                 <p className="text-muted text-center mb-2">Academic Dental Clinic Management</p>
 
