@@ -1,6 +1,23 @@
-import Link from "next/link";
+"use client";
 
-export default function Header({ title, desc, page }) {
+import Link from "next/link";
+import { useContext } from "react";
+import { PatientInfoContext } from "../Contexts/PatientInfoContext";
+import { UsersContext } from "../Contexts/UsersContext";
+
+export default function Header({ title, desc, page, file, setFile }) {
+    const { setIsEditing, isEditing } = useContext(PatientInfoContext);
+    const { updateFile } = useContext(UsersContext);
+
+    function handleEdit() {
+        if (isEditing) {
+            updateFile(file);
+            setIsEditing(false);
+        } else {
+            setIsEditing(true);
+        }
+    }
+
     return (
         <div className="p-4">
             {page === "Student Profile" ? (
@@ -9,9 +26,21 @@ export default function Header({ title, desc, page }) {
                     Back to Students List
                 </Link>
             ) : ''}
-            
-            <h3>{title}</h3>
-            <p className="m-0">{desc}</p>
+
+            <div className="d-flex align-items-center justify-content-between">
+                <div>
+                    <h3>{title}</h3>
+                    <p className="m-0">{desc}</p>
+                </div>
+                {page === "Patient File" ?
+                    <div>
+                        <button className="btn btn-primary" onClick={handleEdit}>
+                            {isEditing ? <><i className="bi bi-floppy"></i> Save Changes</> : <><i className="bi bi-pencil"></i> Edit File</>}
+                        </button>
+                    </div>
+                    : ''
+                }
+            </div>
         </div>
     );
 }
