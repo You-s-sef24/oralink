@@ -11,13 +11,10 @@ export default function Patients() {
 
     const filteredFiles = files.filter(file => {
         const term = search.toLowerCase();
-        return file.patientName.toLowerCase().includes(term);
+        return file.patientName?.toLowerCase().includes(term);
     });
 
     const patients = filteredFiles.map((file) => {
-        function handleView(id) {
-            alert(id);
-        }
 
         return (
             <div className="row text-center align-items-center" key={file.fileId}>
@@ -28,7 +25,7 @@ export default function Patients() {
                     {file.patientName}
                 </div>
                 <div className="col-1 text-truncate">
-                    {file.age}
+                    {file.birthDate}
                 </div>
                 <div className="col text-truncate">
                     {file.phone}
@@ -40,10 +37,10 @@ export default function Patients() {
                     {file.creationDate}
                 </div>
                 <div className="col d-flex justify-content-center text-truncate">
-                    <button className="d-flex align-items-center btn btn-sm btn-primary gap-1" onClick={() => { handleView(file.fileId) }}>
+                    <Link href={`my-files/${file.fileId}`} className="d-flex align-items-center btn btn-sm btn-primary gap-1">
                         <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-eye w-75 h-4" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg></span>
                         View
-                    </button>
+                    </Link>
                 </div>
                 <hr className="mt-2" />
             </div>
@@ -77,7 +74,7 @@ export default function Patients() {
                     Patient Name
                 </div>
                 <div className="col-1 text-truncate">
-                    Age
+                    Birth Date
                 </div>
                 <div className="col text-truncate">
                     Phone

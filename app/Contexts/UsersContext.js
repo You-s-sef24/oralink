@@ -38,6 +38,28 @@ export default function UsersProvider({ children }) {
     const [gradedFiles, setGradedFiles] = useState(0);
     const [avgGrade, setAvgGrade] = useState(0);
 
+    const updateFile = (updatedFile) => {
+        setUsers(prevUsers =>
+            prevUsers.map(user => {
+                if (user.id !== currentUser.id) return user;
+
+                return {
+                    ...user,
+                    files: user.files.map(file =>
+                        file.id === updatedFile.id ? updatedFile : file
+                    )
+                };
+            })
+        );
+
+        setCurrentUser(prev => ({
+            ...prev,
+            files: prev.files.map(file =>
+                file.id === updatedFile.id ? updatedFile : file
+            )
+        }));
+    };
+
 
     useEffect(() => {
         const storedUser = localStorage.getItem("currentUser");
@@ -81,7 +103,7 @@ export default function UsersProvider({ children }) {
 
 
     return (
-        <UsersContext.Provider value={{ users, setUsers, currentUser, setCurrentUser, isLoggedIn, setIsLoggedIn, totalStudents, totalFiles, gradedFiles, avgGrade }}>
+        <UsersContext.Provider value={{ users, setUsers, currentUser, setCurrentUser, isLoggedIn, setIsLoggedIn, totalStudents, totalFiles, updateFile, gradedFiles, avgGrade }}>
             {children}
         </UsersContext.Provider>
     );

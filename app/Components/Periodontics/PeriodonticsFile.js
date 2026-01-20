@@ -1,26 +1,17 @@
 "use client";
 
 import { useContext, useState } from "react";
-import { useRouter } from "next/navigation";
-import { UsersContext } from "../../Contexts/UsersContext";
 import { StatesContext } from "../../Contexts/StatesContext";
 import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
+import PeriodonticsPage1 from "./PeriodonticsPage1";
 import PeriodonticsPage2 from "./PeriodonticsPage2";
+import PeriodonticsPage4 from "./PeriodonticsPage4";
 import PeriodonticsPage3 from "./PeriodonticsPage3";
 
 export default function PeriodonticsFile() {
-    const { info, setInfo, resetInfo } = useContext(PatientInfoContext);
     const [step, setStep] = useState(1);
+    const { periodonticsData, setPeriodonticsData, handleSave } = useContext(PatientInfoContext);
     const { state, setState } = useContext(StatesContext);
-    const { currentUser, setCurrentUser } = useContext(UsersContext);
-    const router = useRouter();
-
-    function handleSave() {
-        const newPatientsFiles = [...currentUser.files, info];
-        setCurrentUser({ ...currentUser, files: newPatientsFiles });
-        resetInfo();
-        router.push('/dashboard');
-    }
 
     function handleBack() {
         if (step === 1) {
@@ -44,23 +35,26 @@ export default function PeriodonticsFile() {
             <p className="text-center">Faculty of Dentistry</p>
             <hr />
             {step === 1 ? (
-                <></>
+                <PeriodonticsPage1 info={periodonticsData} setInfo={setPeriodonticsData} />
             ) : step === 2 ? (
-                <PeriodonticsPage2 info={info} setInfo={setInfo} />
+                <PeriodonticsPage2 info={periodonticsData} setInfo={setPeriodonticsData} />
             ) : step === 3 ? (
-                <PeriodonticsPage3 info={info} setInfo={setInfo} />
+                <PeriodonticsPage3 info={periodonticsData} setInfo={setPeriodonticsData} />
             ) : (
-                <></>
+                <PeriodonticsPage4 info={periodonticsData} setInfo={setPeriodonticsData} />
             )
             }
 
-            <div className="d-flex justify-content-between gap-2">
+            <div className="d-flex justify-content-between align-items-center gap-2">
                 <button className="d-flex align-items-center gap-1 btn btn-secondary my-3" onClick={handleBack}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" className="lucide lucide-chevron-left w-4 h-4" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
                     Back
                 </button>
+
+                <p className="m-0">Page {step} / 4</p>
+
                 {step === 4 ? (
-                    <button className="btn btn-primary my-3" onClick={handleSave}>
+                    <button className="btn btn-primary my-3" onClick={() => { handleSave('periodontics') }}>
                         Save Full Patient File
                     </button>
                 ) : (

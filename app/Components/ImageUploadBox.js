@@ -4,10 +4,11 @@ import { PatientInfoContext } from '../Contexts/PatientInfoContext';
 import '../globals.css';
 import { useContext, useState } from "react";
 
-export default function ImageUploadBox() {
+export default function ImageUploadBox({ time, type, fileData, setFileData }) {
     const { generalData, setGeneralData } = useContext(PatientInfoContext);
     const [isDragging, setIsDragging] = useState(false);
     const [file, setFile] = useState(null);
+    const { isEditing } = useContext(PatientInfoContext);
 
     function handleDragOver(e) {
         e.preventDefault();
@@ -24,7 +25,15 @@ export default function ImageUploadBox() {
         const droppedFile = e.dataTransfer.files[0];
         if (droppedFile) {
             setFile(droppedFile);
-            setGeneralData({ ...generalData, patientImage: file });
+            if (type === 'xray') {
+                setGeneralData({ ...generalData, xRay: droppedFile });
+                return;
+            }
+            if (isEditing) {
+                time === 'pre' ? setFileData({ ...fileData, prePatientImage: droppedFile }) : setFileData({ ...fileData, postPatientImage: droppedFile });
+            } else {
+                time === 'pre' ? setGeneralData({ ...generalData, prePatientImage: droppedFile }) : setGeneralData({ ...generalData, postPatientImage: droppedFile });
+            }
         }
     }
 
@@ -32,12 +41,19 @@ export default function ImageUploadBox() {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             setFile(selectedFile);
+            if (type === 'xray') {
+                setGeneralData({ ...generalData, xRay: selectedFile });
+                return;
+            }
+            time === 'pre' ? setGeneralData({ ...generalData, prePatientImage: selectedFile }) : setGeneralData({ ...generalData, postPatientImage: selectedFile });
         }
     }
 
     return (
         <div className="upload-container">
-            <h4 className="mb-3">Patient Image</h4>
+            {
+                type === 'xray' ? <h4 className="mb-3">X-Ray Image (Optional)</h4> : time === 'pre' ? <h4 className="mb-3">Pre-Patient Image</h4> : <h4 className="mb-3">Post-Patient Image</h4>
+            }
 
             {file ? (
                 <div className="d-flex justify-content-center position-relative">
@@ -63,6 +79,7 @@ export default function ImageUploadBox() {
                         type="file"
                         accept="image/png, image/jpeg, .dcm"
                         className="d-none"
+                        required={type !== 'xray'}
                         onChange={handleFileSelect}
                     />
 

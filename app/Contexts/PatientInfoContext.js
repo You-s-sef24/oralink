@@ -1,16 +1,21 @@
 "use client";
 
-import { createContext, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createContext, useContext, useState } from "react";
+import { UsersContext } from "./UsersContext";
 
 export const PatientInfoContext = createContext();
 
 export default function PatientInfoProvider({ children }) {
+    const { currentUser, setCurrentUser, users, setUsers } = useContext(UsersContext);
+    const router = useRouter();
+
     const [generalData, setGeneralData] = useState({
         fileId: Date.now(),
         patientName: "",
         gender: "Male",
-        martialStatus: "",
-        age: "",
+        martialStatus: "Single",
+        birthDate: "",
         occupation: "",
         address: "",
         department: "",
@@ -84,10 +89,58 @@ export default function PatientInfoProvider({ children }) {
         prePatientImage: null,
         postPatientImage: null,
         xRay: null,
-        creationDate: new Date().toLocaleDateString("en-US"),
     });
 
+    const [file, setFile] = useState(null);
+
+    const [isEditing, setIsEditing] = useState(false);
+
+    const createTooth = (tooth) => ({
+        tooth,
+        mobility: 0,
+        furcation: 0,
+        probing: { mb: 0, b: 0, db: 0, ml: 0, l: 0, dl: 0 },
+        recession: { mb: 0, b: 0, db: 0, ml: 0, l: 0, dl: 0 },
+        bop: { mb: 0, b: 0, db: 0, ml: 0, l: 0, dl: 0 },
+        pi: { mb: 0, b: 0, db: 0, ml: 0, l: 0, dl: 0 },
+    });
+
+    const teethNumbers = [
+        18, 17, 16, 15, 14, 13, 12, 11,
+        21, 22, 23, 24, 25, 26, 27, 28,
+        48, 47, 46, 45, 44, 43, 42, 41,
+        31, 32, 33, 34, 35, 36, 37, 38
+    ];
+
     const [periodonticsData, setPeriodonticsData] = useState({
+        clinicalExamination: {
+            patientAppraisal: "",
+            vitalSigns: "",
+            skull: "",
+            face: "",
+            eyesEarsNose: "",
+            skinHair: "",
+            handNails: "",
+            neck: "",
+            salivaryGlands: "",
+            lymphNodes: "",
+            labialMucosa: "",
+            buccalMucosa: "",
+            gingiva: "",
+            alveolarRidge: "",
+            vestibule: "",
+            tongue: "",
+            floorOfMouth: "",
+            hardPalate: "",
+            softPalateUvulaOropharynx: "",
+            tmj: "",
+            missedExtracted: "",
+            filled: "",
+            decayed: "",
+            discolored: "",
+            malposed: "",
+            wastingDisease: ""
+        },
         radiographicInterpretation: {
             horizontalBoneLoss: "",
             verticalBoneLoss: "",
@@ -96,8 +149,14 @@ export default function PatientInfoProvider({ children }) {
         },
         diagnosis: "",
         prognosis: "",
-        treatmentPlan: "",
-        maintenancePhase: "",
+        periodontalChart: teethNumbers.map(createTooth),
+        treatmentPlan: {
+            systemicPhase: "",
+            acutePhase: "",
+            diseaseControlPhase: "",
+            definitivePhase: "",
+            maintenancePhase: "",
+        },
         periodontalExamination: {
             hygiene: {
                 depositsPlaque: "",
@@ -120,9 +179,25 @@ export default function PatientInfoProvider({ children }) {
                 occlusalRelationship: "",
                 fremitus: "",
             },
+            teeth: [
+                { tooth: 7, top: 0, bottom: 0 },
+                { tooth: 6, top: 0, bottom: 0 },
+                { tooth: 5, top: 0, bottom: 0 },
+                { tooth: 4, top: 0, bottom: 0 },
+                { tooth: 3, top: 0, bottom: 0 },
+                { tooth: 2, top: 0, bottom: 0 },
+                { tooth: 1, top: 0, bottom: 0 },
+                { tooth: 1, top: 0, bottom: 0 },
+                { tooth: 2, top: 0, bottom: 0 },
+                { tooth: 3, top: 0, bottom: 0 },
+                { tooth: 4, top: 0, bottom: 0 },
+                { tooth: 5, top: 0, bottom: 0 },
+                { tooth: 6, top: 0, bottom: 0 },
+                { tooth: 7, top: 0, bottom: 0 },
+            ]
         },
     });
-    
+
     const [endodonticsData, setEndodonticsData] = useState({
         subjectives: {
             natureOfPain: "",
@@ -258,8 +333,8 @@ export default function PatientInfoProvider({ children }) {
             fileId: Date.now(),
             patientName: "",
             gender: "Male",
-            martialStatus: "",
-            age: "",
+            martialStatus: "Single",
+            birthDate: "",
             occupation: "",
             address: "",
             department: "",
@@ -332,7 +407,7 @@ export default function PatientInfoProvider({ children }) {
             },
             prePatientImage: null,
             postPatientImage: null,
-            creationDate: new Date().toLocaleDateString("en-US"),
+            xRay: null,
         });
 
         setEndodonticsData({
@@ -466,6 +541,34 @@ export default function PatientInfoProvider({ children }) {
         });
 
         setPeriodonticsData({
+            clinicalExamination: {
+                patientAppraisal: "",
+                vitalSigns: "",
+                skull: "",
+                face: "",
+                eyesEarsNose: "",
+                skinHair: "",
+                handNails: "",
+                neck: "",
+                salivaryGlands: "",
+                lymphNodes: "",
+                labialMucosa: "",
+                buccalMucosa: "",
+                gingiva: "",
+                alveolarRidge: "",
+                vestibule: "",
+                tongue: "",
+                floorOfMouth: "",
+                hardPalate: "",
+                softPalateUvulaOropharynx: "",
+                tmj: "",
+                missedExtracted: "",
+                filled: "",
+                decayed: "",
+                discolored: "",
+                malposed: "",
+                wastingDisease: ""
+            },
             radiographicInterpretation: {
                 horizontalBoneLoss: "",
                 verticalBoneLoss: "",
@@ -474,8 +577,14 @@ export default function PatientInfoProvider({ children }) {
             },
             diagnosis: "",
             prognosis: "",
-            treatmentPlan: "",
-            maintenancePhase: "",
+            periodontalChart: teethNumbers.map(createTooth),
+            treatmentPlan: {
+                systemicPhase: "",
+                acutePhase: "",
+                diseaseControlPhase: "",
+                definitivePhase: "",
+                maintenancePhase: "",
+            },
             periodontalExamination: {
                 hygiene: {
                     depositsPlaque: "",
@@ -498,12 +607,49 @@ export default function PatientInfoProvider({ children }) {
                     occlusalRelationship: "",
                     fremitus: "",
                 },
+                teeth: [
+                    { tooth: 7, top: 0, bottom: 0 },
+                    { tooth: 6, top: 0, bottom: 0 },
+                    { tooth: 5, top: 0, bottom: 0 },
+                    { tooth: 4, top: 0, bottom: 0 },
+                    { tooth: 3, top: 0, bottom: 0 },
+                    { tooth: 2, top: 0, bottom: 0 },
+                    { tooth: 1, top: 0, bottom: 0 },
+                    { tooth: 1, top: 0, bottom: 0 },
+                    { tooth: 2, top: 0, bottom: 0 },
+                    { tooth: 3, top: 0, bottom: 0 },
+                    { tooth: 4, top: 0, bottom: 0 },
+                    { tooth: 5, top: 0, bottom: 0 },
+                    { tooth: 6, top: 0, bottom: 0 },
+                    { tooth: 7, top: 0, bottom: 0 },
+                ]
             },
         });
     }
 
+    function handleSave(dept) {
+        const patientFile = {
+            ...generalData,
+            studentId: currentUser?.id,
+            creationDate: new Date().toLocaleDateString("en-US"),
+            departmentData: dept === "periodontics" ? periodonticsData : endodonticsData,
+        };
+        const updatedUser = {
+            ...currentUser,
+            files: [...(currentUser.files || []), patientFile],
+        };
+        setCurrentUser(updatedUser);
+
+        const updatedUsers = users.map(user =>
+            user.id === updatedUser.id ? updatedUser : user
+        );
+        setUsers(updatedUsers);
+        resetInfo();
+        router.push('/dashboard');
+    }
+
     return (
-        <PatientInfoContext.Provider value={{ generalData, setGeneralData, endodonticsData, setEndodonticsData, periodonticsData, setPeriodonticsData, resetInfo }}>
+        <PatientInfoContext.Provider value={{ generalData, setGeneralData, endodonticsData, setEndodonticsData, periodonticsData, setPeriodonticsData, handleSave, isEditing, setIsEditing, file, setFile }}>
             {children}
         </PatientInfoContext.Provider>
     );
