@@ -2,13 +2,29 @@
 import { PatientInfoContext } from "@/app/Contexts/PatientInfoContext";
 import { useContext, useState } from "react";
 
-export default function PapillaryBleeding() {
-    const { periodonticsData, setPeriodonticsData } = useContext(PatientInfoContext);
+export default function PapillaryBleeding({ file, setFile }) {
+    const { periodonticsData, isEditing } = useContext(PatientInfoContext);
     const teethData = periodonticsData.periodontalExamination.teeth;
     const [teeth, setTeeth] = useState(teethData);
 
     const update = (i, field, value) => {
         if (value < 0 || value > 4) return;
+        if (isEditing) {
+            const updatedTeeth = [...teeth];
+            updatedTeeth[i][field] = value;
+            setTeeth(updatedTeeth);
+            setFile({
+                ...file,
+                departmentData: {
+                    ...file.departmentData,
+                    periodontalExamination: {
+                        ...file.departmentData.periodontalExamination,
+                        teeth: teeth.map((t, index) => index === i ? { ...t, [field]: value } : t)
+                    }
+                }
+            });
+            return;
+        }
         const copy = [...teeth];
         copy[i][field] = value;
         setTeeth(copy);

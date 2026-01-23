@@ -95,14 +95,47 @@ export default function PatientInfoProvider({ children }) {
 
     const [isEditing, setIsEditing] = useState(false);
 
-    const createTooth = (tooth) => ({
-        tooth,
-        mobility: 0,
-        furcation: 0,
-        probing: { mb: 0, b: 0, db: 0, ml: 0, l: 0, dl: 0 },
-        recession: { mb: 0, b: 0, db: 0, ml: 0, l: 0, dl: 0 },
-        bop: { mb: 0, b: 0, db: 0, ml: 0, l: 0, dl: 0 },
-        pi: { mb: 0, b: 0, db: 0, ml: 0, l: 0, dl: 0 },
+    const createTooth = (toothNumber) => ({
+        tooth: toothNumber,
+
+        mobility: "",
+        furcation: "",
+
+        probing: {
+            mb: "",
+            b: "",
+            db: "",
+            ml: "",
+            l: "",
+            dl: "",
+        },
+
+        recession: {
+            mb: "",
+            b: "",
+            db: "",
+            ml: "",
+            l: "",
+            dl: "",
+        },
+
+        bop: {
+            mb: "",
+            b: "",
+            db: "",
+            ml: "",
+            l: "",
+            dl: "",
+        },
+
+        pi: {
+            mb: "",
+            b: "",
+            db: "",
+            ml: "",
+            l: "",
+            dl: "",
+        },
     });
 
     const teethNumbers = [
@@ -159,11 +192,11 @@ export default function PatientInfoProvider({ children }) {
         },
         periodontalExamination: {
             hygiene: {
-                depositsPlaque: "",
+                depositsPlaque: "Heavy",
             },
             calculus: {
-                supragingival: "",
-                subgingival: "",
+                supragingival: "Heavy",
+                subgingival: "Heavy",
             },
             gingiva: {
                 color: "",
@@ -587,11 +620,11 @@ export default function PatientInfoProvider({ children }) {
             },
             periodontalExamination: {
                 hygiene: {
-                    depositsPlaque: "",
+                    depositsPlaque: "Heavy",
                 },
                 calculus: {
-                    supragingival: "",
-                    subgingival: "",
+                    supragingival: "Heavy",
+                    subgingival: "Heavy",
                 },
                 gingiva: {
                     color: "",

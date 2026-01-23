@@ -5,7 +5,6 @@ import TableIndicators from "./TableIndicators";
 export default function PeriodonticsPage2({ info, setInfo }) {
     return (
         <div className="p-3">
-
             <div className="position-relative border border-primary rounded-3 p-4 mt-4 bg-white">
                 <span className="position-absolute top-0 start-0 translate-middle-y ms-4 px-2 bg-white text-primary fw-semibold">
                     Periodontal Examination
@@ -124,7 +123,6 @@ export default function PeriodonticsPage2({ info, setInfo }) {
                     <ImageUploadBox type={'xray'} />
                 </div>
             </div>
-
         </div>
     )
 }

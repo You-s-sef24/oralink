@@ -5,10 +5,9 @@ import '../globals.css';
 import { useContext, useState } from "react";
 
 export default function ImageUploadBox({ time, type, fileData, setFileData }) {
-    const { generalData, setGeneralData } = useContext(PatientInfoContext);
+    const { generalData, setGeneralData, isEditing } = useContext(PatientInfoContext);
     const [isDragging, setIsDragging] = useState(false);
     const [file, setFile] = useState(null);
-    const { isEditing } = useContext(PatientInfoContext);
 
     function handleDragOver(e) {
         e.preventDefault();
@@ -26,6 +25,10 @@ export default function ImageUploadBox({ time, type, fileData, setFileData }) {
         if (droppedFile) {
             setFile(droppedFile);
             if (type === 'xray') {
+                if (isEditing) {
+                    setFileData({ ...fileData, xRay: droppedFile });
+                    return;
+                }
                 setGeneralData({ ...generalData, xRay: droppedFile });
                 return;
             }
@@ -42,7 +45,15 @@ export default function ImageUploadBox({ time, type, fileData, setFileData }) {
         if (selectedFile) {
             setFile(selectedFile);
             if (type === 'xray') {
+                if (isEditing) {
+                    setFileData({ ...fileData, xRay: selectedFile });
+                    return;
+                }
                 setGeneralData({ ...generalData, xRay: selectedFile });
+                return;
+            }
+            if (isEditing) {
+                time === 'pre' ? setFileData({ ...fileData, prePatientImage: selectedFile }) : setFileData({ ...fileData, postPatientImage: selectedFile });
                 return;
             }
             time === 'pre' ? setGeneralData({ ...generalData, prePatientImage: selectedFile }) : setGeneralData({ ...generalData, postPatientImage: selectedFile });

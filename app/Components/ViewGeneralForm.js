@@ -7,10 +7,6 @@ import ImageUploadBox from "./ImageUploadBox";
 export default function ViewGeneralForm() {
     const { isEditing, file, setFile } = useContext(PatientInfoContext);
 
-    function handleSubmit(e) {
-        e.preventDefault();
-    }
-
     const ReadOnlyField = ({ label, value }) => (
         <div className="mb-2">
             <label className="form-label fw-semibold">{label}</label>
@@ -22,7 +18,7 @@ export default function ViewGeneralForm() {
 
     return (
         isEditing ?
-            <form className="p-4" onSubmit={(e) => { handleSubmit(e) }}>
+            <form className="p-4">
                 <div className="row align-items-start d-flex g-3">
                     <div className="col-12 col-md-6">
                         <div className="position-relative border border-primary rounded-3 p-4  bg-white">
@@ -560,10 +556,6 @@ export default function ViewGeneralForm() {
                     <div className="col-12 col-sm-6">
                         <ImageUploadBox time={'post'} type={''} fileData={file} setFileData={setFile} />
                     </div>
-                </div>
-
-                <div className="d-flex justify-content-end my-3">
-                    <button type="submit" className="btn btn-primary">Next</button>
                 </div>
 
             </form >

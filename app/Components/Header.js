@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { PatientInfoContext } from "../Contexts/PatientInfoContext";
 import { UsersContext } from "../Contexts/UsersContext";
 
-export default function Header({ title, desc, page, file, setFile }) {
+export default function Header({ title, desc, page, file }) {
     const { setIsEditing, isEditing } = useContext(PatientInfoContext);
     const { updateFile } = useContext(UsersContext);
 
@@ -30,7 +30,7 @@ export default function Header({ title, desc, page, file, setFile }) {
             <div className="d-flex align-items-center justify-content-between">
                 <div>
                     <h3>{title}</h3>
-                    <p className="m-0">{desc}</p>
+                    <p className="m-0">{page === "Patient File" ? `File Id: ${file?.fileId}` : desc}</p>
                 </div>
                 {page === "Patient File" ?
                     <div>

@@ -5,6 +5,7 @@ import BootstrapClient from "@/app/Components/BootstrapClient";
 import UsersProvider from "@/app/Contexts/UsersContext";
 import PatientInfoProvider from "@/app/Contexts/PatientInfoContext";
 import Navbar from "@/app/Components/Navbar";
+import StatesProvider from "@/app/Contexts/StatesContext";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -26,9 +27,11 @@ export default function FileLayout({ children }) {
         <div className={`${geistSans.variable} ${geistMono.variable} font-sans`}>
             <UsersProvider>
                 <PatientInfoProvider>
-                    <BootstrapClient />
-                    <Navbar />
-                    {children}
+                    <StatesProvider>
+                        <BootstrapClient />
+                        <Navbar />
+                        {children}
+                    </StatesProvider>
                 </PatientInfoProvider>
             </UsersProvider>
         </div>

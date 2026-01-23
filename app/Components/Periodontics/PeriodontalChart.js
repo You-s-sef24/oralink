@@ -5,26 +5,65 @@ import { useContext } from "react";
 const SITES_BUCCAL = ["mb", "b", "db"];
 const SITES_LINGUAL = ["ml", "l", "dl"];
 
-export default function PeriodontalChart() {
-    const { periodonticsData, setPeriodonticsData } = useContext(PatientInfoContext);
+export default function PeriodontalChart({ file, setFile }) {
+    const { periodonticsData, setPeriodonticsData, isEditing } = useContext(PatientInfoContext);
 
-    const teeth = periodonticsData?.periodontalChart || [];
+    const teeth = isEditing
+        ? file?.departmentData?.periodontalChart ?? []
+        : periodonticsData?.periodontalChart || [];
     const upperTeeth = teeth.slice(0, 16);
     const lowerTeeth = teeth.slice(16, 32);
 
+    console.log(teeth);
+
+
     if (!teeth.length) return <p>Loading periodontal chart...</p>;
 
+    const parseNumber = (value) =>
+        value === "" ? "" : Number(value);
+
     const updateSite = (i, field, site, value) => {
-        const updatedTeeth = [...teeth];
-        updatedTeeth[i][field][site] = value;
-        setPeriodonticsData(prev => ({ ...prev, periodontalChart: updatedTeeth }));
+        const updatedTeeth = teeth.map((tooth, idx) =>
+            idx === i
+                ? {
+                    ...tooth,
+                    [field]: {
+                        ...tooth[field],
+                        [site]: value
+                    }
+                }
+                : tooth
+        );
+
+        if (isEditing) {
+            setFile(prev => ({
+                ...prev,
+                departmentData: {
+                    ...prev.departmentData,
+                    periodontalChart: updatedTeeth
+                }
+            }));
+        } else {
+            setPeriodonticsData(prev => ({
+                ...prev,
+                periodontalChart: updatedTeeth
+            }));
+        }
     };
+
 
     const updateSimple = (i, field, value) => {
         const updatedTeeth = [...teeth];
         updatedTeeth[i][field] = value;
-        setPeriodonticsData(prev => ({ ...prev, periodontalChart: updatedTeeth }));
+        isEditing ? setFile(prev => ({
+            ...prev,
+            departmentData: {
+                ...prev.departmentData,
+                periodontalChart: updatedTeeth
+            }
+        })) : setPeriodonticsData(prev => ({ ...prev, periodontalChart: updatedTeeth }));
     };
+
 
     const renderTable = (label, archTeeth, startIndex) => (
         <div className="w-100 mt-4">
@@ -45,7 +84,7 @@ export default function PeriodontalChart() {
                                             type="number"
                                             className="form-control text-center"
                                             value={t.mobility}
-                                            onChange={e => updateSimple(globalIndex, "mobility", +e.target.value)}
+                                            onChange={e => updateSimple(globalIndex, "mobility", parseNumber(e.target.value))}
                                         />
                                     </td>
                                 );
@@ -62,7 +101,7 @@ export default function PeriodontalChart() {
                                             type="number"
                                             className="form-control text-center"
                                             value={t.furcation}
-                                            onChange={e => updateSimple(globalIndex, "furcation", +e.target.value)}
+                                            onChange={e => updateSimple(globalIndex, "furcation", parseNumber(e.target.value))}
                                         />
                                     </td>
                                 );
@@ -83,7 +122,7 @@ export default function PeriodontalChart() {
                                                     className="form-control text-center"
                                                     value={t.probing[site]}
                                                     onChange={e =>
-                                                        updateSite(globalIndex, "probing", site, +e.target.value)
+                                                        updateSite(globalIndex, "probing", site, parseNumber(e.target.value))
                                                     }
                                                 />
                                             ))}
@@ -114,7 +153,7 @@ export default function PeriodontalChart() {
                                                     className="form-control text-center"
                                                     value={t.probing[site]}
                                                     onChange={e =>
-                                                        updateSite(globalIndex, "probing", site, +e.target.value)
+                                                        updateSite(globalIndex, "probing", site, parseNumber(e.target.value))
                                                     }
                                                 />
                                             ))}
@@ -138,7 +177,7 @@ export default function PeriodontalChart() {
                                                     className="form-control text-center"
                                                     value={t.recession[site]}
                                                     onChange={e =>
-                                                        updateSite(globalIndex, "recession", site, +e.target.value)
+                                                        updateSite(globalIndex, "recession", site, parseNumber(e.target.value))
                                                     }
                                                 />
                                             ))}
@@ -162,7 +201,7 @@ export default function PeriodontalChart() {
                                                     className="form-control text-center"
                                                     value={t.bop[site]}
                                                     onChange={e =>
-                                                        updateSite(globalIndex, "bop", site, +e.target.value)
+                                                        updateSite(globalIndex, "bop", site, parseNumber(e.target.value))
                                                     }
                                                 />
                                             ))}
@@ -186,7 +225,7 @@ export default function PeriodontalChart() {
                                                     className="form-control text-center"
                                                     value={t.pi[site]}
                                                     onChange={e =>
-                                                        updateSite(globalIndex, "pi", site, +e.target.value)
+                                                        updateSite(globalIndex, "pi", site, parseNumber(e.target.value))
                                                     }
                                                 />
                                             ))}
