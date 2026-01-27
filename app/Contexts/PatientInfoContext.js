@@ -233,11 +233,11 @@ export default function PatientInfoProvider({ children }) {
 
     const [endodonticsData, setEndodonticsData] = useState({
         subjectives: {
-            natureOfPain: "",
-            onset: "",
-            location: "",
+            natureOfPain: "None",
+            onset: "Dull",
+            location: "Localized",
             radiatingTo: "",
-            duration: "",
+            duration: "Seconds",
             intiatedByCold: "",
             intiatedByHeat: "",
             intiatedBySweets: "",
@@ -252,14 +252,14 @@ export default function PatientInfoProvider({ children }) {
         },
         objectives: {
             extraoral: {
-                facialSwelling: "",
-                lymphNodes: "",
-                swollen: "",
+                facialSwelling: "Yes",
+                lymphNodes: "Yes",
+                swollen: "Yes",
             },
             intraoral: {
-                swelling: "",
-                sinusTract: "",
-                softTissues: "",
+                swelling: "Yes (WNL)",
+                sinusTract: "Yes",
+                softTissues: "Yes",
                 clinicalCrown: {
                     restoration: "",
                     caries: "",
@@ -320,8 +320,8 @@ export default function PatientInfoProvider({ children }) {
         },
         assessment: {
             diagnosis: {
-                pulpal: "",
-                periapical: "",
+                pulpal: "WNL",
+                periapical: "WNL",
             },
             etiology: {
                 caries: false,
@@ -332,7 +332,7 @@ export default function PatientInfoProvider({ children }) {
                 trauma: false,
                 perio: false,
             },
-            prognosis: "",
+            prognosis: "Good",
         },
         treatmentPlan: {
             endodontic: {
@@ -445,11 +445,11 @@ export default function PatientInfoProvider({ children }) {
 
         setEndodonticsData({
             subjectives: {
-                natureOfPain: "",
-                onset: "",
-                location: "",
+                natureOfPain: "None",
+                onset: "Dull",
+                location: "Localized",
                 radiatingTo: "",
-                duration: "",
+                duration: "Seconds",
                 intiatedByCold: "",
                 intiatedByHeat: "",
                 intiatedBySweets: "",
@@ -464,14 +464,14 @@ export default function PatientInfoProvider({ children }) {
             },
             objectives: {
                 extraoral: {
-                    facialSwelling: "",
-                    lymphNodes: "",
-                    swollen: "",
+                    facialSwelling: "Yes",
+                    lymphNodes: "Yes",
+                    swollen: "Yes",
                 },
                 intraoral: {
-                    swelling: "",
-                    sinusTract: "",
-                    softTissues: "",
+                    swelling: "Yes (WNL)",
+                    sinusTract: "Yes",
+                    softTissues: "Yes",
                     clinicalCrown: {
                         restoration: "",
                         caries: "",
@@ -532,8 +532,8 @@ export default function PatientInfoProvider({ children }) {
             },
             assessment: {
                 diagnosis: {
-                    pulpal: "",
-                    periapical: "",
+                    pulpal: "WNL",
+                    periapical: "WNL",
                 },
                 etiology: {
                     caries: false,
@@ -544,7 +544,7 @@ export default function PatientInfoProvider({ children }) {
                     trauma: false,
                     perio: false,
                 },
-                prognosis: "",
+                prognosis: "Good",
             },
             treatmentPlan: {
                 endodontic: {

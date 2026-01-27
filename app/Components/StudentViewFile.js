@@ -10,6 +10,7 @@ import ViewPeriodonticsPage1 from "./Periodontics/ViewPeriodonticsPage1";
 import ViewPeriodonticsPage2 from "./Periodontics/ViewPeriodonticsPage2";
 import ViewPeriodonticsPage3 from "./Periodontics/ViewPeriodonticsPage3";
 import ViewPeriodonticsPage4 from "./Periodontics/ViewPeriodonticsPage4";
+import ViewEndodonticsFile from "./Endodontics/ViewEndodonticsFile";
 
 export default function StudentViewFile({ params }) {
     const { fileId } = params;
@@ -51,18 +52,36 @@ export default function StudentViewFile({ params }) {
 
             <hr className="mt-0" />
 
-            {state === 1 ?
-                <ViewGeneralForm />
-                : state === 2 ?
-                    <ViewPeriodonticsPage1 />
-                    : state === 3 ? <ViewPeriodonticsPage2 />
-                        : state === 4 ? <ViewPeriodonticsPage3 />
-                            : <ViewPeriodonticsPage4 />
+            {
+                file.department === 'Periodontics' ?
+                    state === 1 ?
+                        <ViewGeneralForm />
+                        : state === 2 ?
+                            <ViewPeriodonticsPage1 />
+                            : state === 3 ? <ViewPeriodonticsPage2 />
+                                : state === 4 ? <ViewPeriodonticsPage3 />
+                                    : <ViewPeriodonticsPage4 />
+                    : file.department === 'Endodontics' ?
+                        state === 1 ?
+                            <ViewGeneralForm />
+                            :
+                            <ViewEndodonticsFile />
+                        : <></>
             }
-            <div className="d-flex justify-content-between m-3">
-                {state === 1 ? <div></div> : <button className="btn btn-primary" onClick={() => { setState(state - 1) }}>Back</button>}
-                {state === 5 ? <div></div> : <button className="btn btn-primary" onClick={() => { setState(state + 1) }}>Next</button>}
-            </div>
+            {
+                file.department === "Periodontics" ?
+                    <div className="d-flex justify-content-between m-3">
+                        {state === 1 ? <div></div> : <button className="btn btn-primary" onClick={() => { setState(state - 1) }}>Back</button>}
+                        {state === 5 ? <div></div> : <button className="btn btn-primary" onClick={() => { setState(state + 1) }}>Next</button>}
+                    </div>
+                    : file.department === "Endodontics" ?
+                        <div className="d-flex justify-content-between m-3">
+                            {state === 1 ? <div></div> : <button className="btn btn-primary" onClick={() => { setState(state - 1) }}>Back</button>}
+                            {state === 2 ? <div></div> : <button className="btn btn-primary" onClick={() => { setState(state + 1) }}>Next</button>}
+                        </div>
+                        : <div className="d-flex justify-content-between m-3">
+                        </div>
+            }
         </div>
     );
 }

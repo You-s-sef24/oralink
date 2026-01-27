@@ -3,9 +3,10 @@
 import { useContext, useState } from "react";
 import { StatesContext } from "../../Contexts/StatesContext";
 import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
+import ImageUploadBox from "../ImageUploadBox";
 
 export default function EndodonticsFile() {
-    const { endodonticsData, setEndodonticsData, handleSave } = useContext(PatientInfoContext);
+    const { endodonticsData, setEndodonticsData, handleSave, file, setFile } = useContext(PatientInfoContext);
     const [step, setStep] = useState(1);
     const { state, setState } = useContext(StatesContext);
 
@@ -1286,12 +1287,16 @@ export default function EndodonticsFile() {
                 </div>
             </div>
 
+            <div className="row mt-4">
+                <ImageUploadBox type={'xray'} />
+            </div>
+
             <div className="d-flex justify-content-between gap-2">
                 <button className="d-flex align-items-center gap-1 btn btn-secondary my-3" onClick={handleBack}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" className="lucide lucide-chevron-left w-4 h-4" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
                     Back
                 </button>
-                <button className="btn btn-primary my-3" onClick={()=>{handleSave('endodontics')}}>
+                <button className="btn btn-primary my-3" onClick={() => { handleSave('endodontics') }}>
                     Save Full Patient File
                 </button>
             </div>
