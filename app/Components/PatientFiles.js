@@ -18,7 +18,7 @@ export default function PatientFiles({ page }) {
             .forEach(student => {
                 (student.files || []).forEach(file => {
                     allFiles.push({
-                        fileId: file.id,
+                        fileId: file.fileId,
                         studentId: student.id,
                         studentName: student.name,
                         patientName: file.patientName,
@@ -68,9 +68,9 @@ export default function PatientFiles({ page }) {
         });
     }
 
-    const patientFiles = filteredFiles.map((file, index) => {
+    const patientFiles = filteredFiles.map((file) => {
         return (
-            <div className="row text-center align-items-center" key={index}>
+            <div className="row text-center align-items-center" key={file.fileId}>
                 <div className="col-1 text-truncate">
                     {file.fileId}
                 </div>
@@ -109,7 +109,7 @@ export default function PatientFiles({ page }) {
     }
 
     return (
-        <div className={`border rounded p-3 ${page ? '' : 'mt-5'}`}>
+        <div className={`border rounded p-3 ${page ? '' : 'mt-3'}`}>
             {page === 'graded' || page === 'ungraded' ? (
                 ''
             ) : (
@@ -134,8 +134,7 @@ export default function PatientFiles({ page }) {
                         }}>
                             <option>All Departments</option>
                             <option value={'Periodontics'}>Periodontics</option>
-                            <option value={'Restorations'}>Restorations</option>
-                            <option value={'Cleaning'}>Cleaning</option>
+                            <option value={'Endodontics'}>Endodontics</option>
                         </select>
                     </div>
 

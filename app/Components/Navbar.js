@@ -41,7 +41,7 @@ export default function Navbar() {
     }
 
     return (
-        <nav className="navbar navbar-light bg-white fixed-top">
+        <nav className="navbar navbar-light bg-white">
             <div className="container-fluid d-flex gap-2 align-items-center justify-content-start">
                 <button
                     className="navbar-toggler"

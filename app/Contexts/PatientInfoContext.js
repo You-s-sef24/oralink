@@ -663,6 +663,9 @@ export default function PatientInfoProvider({ children }) {
     function handleSave(dept) {
         const patientFile = {
             ...generalData,
+            grade: 0,
+            gradeAI: 0,
+            feedback: "",
             studentId: currentUser?.id,
             creationDate: new Date().toLocaleDateString("en-US"),
             departmentData: dept === "periodontics" ? periodonticsData : endodonticsData,

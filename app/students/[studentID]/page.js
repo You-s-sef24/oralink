@@ -5,14 +5,15 @@ import Header from "@/app/Components/Header";
 import StudentCard from "@/app/Components/StudentCard";
 import StudentFiles from "@/app/Components/StudentFiles";
 import { UsersContext } from "@/app/Contexts/UsersContext";
+import { useParams } from "next/navigation";
 
-export default function StudentProfile({ params }) {
-    const { studentID } = use(params);
+export default function StudentProfile() {
+    const { studentID } = useParams();
     const { users } = useContext(UsersContext);
-    const student = users.find(user => user.id === Number(studentID));
+    const student = users.find(user => Number(user.id) === Number(studentID));
 
     return (
-        <div className="container-fluid pt-5">
+        <div className="container-fluid">
             <Header title={'Student Files'} desc={'View all patient files submitted by this student'} page={'Student Profile'} />
 
             <hr className="m-0" />

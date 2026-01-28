@@ -15,9 +15,9 @@ export default function StudentFiles({ student }) {
 
     const renderFiles = files.map((file) => {
         return (
-            <div className="row text-center align-items-center" key={file.id}>
+            <div className="row text-center align-items-center" key={file.fileId}>
                 <div className="col-1 text-truncate">
-                    {file.id}
+                    {file.fileId}
                 </div>
                 <div className="col-3 text-truncate">
                     {file.patientName}
@@ -28,7 +28,7 @@ export default function StudentFiles({ student }) {
                 <div className="col text-truncate">
                     {file.creationDate}
                 </div>
-                <div className="col-2 d-none d-sm-block text-truncate">
+                <div className="col-2 d-none d-md-block text-truncate">
                     <div className="d-inline-block">
                         {file.grade > 0 ? (
                             <span className="d-flex justify-content-center align-items-center bg-success text-white rounded-pill px-2 py-1 gap-1">
@@ -47,7 +47,7 @@ export default function StudentFiles({ student }) {
                     {file.grade}/100
                 </div>
                 <div className="col d-flex justify-content-center text-truncate">
-                    <Link href={`/students/${student.id}/files/${file.id}`} className="d-flex align-items-center btn btn-sm btn-primary gap-1">
+                    <Link href={`/students/${student.id}/files/${file.fileId}`} className="d-flex align-items-center btn btn-sm btn-primary gap-1">
                         <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-eye w-75 h-4" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg></span>
                         Open
                     </Link>
@@ -72,7 +72,7 @@ export default function StudentFiles({ student }) {
                 <div className="col text-truncate">
                     Created Date
                 </div>
-                <div className="col-2 d-none d-sm-block text-truncate">
+                <div className="col-2 d-none d-md-block text-truncate">
                     Status
                 </div>
                 <div className="col text-truncate">

@@ -12,7 +12,7 @@ export default function DashboardPage() {
     const { currentUser } = useContext(UsersContext);
 
     return (
-        <div className="container-fluid pt-5">
+        <div className="container-fluid">
             <Header title={`${currentUser?.role} Dashboard`} desc={currentUser?.role === "Student" ? `Welcome back, ${currentUser?.email}` : `Welcome back, Dr. ${currentUser?.name}`} />
 
             <hr className="m-0" />

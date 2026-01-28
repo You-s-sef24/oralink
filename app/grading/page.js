@@ -4,7 +4,7 @@ import Header from "../Components/Header";
 
 export default function GradingPanelPage() {
     return (
-        <div className="container-fluid pt-5">
+        <div className="container-fluid">
             <Header title={'Grading Dashboard'} desc={'Review and grade student submissions'} />
 
             <hr className="m-0" />

@@ -6,12 +6,6 @@ body {
   background: linear-gradient(to bottom, #83aeee, #ffffff);
   min-height: 100vh;
 }
-.navbar {
-  position: fixed;
-  z-index: 999;
-  top: 0;
-  width: 100%;
-}
 
 .footer {
   position: fixed;

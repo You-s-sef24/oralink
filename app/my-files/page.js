@@ -3,7 +3,7 @@ import Patients from "../Components/Patients";
 
 export default function MyFilesPage() {
     return (
-        <div className="container-fluid pt-5">
+        <div className="container-fluid">
             <Header title={'Search Patient Files'} desc={'Find and view patient records'} />
 
             <hr className="m-0" />

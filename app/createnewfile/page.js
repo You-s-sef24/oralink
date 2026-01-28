@@ -15,7 +15,7 @@ export default function CreateNewFilePage() {
     const { state, setState } = useContext(StatesContext);
 
     return (
-        <div className="container-fluid pt-5">
+        <div className="container-fluid">
             <Header title={'Create New Patient File'} desc={'Complete all required forms to register a new patient'} />
 
             <hr className="m-0" />
@@ -49,17 +49,15 @@ export default function CreateNewFilePage() {
                 </>
             ) : (
                 <>
-                    {generalData.department === 'Periodontics' ?
-                        (
+                    {
+                        generalData.department === 'Periodontics' ? (
                             <PeriodonticsFile />
                         )
-                        : generalData.department === 'Restorations & Prosthodontics' ? (
-                            <></>
-                        ) : generalData.department === 'Endodontics' ? (
-                            <EndodonticsFile />
-                        ) : (
-                            <></>
-                        )
+                            : generalData.department === 'Endodontics' ? (
+                                <EndodonticsFile />
+                            ) : (
+                                <></>
+                            )
                     }
                 </>
             )
