@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 
 export const UsersContext = createContext();
 
@@ -9,7 +9,15 @@ export default function UsersProvider({ children }) {
         {
             id: 1,
             name: "Reham Hussien",
+            role: "Head of department",
+            email: "hod@123",
+            password: "123",
+        },
+        {
+            id: 2,
+            name: "Amr Diab",
             role: "Supervisor",
+            department: "Periodontics",
             email: "admin@123",
             password: "123",
         },
@@ -452,10 +460,6 @@ export default function UsersProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [totalStudents, setTotalStudents] = useState(0);
-    const [totalFiles, setTotalFiles] = useState(0);
-    const [gradedFiles, setGradedFiles] = useState(0);
-    const [avgGrade, setAvgGrade] = useState(0);
 
     const updateFile = (updatedFile) => {
         setUsers(prevUsers =>
@@ -478,6 +482,90 @@ export default function UsersProvider({ children }) {
             )
         }));
     };
+
+    const stats = useMemo(() => {
+        const students = users.filter(u => u.role === "Student");
+        const supervisors = users.filter(u => u.role === "Supervisor");
+
+        const allFiles = students.flatMap(s => s.files || []);
+
+        // ---- Files per department
+        const filesPerDepartment = {};
+        allFiles.forEach(f => {
+            filesPerDepartment[f.department] =
+                (filesPerDepartment[f.department] || 0) + 1;
+        });
+
+        // ---- Students per department
+        const studentsPerDepartment = {};
+        students.forEach(s => {
+            const deps = new Set((s.files || []).map(f => f.department));
+            deps.forEach(dep => {
+                studentsPerDepartment[dep] =
+                    (studentsPerDepartment[dep] || 0) + 1;
+            });
+        });
+
+        // ---- Grades
+        const gradedFilesList = allFiles.filter(f => f.grade > 0);
+        const gradedAIList = allFiles.filter(f => f.gradeAI > 0);
+
+        const avgGrade = gradedFilesList.length
+            ? gradedFilesList.reduce((sum, f) => sum + f.grade, 0) / gradedFilesList.length
+            : 0;
+
+        const avgGradeAI = gradedAIList.length
+            ? gradedAIList.reduce((sum, f) => sum + f.gradeAI, 0) / gradedAIList.length
+            : 0;
+
+        // ---- Files this month
+        const now = new Date();
+        const filesThisMonth = allFiles.filter(f => {
+            const d = new Date(f.creationDate);
+            return d.getMonth() === now.getMonth() &&
+                d.getFullYear() === now.getFullYear();
+        }).length;
+
+        // ---- Students with no files
+        const studentsWithNoFiles =
+            students.filter(s => !s.files || s.files.length === 0).length;
+
+        // ---- Top students
+        const topStudents = students
+            .map(s => {
+                const sFiles = s.files || [];
+                const graded = sFiles.filter(f => f.grade > 0);
+                const avg =
+                    graded.length
+                        ? graded.reduce((sum, f) => sum + f.grade, 0) / graded.length
+                        : 0;
+
+                return {
+                    id: s.id,
+                    name: s.name,
+                    avgGrade: avg,
+                    totalFiles: sFiles.length
+                };
+            })
+            .filter(s => s.totalFiles > 0)
+            .sort((a, b) => b.avgGrade - a.avgGrade)
+            .slice(0, 5);
+
+        return {
+            totalStudents: students.length,
+            totalSupervisors: supervisors.length,
+            totalFiles: allFiles.length,
+            gradedFiles: gradedFilesList.length,
+            ungradedFiles: allFiles.length - gradedFilesList.length,
+            avgGrade,
+            avgGradeAI,
+            filesThisMonth,
+            studentsWithNoFiles,
+            filesPerDepartment,
+            studentsPerDepartment,
+            topStudents
+        };
+    }, [users]);
 
 
     useEffect(() => {
@@ -505,24 +593,11 @@ export default function UsersProvider({ children }) {
         localStorage.setItem("currentUser", JSON.stringify(currentUser));
         localStorage.setItem("isLoggedIn", isLoggedIn.toString());
 
-        setTotalStudents(users.reduce(
-            (count, u) => (u.role === "Student" ? count + 1 : count),
-            0
-        ));
-
-        const allFiles = users.flatMap(user => user.files || []);
-        setTotalFiles(allFiles.length);
-
-        const gradedFilesList = allFiles.filter(file => file.grade > 0);
-        setGradedFiles(gradedFilesList.length);
-
-        setAvgGrade(gradedFilesList.length > 0 ? gradedFilesList.reduce((sum, file) => sum + file.grade, 0) / gradedFilesList.length : 0);
-
     }, [users, currentUser, isLoggedIn, loading]);
 
 
     return (
-        <UsersContext.Provider value={{ users, setUsers, currentUser, setCurrentUser, isLoggedIn, setIsLoggedIn, totalStudents, totalFiles, updateFile, gradedFiles, avgGrade }}>
+        <UsersContext.Provider value={{ users, setUsers, currentUser, setCurrentUser, isLoggedIn, setIsLoggedIn, stats, updateFile }}>
             {children}
         </UsersContext.Provider>
     );

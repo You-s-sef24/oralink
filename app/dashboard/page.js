@@ -7,6 +7,7 @@ import Header from "../Components/Header";
 import StudentDashboard from "../Components/StudentDashboard";
 import SupervisorDashboard from "../Components/SupervisorDashboard";
 import Loading from "../loading";
+import HodDashboard from "../Components/HodDashboard";
 
 export default function DashboardPage() {
     const { currentUser } = useContext(UsersContext);
@@ -21,6 +22,8 @@ export default function DashboardPage() {
                 <StudentDashboard />
             ) : currentUser?.role === "Supervisor" ? (
                 <SupervisorDashboard />
+            ) : currentUser?.role === "Head of department" ? (
+                <HodDashboard />
             ) : (
                 <Loading />
             )}

@@ -1,14 +1,10 @@
 import Link from "next/link";
 import SupervisorGettingStarted from "./SupervisorGettingStarted";
-import SupervisorOverview from "./SupervisorOverview";
 
 export default function SupervisorDashboard() {
     return (
         <>
             <div className="p-4">
-                <p>Overview</p>
-                <SupervisorOverview />
-
                 <p>Quick Actions</p>
                 <div className="row align-items-center g-3">
                     <div className="col-12 col-sm-6 col-lg-4">

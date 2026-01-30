@@ -11,7 +11,7 @@ export default function SupervisorGettingStarted() {
                     Provide constructive feedback to help students improve
                 </li>
                 <li>
-                    Track student progress across all departments
+                    Track student progress in his Department
                 </li>
                 <li>
                     Monitor ungraded files to ensure timely feedback

@@ -5,7 +5,7 @@ import { UsersContext } from "../Contexts/UsersContext";
 import PatientFiles from "./PatientFiles";
 
 export default function GradingTabs() {
-    const { totalFiles, gradedFiles, users } = useContext(UsersContext);
+    const { stats } = useContext(UsersContext);
 
     return (
         <div>
@@ -21,7 +21,7 @@ export default function GradingTabs() {
                         aria-controls="ungradedFiles"
                         aria-selected="true"
                     >
-                        Ungraded Files ({totalFiles - gradedFiles})
+                        Ungraded Files ({stats.ungradedFiles})
                     </button>
                 </li>
 
@@ -36,7 +36,7 @@ export default function GradingTabs() {
                         aria-controls="gradedFiles"
                         aria-selected="false"
                     >
-                        Graded Files ({gradedFiles})
+                        Graded Files ({stats.gradedFiles})
                     </button>
                 </li>
             </ul>

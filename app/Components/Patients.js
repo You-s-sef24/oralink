@@ -15,7 +15,6 @@ export default function Patients() {
     });
 
     const patients = filteredFiles.map((file) => {
-
         return (
             <div className="row text-center align-items-center" key={file.fileId}>
                 <div className="col-2 text-truncate">

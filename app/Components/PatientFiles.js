@@ -8,15 +8,21 @@ export default function PatientFiles({ page }) {
     const [search, setSearch] = useState('');
     const [department, setDepartment] = useState('');
     const [status, setStatus] = useState('');
-    const { users, totalFiles } = useContext(UsersContext);
+    const { users, currentUser, stats } = useContext(UsersContext);
 
-    function getAllFiles(users) {
+    function getAllFiles(users, currentUser) {
         const allFiles = [];
 
         users
             .filter(u => u.role === "Student")
             .forEach(student => {
                 (student.files || []).forEach(file => {
+                    if (
+                        currentUser?.role !== "Head of department" &&
+                        file.department !== currentUser?.department
+                    ) {
+                        return;
+                    }
                     allFiles.push({
                         fileId: file.fileId,
                         studentId: student.id,
@@ -33,7 +39,7 @@ export default function PatientFiles({ page }) {
     }
 
 
-    const filess = getAllFiles(users);
+    const filess = getAllFiles(users, currentUser);
     let filteredFiles;
 
     if (page === 'graded') {
@@ -100,7 +106,7 @@ export default function PatientFiles({ page }) {
         );
     });
 
-    if (totalFiles === 0) {
+    if (stats.totalFiles === 0) {
         return (
             <div className="d-flex justify-content-center mt-3">
                 No Submitted Files Yet.
@@ -123,20 +129,23 @@ export default function PatientFiles({ page }) {
                         <input type="search" id="search" value={search} onChange={(e) => { setSearch(e.target.value) }} className="border-start-0 form-control p-3" placeholder="Search by patient name" aria-label="Search" aria-describedby="Search" />
                     </div >
 
-                    <div className="input-group">
-                        <div className="input-group-prepend">
-                            <label className="input-group-text text-secondary bg-white border-end-0 p-3" htmlFor="search">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-funnel absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" aria-hidden="true"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"></path></svg>
-                            </label>
-                        </div>
-                        <select className="form-select" onChange={(e) => {
-                            setDepartment(e.target.value);
-                        }}>
-                            <option>All Departments</option>
-                            <option value={'Periodontics'}>Periodontics</option>
-                            <option value={'Endodontics'}>Endodontics</option>
-                        </select>
-                    </div>
+                    {currentUser?.role === "Supervisor" ? (<></>) : (
+                        <div className="input-group">
+                            <div className="input-group-prepend">
+                                <label className="input-group-text text-secondary bg-white border-end-0 p-3" htmlFor="search">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-funnel absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" aria-hidden="true"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"></path></svg>
+                                </label>
+                            </div >
+                            <select className="form-select" onChange={(e) => {
+                                setDepartment(e.target.value);
+                            }}>
+                                <option>All Departments</option>
+                                <option value={'Periodontics'}>Periodontics</option>
+                                <option value={'Endodontics'}>Endodontics</option>
+                            </select>
+                        </div >
+                    )
+                    }
 
                     <div className="input-group">
                         <div className="input-group-prepend">

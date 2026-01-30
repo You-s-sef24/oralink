@@ -1,7 +1,20 @@
 import Link from "next/link";
+import { useContext } from "react";
+import { UsersContext } from "../Contexts/UsersContext";
+
 
 export default function StudentFiles({ student }) {
-    const files = student?.files || [];
+    const { currentUser } = useContext(UsersContext);
+
+    const allFiles = student?.files || [];
+
+    const files = allFiles.filter(file => {
+        if (currentUser?.role === "Head of department") {
+            return true;
+        }
+
+        return file.department === currentUser?.department;
+    });
 
     if (files.length === 0) {
         return (
