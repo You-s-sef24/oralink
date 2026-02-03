@@ -4,7 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import BootstrapClient from "@/app/Components/BootstrapClient";
 import UsersProvider from "@/app/Contexts/UsersContext";
 import PatientInfoProvider from "@/app/Contexts/PatientInfoContext";
-import Navbar from "@/app/Components/Navbar";
+import Navbar from "@/app/Components/General/Navbar";
 import StatesProvider from "@/app/Contexts/StatesContext";
 
 const geistSans = Geist({

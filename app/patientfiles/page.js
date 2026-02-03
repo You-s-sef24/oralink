@@ -1,5 +1,5 @@
-import Header from "../Components/Header";
-import PatientFiles from "../Components/PatientFiles";
+import Header from "../Components/General/Header";
+import PatientFiles from "../Components/General/PatientFiles";
 
 export default function PatientFilesPage() {
     return (

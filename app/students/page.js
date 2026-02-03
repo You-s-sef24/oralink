@@ -1,5 +1,5 @@
-import Header from "../Components/Header";
-import Students from "../Components/Students";
+import Header from "../Components/General/Header";
+import Students from "../Components/General/Students";
 
 export default function StudentsPage() {
     return (

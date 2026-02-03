@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext, useState } from "react";
-import { UsersContext } from "../Contexts/UsersContext";
+import { UsersContext } from "../../Contexts/UsersContext";
 import Link from "next/link";
 
 export default function Students() {

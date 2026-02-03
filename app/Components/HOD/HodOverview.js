@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext } from "react";
-import { UsersContext } from "../Contexts/UsersContext";
+import { UsersContext } from "../../Contexts/UsersContext";
 
 export default function HodOverview() {
     const { stats } = useContext(UsersContext);

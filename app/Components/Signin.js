@@ -33,7 +33,7 @@ export default function Signin() {
         setError({ status: false, msg: "" });
         setCurrentUser(isFound);
         setIsLoggedIn(true);
-        router.push('/dashboard');
+        router.push('/home');
     }
 
     return (

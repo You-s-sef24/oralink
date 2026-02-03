@@ -2,7 +2,7 @@
 
 import { useContext } from "react";
 import GeneralForm from "../Components/GeneralForm";
-import Header from "../Components/Header";
+import Header from "../Components/General/Header";
 import './style.css';
 import DepartmentSelection from "../Components/DepartmentSelection";
 import PeriodonticsFile from "../Components/Periodontics/PeriodonticsFile";

@@ -165,19 +165,6 @@ export default function GeneralForm() {
                             </div>
 
                             <div className="d-flex">
-                                <input id="mh-diabetes" className="form-check-input me-2" type="checkbox"
-                                    checked={generalData.medicalHistory.diabetes}
-                                    onChange={(e) =>
-                                        setGeneralData({
-                                            ...generalData,
-                                            medicalHistory: { ...generalData.medicalHistory, diabetes: e.target.checked }
-                                        })
-                                    }
-                                />
-                                <label htmlFor="mh-diabetes" className="form-check-label">Are you diabetic?</label>
-                            </div>
-
-                            <div className="d-flex">
                                 <input id="mh-liverProblems" className="form-check-input me-2" type="checkbox"
                                     checked={generalData.medicalHistory.liverProblems}
                                     onChange={(e) =>
@@ -339,7 +326,7 @@ export default function GeneralForm() {
                                 <input
                                     type="text"
                                     className="form-control mt-2"
-                                    value={generalData.medicalHistory.other.details}
+                                    value={generalData.medicalHistory.other.found ? generalData.medicalHistory.other.details : ""}
                                     onChange={(e) =>
                                         setGeneralData({
                                             ...generalData,
@@ -353,6 +340,33 @@ export default function GeneralForm() {
                                     placeholder="If yes, please specify"
                                 />
                             </div>
+
+                            <div className="mt-2">
+                                <div className="d-flex">
+                                    <input id="mh-diabetes" className="form-check-input me-2" type="checkbox"
+                                        checked={generalData.medicalHistory.diabetes}
+                                        onChange={(e) =>
+                                            setGeneralData({
+                                                ...generalData,
+                                                medicalHistory: { ...generalData.medicalHistory, diabetes: e.target.checked }
+                                            })
+                                        }
+                                    />
+                                    <label htmlFor="mh-diabetes" className="form-check-label">Are you diabetic?</label>
+                                </div>
+                                <div>
+                                    <input type="number"
+                                        className="form-control mt-2"
+                                        placeholder="HbA1c" disabled={!generalData.medicalHistory.diabetes}
+                                        value={generalData.medicalHistory.diabetes ? generalData.medicalHistory.hba1c : ""}
+                                        onChange={(e) => {
+                                            if (e.target.value >= 0) {
+                                                setGeneralData({ ...generalData, medicalHistory: { ...generalData.medicalHistory, hba1c: e.target.value } })
+                                            }
+                                        }} />
+                                </div>
+                            </div>
+
 
                             <div className="mt-3">
                                 <label className="form-check-label fw-bold">Family & Social History</label>
@@ -530,7 +544,7 @@ export default function GeneralForm() {
 
                                             <div className="col-sm-6">
                                                 <label htmlFor="howManyPerDay" className="form-label">How much/many per day?</label>
-                                                <input id="howManyPerDay" type="text" className="form-control" value={generalData.dentalHistory.smoking.howManyPerDay} onChange={(e) => { setGeneralData({ ...generalData, dentalHistory: { ...generalData.dentalHistory, smoking: { ...generalData.dentalHistory.smoking, howManyPerDay: e.target.value } } }) }} />
+                                                <input id="howManyPerDay" type="number" className="form-control" value={generalData.dentalHistory.smoking.howManyPerDay} onChange={(e) => { setGeneralData({ ...generalData, dentalHistory: { ...generalData.dentalHistory, smoking: { ...generalData.dentalHistory.smoking, howManyPerDay: e.target.value } } }) }} />
                                             </div>
                                         </div>
                                     ) : ("")}

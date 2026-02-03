@@ -2,11 +2,19 @@ import Link from "next/link";
 import HodGettingStarted from "./HodGettingStarted";
 import HodOverview from "./HodOverview";
 
-export default function HodDashboard() {
+export default function HodHome() {
     return (
         <>
             <div className="p-4">
-                <p>Overview</p>
+                <p className="d-flex justify-content-between align-items-center">
+                    Overview
+                    <Link href={'/dashboard'}>
+                        View Full Dashboard
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
+                            <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
+                        </svg>
+                    </Link>
+                </p>
                 <HodOverview />
                 <p>Quick Actions</p>
                 <div className="row align-items-center g-3">

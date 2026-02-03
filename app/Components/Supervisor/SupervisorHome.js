@@ -1,7 +1,7 @@
 import Link from "next/link";
 import SupervisorGettingStarted from "./SupervisorGettingStarted";
 
-export default function SupervisorDashboard() {
+export default function SupervisorHome() {
     return (
         <>
             <div className="p-4">

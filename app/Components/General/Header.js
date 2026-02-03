@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useContext } from "react";
-import { PatientInfoContext } from "../Contexts/PatientInfoContext";
-import { UsersContext } from "../Contexts/UsersContext";
+import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
+import { UsersContext } from "../../Contexts/UsersContext";
 
 export default function Header({ title, desc, page, file }) {
     const { setIsEditing, isEditing } = useContext(PatientInfoContext);

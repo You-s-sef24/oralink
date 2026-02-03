@@ -1,15 +1,15 @@
 "use client";
 
 import { useContext, useEffect, useState } from "react";
-import { UsersContext } from "../Contexts/UsersContext";
-import ViewGeneralForm from "./ViewGeneralForm";
-import ViewPeriodonticsPage1 from "./Periodontics/ViewPeriodonticsPage1";
-import ViewPeriodonticsPage2 from "./Periodontics/ViewPeriodonticsPage2";
-import ViewPeriodonticsPage3 from "./Periodontics/ViewPeriodonticsPage3";
-import ViewPeriodonticsPage4 from "./Periodontics/ViewPeriodonticsPage4";
-import ViewEndodonticsFile from "./Endodontics/ViewEndodonticsFile";
-import { StatesContext } from "../Contexts/StatesContext";
-import { PatientInfoContext } from "../Contexts/PatientInfoContext";
+import { UsersContext } from "../../Contexts/UsersContext";
+import ViewGeneralForm from "../ViewGeneralForm";
+import ViewPeriodonticsPage1 from "../Periodontics/ViewPeriodonticsPage1";
+import ViewPeriodonticsPage2 from "../Periodontics/ViewPeriodonticsPage2";
+import ViewPeriodonticsPage3 from "../Periodontics/ViewPeriodonticsPage3";
+import ViewPeriodonticsPage4 from "../Periodontics/ViewPeriodonticsPage4";
+import ViewEndodonticsFile from "../Endodontics/ViewEndodonticsFile";
+import { StatesContext } from "../../Contexts/StatesContext";
+import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
 import { useRouter } from "next/navigation";
 
 export default function SupervisorViewFile({ fileId }) {

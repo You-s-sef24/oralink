@@ -2,7 +2,7 @@
 
 import { useContext } from "react";
 import { UsersContext } from "../Contexts/UsersContext";
-import PatientFiles from "./PatientFiles";
+import PatientFiles from "./General/PatientFiles";
 
 export default function GradingTabs() {
     const { stats } = useContext(UsersContext);

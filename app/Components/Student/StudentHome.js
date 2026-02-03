@@ -3,7 +3,7 @@
 import Link from "next/link";
 import StudentGettingStarted from "./StudentGettingStarted";
 
-export default function StudentDashboard() {
+export default function StudentHome() {
     return (
         <>
             <div className="p-4">

@@ -54,7 +54,7 @@ export default function XrayUploadBox() {
         setIsAnalyzed(false);
     }
 
-    function handleExport(){
+    function handleExport() {
 
     }
 

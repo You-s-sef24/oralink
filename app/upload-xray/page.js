@@ -1,6 +1,6 @@
-import Header from "../Components/Header";
-import XrayUploadBox from "../Components/XrayUploadBox";
-import XrayInfo from "../Components/Xray Info";
+import Header from "../Components/General/Header";
+import XrayUploadBox from "../Components/AI/XrayUploadBox";
+import XrayInfo from "../Components/AI/Xray Info";
 
 export default function UploadXrayPage() {
     return (

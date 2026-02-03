@@ -37,6 +37,7 @@ export default function PatientInfoProvider({ children }) {
         medicalHistory: {
             heartProblems: false,
             diabetes: false,
+            hba1c: "",
             liverProblems: false,
             kidneyProblems: false,
             lungProblems: false,
@@ -389,6 +390,7 @@ export default function PatientInfoProvider({ children }) {
             medicalHistory: {
                 heartProblems: false,
                 diabetes: false,
+                hba1c: "",
                 liverProblems: false,
                 kidneyProblems: false,
                 lungProblems: false,

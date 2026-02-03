@@ -1,6 +1,6 @@
 import GradingStats from "../Components/GradingStats";
 import GradingTabs from "../Components/GradingTabs";
-import Header from "../Components/Header";
+import Header from "../Components/General/Header";
 
 export default function GradingPanelPage() {
     return (

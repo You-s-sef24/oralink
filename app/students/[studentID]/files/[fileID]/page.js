@@ -1,7 +1,7 @@
 "use client";
 
-import Header from "@/app/Components/Header";
-import SupervisorViewFile from "@/app/Components/SupervisorViewFile";
+import Header from "@/app/Components/General/Header";
+import SupervisorViewFile from "@/app/Components/Supervisor/SupervisorViewFile";
 import { UsersContext } from "@/app/Contexts/UsersContext";
 import { useParams } from "next/navigation";
 import { useContext, use } from "react";

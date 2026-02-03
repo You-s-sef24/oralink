@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useContext } from "react";
-import { UsersContext } from "../Contexts/UsersContext";
+import { UsersContext } from "../../Contexts/UsersContext";
 
 
 export default function StudentFiles({ student }) {

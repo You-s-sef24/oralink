@@ -1,9 +1,9 @@
 "use client";
 
 import { useContext, use } from "react";
-import Header from "@/app/Components/Header";
+import Header from "@/app/Components/General/Header";
 import StudentCard from "@/app/Components/StudentCard";
-import StudentFiles from "@/app/Components/StudentFiles";
+import StudentFiles from "@/app/Components/General/StudentFiles";
 import { UsersContext } from "@/app/Contexts/UsersContext";
 import { useParams } from "next/navigation";
 

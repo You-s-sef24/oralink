@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
-import Navbar from "../Components/Navbar";
+import Navbar from "../Components/General/Navbar";
 import UsersProvider from "../Contexts/UsersContext";
 import BootstrapClient from "../Components/BootstrapClient";
 

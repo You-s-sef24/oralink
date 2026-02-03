@@ -1,17 +1,17 @@
 "use client";
 
-import Header from "@/app/Components/Header";
+import Header from "@/app/Components/General/Header";
 import { UsersContext } from "@/app/Contexts/UsersContext";
 import { useContext, useEffect } from "react";
-import ViewGeneralForm from "./ViewGeneralForm";
-import { PatientInfoContext } from "../Contexts/PatientInfoContext";
-import { StatesContext } from "../Contexts/StatesContext";
-import ViewPeriodonticsPage1 from "./Periodontics/ViewPeriodonticsPage1";
-import ViewPeriodonticsPage2 from "./Periodontics/ViewPeriodonticsPage2";
-import ViewPeriodonticsPage3 from "./Periodontics/ViewPeriodonticsPage3";
-import ViewPeriodonticsPage4 from "./Periodontics/ViewPeriodonticsPage4";
-import ViewEndodonticsFile from "./Endodontics/ViewEndodonticsFile";
-import Loading from "../loading";
+import ViewGeneralForm from "../ViewGeneralForm";
+import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
+import { StatesContext } from "../../Contexts/StatesContext";
+import ViewPeriodonticsPage1 from "../Periodontics/ViewPeriodonticsPage1";
+import ViewPeriodonticsPage2 from "../Periodontics/ViewPeriodonticsPage2";
+import ViewPeriodonticsPage3 from "../Periodontics/ViewPeriodonticsPage3";
+import ViewPeriodonticsPage4 from "../Periodontics/ViewPeriodonticsPage4";
+import ViewEndodonticsFile from "../Endodontics/ViewEndodonticsFile";
+import Loading from "../../loading";
 import { useParams } from "next/navigation";
 
 export default function StudentViewFile() {
