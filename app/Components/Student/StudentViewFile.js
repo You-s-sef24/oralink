@@ -15,6 +15,7 @@ import Loading from "../../loading";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import SubmitModal from "../General/SubmitModal";
+import ViewPeriodonticsPage5 from "../Periodontics/ViewPeriodonticsPage5";
 
 export default function StudentViewFile() {
     const { fileId } = useParams();
@@ -144,13 +145,12 @@ export default function StudentViewFile() {
 
             {
                 file.department === 'Periodontics' ?
-                    state === 1 ?
-                        <ViewGeneralForm />
-                        : state === 2 ?
-                            <ViewPeriodonticsPage1 />
+                    state === 1 ? <ViewGeneralForm />
+                        : state === 2 ? <ViewPeriodonticsPage1 />
                             : state === 3 ? <ViewPeriodonticsPage2 />
                                 : state === 4 ? <ViewPeriodonticsPage3 />
-                                    : <ViewPeriodonticsPage4 />
+                                    : state === 5 ? < ViewPeriodonticsPage4 />
+                                        : <ViewPeriodonticsPage5 />
                     : file.department === 'Endodontics' ?
                         state === 1 ?
                             <ViewGeneralForm />
@@ -162,7 +162,7 @@ export default function StudentViewFile() {
                 file.department === "Periodontics" ?
                     <div className="d-flex justify-content-between m-3">
                         {state === 1 ? <div></div> : <button className="btn btn-primary" onClick={() => { setState(state - 1) }}>Back</button>}
-                        {state === 5 ? <div></div> : <button className="btn btn-primary" onClick={() => { setState(state + 1) }}>Next</button>}
+                        {state === 6 ? <div></div> : <button className="btn btn-primary" onClick={() => { setState(state + 1) }}>Next</button>}
                     </div>
                     : file.department === "Endodontics" ?
                         <div className="d-flex justify-content-between m-3">

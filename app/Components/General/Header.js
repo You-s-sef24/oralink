@@ -107,6 +107,12 @@ export default function Header({ title, desc, page }) {
                 </div>
                 {page === "Patient File" && !file.isSubmitted ?
                     <div className="d-flex gap-2">
+                        {isEditing ? (
+                            <button className={`btn btn-secondary`} onClick={() => { setIsEditing(false) }} disabled={isLoading}>
+                                Cancel
+                            </button>
+                        ) : ''}
+                        
                         <button className={`btn ${isEditing ? 'btn-primary' : 'btn-secondary'} `} onClick={handleEdit} disabled={isLoading}>
                             {isEditing ?
                                 <>

@@ -7,10 +7,11 @@ import PeriodonticsPage1 from "./PeriodonticsPage1";
 import PeriodonticsPage2 from "./PeriodonticsPage2";
 import PeriodonticsPage4 from "./PeriodonticsPage4";
 import PeriodonticsPage3 from "./PeriodonticsPage3";
+import PeriodonticsPage5 from "./PeriodonticsPage5";
 
 export default function PeriodonticsFile() {
     const [step, setStep] = useState(1);
-    const { periodonticsData, setPeriodonticsData, handleSave, isLoading, setIsLoading } = useContext(PatientInfoContext);
+    const { periodonticsData, setPeriodonticsData, generalData, setGeneralData, handleSave, isLoading, setIsLoading } = useContext(PatientInfoContext);
     const { state, setState } = useContext(StatesContext);
 
     function handleBack() {
@@ -40,8 +41,10 @@ export default function PeriodonticsFile() {
                 <PeriodonticsPage2 info={periodonticsData} setInfo={setPeriodonticsData} />
             ) : step === 3 ? (
                 <PeriodonticsPage3 info={periodonticsData} setInfo={setPeriodonticsData} />
-            ) : (
+            ) : step === 4 ? (
                 <PeriodonticsPage4 info={periodonticsData} setInfo={setPeriodonticsData} />
+            ) : (
+                <PeriodonticsPage5 info={generalData} setInfo={setGeneralData} />
             )
             }
 
@@ -51,9 +54,9 @@ export default function PeriodonticsFile() {
                     Back
                 </button>
 
-                <p className="m-0">Page {step} / 4</p>
+                <p className="m-0">Page {step} / 5</p>
 
-                {step === 4 ? (
+                {step === 5 ? (
                     <button className="btn btn-primary my-3" disabled={isLoading} onClick={() => {
                         handleSave('periodontics');
                     }}>

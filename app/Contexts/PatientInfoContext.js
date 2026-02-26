@@ -87,6 +87,7 @@ export default function PatientInfoProvider({ children }) {
             },
             comments: ""
         },
+        treatmentProcedures: [],
         prePatientImage: null,
         postPatientImage: null,
         xRay: null,
@@ -516,6 +517,7 @@ export default function PatientInfoProvider({ children }) {
                 },
                 comments: ""
             },
+            treatmentProcedures: [],
             prePatientImage: null,
             postPatientImage: null,
             xRay: null,
@@ -749,7 +751,6 @@ export default function PatientInfoProvider({ children }) {
 
             const formData = new FormData();
 
-            // 🔹 Prepare payload (text fields)
             const payload = {
                 patientName: generalData.patientName ?? "",
                 gender: generalData.gender ?? "Male",
@@ -779,10 +780,9 @@ export default function PatientInfoProvider({ children }) {
                         : endodonticsData ?? {},
                 medicalHistory: generalData.medicalHistory ?? {},
                 dentalHistory: generalData.dentalHistory ?? {},
-                // remove studentId & creationDate — backend will set them
+                treatmentProcedures: generalData.treatmentProcedures ?? [],
             };
 
-            // 🔹 Append all normal fields
             Object.entries(payload).forEach(([key, value]) => {
                 if (typeof value === "object" && value !== null) {
                     formData.append(key, JSON.stringify(value));
@@ -791,7 +791,6 @@ export default function PatientInfoProvider({ children }) {
                 }
             });
 
-            // 🔹 Append images — must match DTO EXACT property names (case-sensitive!)
             if (generalData.prePatientImage instanceof File) {
                 formData.append("PrePatientImage", generalData.prePatientImage);
             }
@@ -802,24 +801,23 @@ export default function PatientInfoProvider({ children }) {
                 formData.append("XRay", generalData.xRay);
             }
 
-            // // 🔎 Debug — confirm all keys
-            // console.log("------ FORM DATA START ------");
-            // for (let pair of formData.entries()) {
-            //     console.log(pair[0], pair[1]);
-            //     if (pair[1] instanceof File) {
-            //         console.log("File name:", pair[1].name);
-            //         console.log("File size:", pair[1].size);
-            //         console.log("File type:", pair[1].type);
-            //     }
-            // }
-            // console.log("------ FORM DATA END ------");
+            // 🔎 Debug — confirm all keys
+            console.log("------ FORM DATA START ------");
+            for (let pair of formData.entries()) {
+                console.log(pair[0], pair[1]);
+                if (pair[1] instanceof File) {
+                    console.log("File name:", pair[1].name);
+                    console.log("File size:", pair[1].size);
+                    console.log("File type:", pair[1].type);
+                }
+            }
+            console.log("------ FORM DATA END ------");
 
             await axios.post(
                 "https://oralink.runasp.net/api/patient-files",
                 formData,
                 {
                     headers: {
-                        // "Content-Type": "multipart/form-data",
                         "Authorization": `Bearer ${token}`,
                     },
                 }
@@ -832,12 +830,12 @@ export default function PatientInfoProvider({ children }) {
             console.error("Data:", JSON.stringify(err.response?.data, null, 2));
             console.error("Headers:", err.response?.headers);
             alert(err.response?.data?.Message || "Failed to create file");
-        } 
+        }
         setIsLoading(false);
     }
 
     return (
-        <PatientInfoContext.Provider value={{ generalData, setGeneralData, endodonticsData, setEndodonticsData, periodonticsData, setPeriodonticsData, handleSave, isEditing, setIsEditing, file, setFile, submitModal, setSubmitModal, isLoading, setIsLoading  }}>
+        <PatientInfoContext.Provider value={{ generalData, setGeneralData, endodonticsData, setEndodonticsData, periodonticsData, setPeriodonticsData, handleSave, isEditing, setIsEditing, file, setFile, submitModal, setSubmitModal, isLoading, setIsLoading }}>
             {children}
         </PatientInfoContext.Provider>
     );
