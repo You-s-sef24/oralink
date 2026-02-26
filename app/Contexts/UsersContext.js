@@ -1,6 +1,8 @@
 "use client";
 
 import { createContext, useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import { redirect, useRouter } from "next/navigation";
 
 export const UsersContext = createContext();
 
@@ -1120,28 +1122,27 @@ export default function UsersProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [token, setToken] = useState(null);
+    const [isAuthReady, setIsAuthReady] = useState(false);
+    const [showUsersModal, setShowUsersModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const router = useRouter();
 
-    const updateFile = (updatedFile) => {
-        setUsers(prevUsers =>
-            prevUsers.map(user => {
-                if (user.id !== currentUser.id) return user;
+    useEffect(() => {
+        const storedToken = localStorage.getItem("token");
+        const storedUser = localStorage.getItem("user");
 
-                return {
-                    ...user,
-                    files: user.files.map(file =>
-                        file.id === updatedFile.id ? updatedFile : file
-                    )
-                };
-            })
-        );
-
-        setCurrentUser(prev => ({
-            ...prev,
-            files: prev.files.map(file =>
-                file.id === updatedFile.id ? updatedFile : file
-            )
-        }));
-    };
+        if (storedToken && storedUser) {
+            axios.defaults.headers.common["Authorization"] =
+                `Bearer ${storedToken}`;
+            setCurrentUser(JSON.parse(storedUser));
+            setToken(storedToken);
+            setIsLoggedIn(true);
+            setIsAuthReady(true);
+        }
+    }, []);
 
     const stats = useMemo(() => {
         const students = users.filter(u => u.role === "Student");
@@ -1352,9 +1353,18 @@ export default function UsersProvider({ children }) {
 
     }, [users, currentUser, isLoggedIn, loading]);
 
+    const logout = () => {
+        setCurrentUser(null);
+        setToken('');
+        setIsLoggedIn(false);
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        delete axios.defaults.headers.common["Authorization"];
+        router.replace("/");
+    };
 
     return (
-        <UsersContext.Provider value={{ users, setUsers, currentUser, setCurrentUser, isLoggedIn, setIsLoggedIn, stats, updateFile }}>
+        <UsersContext.Provider value={{ users, setUsers, currentUser, setCurrentUser, isLoggedIn, setIsLoggedIn, stats, token, logout, showUsersModal, setShowUsersModal, showEditModal, setShowEditModal, showDeleteModal, setShowDeleteModal, selectedUser, setSelectedUser }}>
             {children}
         </UsersContext.Provider>
     );

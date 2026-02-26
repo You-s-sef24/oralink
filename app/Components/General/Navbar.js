@@ -9,7 +9,7 @@ import Loading from "../../loading";
 export default function Navbar() {
     const pathname = usePathname();
     const router = useRouter();
-    const { setIsLoggedIn, currentUser, setCurrentUser } = useContext(UsersContext);
+    const { setIsLoggedIn, currentUser, setCurrentUser, logout } = useContext(UsersContext);
 
     const linkClasses = (href) =>
         `list-group-item list-group-item-action py-3 ${pathname === href ? "active text-white bg-primary" : "text-dark"
@@ -32,12 +32,6 @@ export default function Navbar() {
         document.body.style.overflow = "auto";
     }
 
-    function handleLogout() {
-        closeOffcanvas();
-        setCurrentUser(null);
-        setIsLoggedIn(false);
-        router.push('/');
-    }
 
     return (
         <nav className="navbar navbar-light bg-white">
@@ -143,12 +137,17 @@ export default function Navbar() {
                                         <p className="m-0">Grading</p>
                                     </Link>
                                 </>
+                            ) : currentUser?.role === "Admin" ? (
+                                <></>
+                            ) : currentUser?.role === "Doctor" ? (
+                                <></>
                             ) : (<Loading />)}
 
                             <button
                                 className="d-flex align-items-center list-group-item list-group-item-action py-3 text-danger rounded border-0 gap-2"
                                 onClick={() => {
-                                    handleLogout();
+                                    closeOffcanvas();
+                                    logout();
                                 }}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-out" aria-hidden="true"><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path></svg>
