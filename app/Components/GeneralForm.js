@@ -43,12 +43,12 @@ export default function GeneralForm() {
                                     </div>
                                 </div>
                                 <div className="col-6">
-                                    <label className="form-label">Martial Status:</label>
-                                    <select className="form-select" value={generalData.martialStatus} onChange={(e) => { setGeneralData({ ...generalData, martialStatus: e.target.value }) }}>
-                                        <option value="single">Single</option>
-                                        <option value="married">Married</option>
-                                        <option value="divorced">Divorced</option>
-                                        <option value="widowed">Widowed</option>
+                                    <label className="form-label">Marital Status:</label>
+                                    <select className="form-select" value={generalData.maritalStatus} onChange={(e) => { setGeneralData({ ...generalData, maritalStatus: e.target.value }) }}>
+                                        <option value="Single">Single</option>
+                                        <option value="Married">Married</option>
+                                        <option value="Divorced">Divorced</option>
+                                        <option value="Widowed">Widowed</option>
                                     </select>
                                 </div>
                                 <div className="col-6">

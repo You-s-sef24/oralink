@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import GeneralForm from "../Components/GeneralForm";
 import Header from "../Components/General/Header";
 import './style.css';
@@ -9,10 +9,14 @@ import PeriodonticsFile from "../Components/Periodontics/PeriodonticsFile";
 import { StatesContext } from "../Contexts/StatesContext";
 import { PatientInfoContext } from "../Contexts/PatientInfoContext";
 import EndodonticsFile from "../Components/Endodontics/EndodonticsFile";
+import { useRouter } from "next/navigation";
+import { UsersContext } from "../Contexts/UsersContext";
 
 export default function CreateNewFilePage() {
+    const { currentUser } = useContext(UsersContext);
     const { generalData } = useContext(PatientInfoContext);
     const { state, setState } = useContext(StatesContext);
+    const router = useRouter();
 
     return (
         <div className="container-fluid">

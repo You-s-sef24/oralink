@@ -11,7 +11,6 @@ import GradeDistributionChart from "./GradeDistributionChart";
 
 export default function HodDashboard() {
     const { stats } = useContext(UsersContext);
-    console.log(stats);
 
     return (
         <div>

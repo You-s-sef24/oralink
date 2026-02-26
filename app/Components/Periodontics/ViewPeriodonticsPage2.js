@@ -143,7 +143,7 @@ export default function ViewPeriodonticsPage2() {
                     <PapillaryBleeding file={file} setFile={setFile} />
                     <TableIndicators />
 
-                    <ImageUploadBox type={'xray'} />
+                    <ImageUploadBox type={'xray'} fileData={file} setFileData={setFile} />
                 </div>
             </div>
             :
@@ -194,7 +194,11 @@ export default function ViewPeriodonticsPage2() {
 
                     <ViewPapillaryBleeding file={file} />
                     <TableIndicators />
-                    <img className="img-fluid" src={file.xRay} alt="X-ray" />
+                    <hr />
+                    <h3>X-Ray:</h3>
+                    <div className="d-flex justify-content-center">
+                        <img className="rounded img-fluid w-50" src={file.xRay} alt="X-ray" />
+                    </div>
                 </div>
             </div>
     )

@@ -3,6 +3,7 @@
 import { useContext } from "react";
 import { PatientInfoContext } from "../Contexts/PatientInfoContext";
 import ImageUploadBox from "./ImageUploadBox";
+import Image from "next/image";
 
 export default function ViewGeneralForm() {
     const { isEditing, file, setFile } = useContext(PatientInfoContext);
@@ -46,12 +47,12 @@ export default function ViewGeneralForm() {
                                         </div>
                                     </div>
                                     <div className="col-6">
-                                        <label className="form-label">Martial Status:</label>
-                                        <select className="form-select" value={file.martialStatus} onChange={(e) => { setFile({ ...file, martialStatus: e.target.value }) }}>
-                                            <option value="single">Single</option>
-                                            <option value="married">Married</option>
-                                            <option value="divorced">Divorced</option>
-                                            <option value="widowed">Widowed</option>
+                                        <label className="form-label">Marital Status:</label>
+                                        <select className="form-select" value={file.maritalStatus} onChange={(e) => { setFile({ ...file, maritalStatus: e.target.value }) }}>
+                                            <option value="Single">Single</option>
+                                            <option value="Married">Married</option>
+                                            <option value="Divorced">Divorced</option>
+                                            <option value="Widowed">Widowed</option>
                                         </select>
                                     </div>
                                     <div className="col-6">
@@ -80,7 +81,7 @@ export default function ViewGeneralForm() {
                                     </div>
                                     <div className="col-6 col-md-4">
                                         <label className="form-label">Date of Last Visit:</label>
-                                        <input type="date" className="form-control" value={file.lastVisit} onChange={(e) => { setFile({ ...file, lastVisit: e.target.value }) }} />
+                                        <input type="date" className="form-control" value={file.lastVisit || ""} onChange={(e) => { setFile({ ...file, lastVisit: e.target.value }) }} />
                                     </div>
                                     <div className="col-6 col-md-8">
                                         <label className="form-label">Reason of Last Visit:</label>
@@ -363,7 +364,7 @@ export default function ViewGeneralForm() {
                                         <input
                                             type="text"
                                             className="form-control mt-2"
-                                            value={file.medicalHistory.familyAndSocialHistory.disease}
+                                            value={file.medicalHistory.familyAndSocialHistory.diseases}
                                             onChange={(e) =>
                                                 setFile({
                                                     ...file,
@@ -371,7 +372,7 @@ export default function ViewGeneralForm() {
                                                         ...file.medicalHistory,
                                                         familyAndSocialHistory: {
                                                             ...file.medicalHistory.familyAndSocialHistory,
-                                                            disease: e.target.value
+                                                            diseases: e.target.value
                                                         }
                                                     }
                                                 })
@@ -571,7 +572,7 @@ export default function ViewGeneralForm() {
                                 <ReadOnlyField label="Name:" value={file.patientName} />
                                 <ReadOnlyField label="Gender:" value={file.gender} />
                                 <div className="col-6">
-                                    <ReadOnlyField label="Marital Status:" value={file.martialStatus} />
+                                    <ReadOnlyField label="Marital Status:" value={file.maritalStatus} />
                                 </div>
                                 <div className="col-6">
                                     <ReadOnlyField label="Birth Date:" value={file.birthDate} />
@@ -637,7 +638,7 @@ export default function ViewGeneralForm() {
 
                             <div className="row">
                                 <div className="col-sm-6 col-md-4">
-                                    <ReadOnlyField label="Heart Problems:" value={file.medicalHistory.heartProblems ? "Yes" : "No"} />
+                                    <ReadOnlyField label="Heart Problems:" value={file.medicalHistory?.heartProblems ? "Yes" : "No"} />
                                 </div>
                                 <div className="col-sm-6 col-md-4">
                                     <ReadOnlyField label="Diabetes:" value={file.medicalHistory.diabetes ? "Yes" : "No"} />
@@ -681,7 +682,7 @@ export default function ViewGeneralForm() {
                                 <div className="col-sm-6">
                                     <ReadOnlyField
                                         label="Family & Social History:"
-                                        value={`${file.medicalHistory.familyAndSocialHistory.disease || "-"} (${file.medicalHistory.familyAndSocialHistory.person || "-"})`}
+                                        value={`${file.medicalHistory.familyAndSocialHistory.diseases || "-"} (${file.medicalHistory.familyAndSocialHistory.person || "-"})`}
                                     />
                                 </div>
                             </div>
@@ -761,12 +762,12 @@ export default function ViewGeneralForm() {
 
                     {/* ========= Images ========= */}
                     <div className="col-12 col-sm-6">
-                        <img src={file.prePatientImage} alt="Pre dental image" className="img-fluid" />
+                        <img src={file.prePatientImage} alt="Pre dental image" className="img-fluid rounded" />
                     </div>
 
                     {file.postPatientImage ?
                         <div className="col-12 col-sm-6">
-                            <img src={file.postPatientImage} alt="Post dental image" className="img-fluid" />
+                            <img src={file.postPatientImage} alt="Post dental image" className="img-fluid rounded" />
                         </div> : <></>
                     }
                 </div>

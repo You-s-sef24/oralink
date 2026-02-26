@@ -2,7 +2,7 @@
 
 import Header from "@/app/Components/General/Header";
 import { UsersContext } from "@/app/Contexts/UsersContext";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import ViewGeneralForm from "../ViewGeneralForm";
 import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
 import { StatesContext } from "../../Contexts/StatesContext";
@@ -13,41 +13,131 @@ import ViewPeriodonticsPage4 from "../Periodontics/ViewPeriodonticsPage4";
 import ViewEndodonticsFile from "../Endodontics/ViewEndodonticsFile";
 import Loading from "../../loading";
 import { useParams } from "next/navigation";
+import axios from "axios";
+import SubmitModal from "../General/SubmitModal";
 
 export default function StudentViewFile() {
     const { fileId } = useParams();
+    const { token } = useContext(UsersContext);
     const { currentUser } = useContext(UsersContext);
-    const { file, setFile } = useContext(PatientInfoContext);
-    const files = currentUser?.files ?? [];
+    const { file, setFile, submitModal, setSubmitModal } = useContext(PatientInfoContext);
     const { state, setState } = useContext(StatesContext);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const safeParseJSON = (value) => {
+        if (!value || typeof value !== "string") return value;
+
+        try {
+            return JSON.parse(value);
+        } catch (error) {
+            console.error("JSON parse error:", error);
+            return null;
+        }
+    };
+
 
     useEffect(() => {
-        setFile(null);
-        setState(1);
-        console.log("currentUser:", currentUser);
-        console.log("files:", files);
-        console.log("fileId:", fileId);
+        async function fetchFile() {
+            if (!token) {
+                setError("Authentication required");
+                setLoading(false);
+                return;
+            }
 
-        if (!files.length) return;
+            if (!fileId) {
+                setError("File ID is required");
+                setLoading(false);
+                return;
+            }
 
-        const foundFile = files.find(f => Number(f.fileId) == Number(fileId));
-        console.log("foundFile:", foundFile);
+            try {
+                setLoading(true);
+                setError(null);
+                setState(1);
 
-        if (foundFile) {
-            setFile(foundFile);
+                console.log("Fetching file:", fileId);
+
+                const res = await axios.get(
+                    `https://oralink.runasp.net/api/patient-files/${fileId}`,
+                    {
+                        headers: {
+                            'ngrok-skip-browser-warning': 'true',
+                            'Content-Type': 'application/json',
+                        }
+                    }
+                );
+
+                console.log("File fetched:", res.data);
+
+                const fetchedFile = res.data?.data || res.data;
+
+                if (fetchedFile) {
+                    const normalizedFile = {
+                        ...fetchedFile,
+                        departmentData: safeParseJSON(fetchedFile.departmentData),
+                        medicalHistory: safeParseJSON(fetchedFile.medicalHistory),
+                        dentalHistory: safeParseJSON(fetchedFile.dentalHistory),
+                    };
+
+                    setFile(normalizedFile);
+                    console.log(normalizedFile);
+                } else {
+                    setError("File not found");
+                }
+
+            } catch (err) {
+                console.error("Error fetching file:", err);
+
+                if (err.res?.status === 401) {
+                    setError("Session expired. Please login again.");
+                } else if (err.res?.status === 403) {
+                    setError("You don't have permission to view this file.");
+                } else if (err.res?.status === 404) {
+                    setError("File not found.");
+                } else {
+                    setError(err.res?.data?.message || "Failed to load file. Please try again.");
+                }
+
+                setFile(null);
+            } finally {
+                setLoading(false);
+            }
         }
-    }, [files, fileId, setFile]);
 
-    if (!files.length) {
+        fetchFile();
+    }, [fileId, token, setFile, setState]);
+
+    if (loading) {
         return <Loading />;
     }
 
     if (!file) {
-        return <div>No File Found</div>;
+        return (
+            <div className="container-fluid pt-5">
+                <div className="text-center mt-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-muted mb-3">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="8" y1="13" x2="16" y2="13"></line>
+                        <line x1="8" y1="17" x2="16" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <h5 className="text-muted mb-3">File Not Found</h5>
+                    <p className="text-muted mb-4">The requested patient file could not be found.</p>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => window.history.back()}
+                    >
+                        Go Back
+                    </button>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className="container-fluid pt-5">
+        <div className="container-fluid">
             <Header title={'Patient File'} desc={'View and Edit Patient File'} page={'Patient File'} file={file} setFile={setFile} />
 
             <hr className="mt-0" />
@@ -82,6 +172,7 @@ export default function StudentViewFile() {
                         : <div className="d-flex justify-content-between m-3">
                         </div>
             }
+            {submitModal ? <SubmitModal show={submitModal} isClose={() => setSubmitModal(false)} file={file} setFile={setFile} /> : ''}
         </div>
     );
 }

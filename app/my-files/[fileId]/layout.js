@@ -29,7 +29,6 @@ export default function FileLayout({ children }) {
                 <PatientInfoProvider>
                     <StatesProvider>
                         <BootstrapClient />
-                        <Navbar />
                         {children}
                     </StatesProvider>
                 </PatientInfoProvider>

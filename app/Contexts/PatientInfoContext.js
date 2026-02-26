@@ -3,18 +3,18 @@
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";
 import { UsersContext } from "./UsersContext";
+import axios from "axios";
 
 export const PatientInfoContext = createContext();
 
 export default function PatientInfoProvider({ children }) {
-    const { currentUser, setCurrentUser, users, setUsers } = useContext(UsersContext);
+    const { currentUser, setCurrentUser, users, setUsers, token } = useContext(UsersContext);
     const router = useRouter();
 
     const [generalData, setGeneralData] = useState({
-        fileId: Date.now(),
         patientName: "",
         gender: "Male",
-        martialStatus: "Single",
+        maritalStatus: "Single",
         birthDate: "",
         occupation: "",
         address: "",
@@ -92,9 +92,86 @@ export default function PatientInfoProvider({ children }) {
         xRay: null,
     });
 
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState({
+        patientName: "",
+        gender: "",
+        maritalStatus: "",
+        birthDate: "",
+        address: "",
+        phone: "",
+        occupation: "",
+        physicianName: "",
+        physicianPhone: "",
+        lastVisit: "",
+        reasonForVisit: "",
+        chiefComplaint: "",
+        onset: "",
+        course: "",
+        severity: "",
+        distribution: "",
+        precipitatingFactors: "",
+        relievingFactors: "",
+        locationAndRadiation: "",
+        associatedSymptoms: "",
+        previousTreatment: "",
+        medicalHistory: {
+            heartProblems: false,
+            diabetes: false,
+            liverProblems: false,
+            kidneyProblems: false,
+            lungProblems: false,
+            thyroidProblems: false,
+            pregnancy: false,
+            medications: false,
+            surgeries: false,
+            fainted: false,
+            prolongedBleeding: false,
+            allergies: false,
+            other: {
+                found: false,
+                details: ""
+            },
+            familyAndSocialHistory: {
+                disease: "",
+                person: ""
+            }
+        },
+        dentalHistory: {
+            senstivity: false,
+            chewingDifficulty: false,
+            bleedingGums: false,
+            mouthUlcers: false,
+            foodCatch: false,
+            headaches: false,
+            jawPain: false,
+            teethGrinding: false,
+            teethBreaking: false,
+            mobileTeeth: false,
+            badBreath: false,
+            dryMouth: false,
+            oralHistory: {
+                extractedTeeth: false,
+                bridge: false,
+                denture: false,
+                braces: false,
+                problems: false
+            },
+            lastDentalAppointment: "",
+            lastDentalAppointmentOperation: "",
+            lastDentalXray: "",
+            smoking: {
+                isSmoking: false,
+                sinceWhen: "",
+                howManyPerDay: ""
+            },
+            comments: ""
+        },
+        prePatientImage: ""
+    });
 
     const [isEditing, setIsEditing] = useState(false);
+    const [submitModal, setSubmitModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const createTooth = (toothNumber) => ({
         tooth: toothNumber,
@@ -364,10 +441,9 @@ export default function PatientInfoProvider({ children }) {
 
     function resetInfo() {
         setGeneralData({
-            fileId: Date.now(),
             patientName: "",
             gender: "Male",
-            martialStatus: "Single",
+            maritalStatus: "Single",
             birthDate: "",
             occupation: "",
             address: "",
@@ -662,32 +738,106 @@ export default function PatientInfoProvider({ children }) {
         });
     }
 
-    function handleSave(dept) {
-        const patientFile = {
-            ...generalData,
-            grade: 0,
-            gradeAI: 0,
-            feedback: "",
-            studentId: currentUser?.id,
-            creationDate: new Date().toLocaleDateString("en-US"),
-            departmentData: dept === "periodontics" ? periodonticsData : endodonticsData,
-        };
-        const updatedUser = {
-            ...currentUser,
-            files: [...(currentUser.files || []), patientFile],
-        };
-        setCurrentUser(updatedUser);
+    async function handleSave(dept) {
+        setIsLoading(true);
 
-        const updatedUsers = users.map(user =>
-            user.id === updatedUser.id ? updatedUser : user
-        );
-        setUsers(updatedUsers);
-        resetInfo();
-        router.push('/dashboard');
+        try {
+            if (!currentUser?.id) {
+                alert("User not authenticated");
+                return;
+            }
+
+            const formData = new FormData();
+
+            // 🔹 Prepare payload (text fields)
+            const payload = {
+                patientName: generalData.patientName ?? "",
+                gender: generalData.gender ?? "Male",
+                maritalStatus: generalData.maritalStatus ?? "Single",
+                birthDate: generalData.birthDate ?? "",
+                occupation: generalData.occupation ?? "",
+                address: generalData.address ?? "",
+                department: dept === "periodontics" ? "Periodontics" : "Endodontics",
+                phone: generalData.phone ?? "",
+                physicianName: generalData.physicianName ?? "",
+                physicianPhone: generalData.physicianPhone ?? "",
+                lastVisit: generalData.lastVisit ?? "",
+                reasonForVisit: generalData.reasonForVisit ?? "",
+                chiefComplaint: generalData.chiefComplaint ?? "",
+                onset: generalData.onset ?? "",
+                course: generalData.course ?? "",
+                severity: generalData.severity ?? "",
+                distribution: generalData.distribution ?? "",
+                precipitatingFactors: generalData.precipitatingFactors ?? "",
+                relievingFactors: generalData.relievingFactors ?? "",
+                locationAndRadiation: generalData.locationAndRadiation ?? "",
+                associatedSymptoms: generalData.associatedSymptoms ?? "",
+                previousTreatment: generalData.previousTreatment ?? "",
+                departmentData:
+                    dept === "periodontics"
+                        ? periodonticsData ?? {}
+                        : endodonticsData ?? {},
+                medicalHistory: generalData.medicalHistory ?? {},
+                dentalHistory: generalData.dentalHistory ?? {},
+                // remove studentId & creationDate — backend will set them
+            };
+
+            // 🔹 Append all normal fields
+            Object.entries(payload).forEach(([key, value]) => {
+                if (typeof value === "object" && value !== null) {
+                    formData.append(key, JSON.stringify(value));
+                } else {
+                    formData.append(key, value ?? "");
+                }
+            });
+
+            // 🔹 Append images — must match DTO EXACT property names (case-sensitive!)
+            if (generalData.prePatientImage instanceof File) {
+                formData.append("PrePatientImage", generalData.prePatientImage);
+            }
+            if (generalData.postPatientImage instanceof File) {
+                formData.append("PostPatientImage", generalData.postPatientImage);
+            }
+            if (generalData.xRay instanceof File) {
+                formData.append("XRay", generalData.xRay);
+            }
+
+            // // 🔎 Debug — confirm all keys
+            // console.log("------ FORM DATA START ------");
+            // for (let pair of formData.entries()) {
+            //     console.log(pair[0], pair[1]);
+            //     if (pair[1] instanceof File) {
+            //         console.log("File name:", pair[1].name);
+            //         console.log("File size:", pair[1].size);
+            //         console.log("File type:", pair[1].type);
+            //     }
+            // }
+            // console.log("------ FORM DATA END ------");
+
+            await axios.post(
+                "https://oralink.runasp.net/api/patient-files",
+                formData,
+                {
+                    headers: {
+                        // "Content-Type": "multipart/form-data",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                }
+            );
+            resetInfo();
+            router.replace("/my-files");
+        } catch (err) {
+            console.error(err.response?.data || err);
+            console.error("Status:", err.response?.status);
+            console.error("Data:", JSON.stringify(err.response?.data, null, 2));
+            console.error("Headers:", err.response?.headers);
+            alert(err.response?.data?.Message || "Failed to create file");
+        } 
+        setIsLoading(false);
     }
 
     return (
-        <PatientInfoContext.Provider value={{ generalData, setGeneralData, endodonticsData, setEndodonticsData, periodonticsData, setPeriodonticsData, handleSave, isEditing, setIsEditing, file, setFile }}>
+        <PatientInfoContext.Provider value={{ generalData, setGeneralData, endodonticsData, setEndodonticsData, periodonticsData, setPeriodonticsData, handleSave, isEditing, setIsEditing, file, setFile, submitModal, setSubmitModal, isLoading, setIsLoading  }}>
             {children}
         </PatientInfoContext.Provider>
     );

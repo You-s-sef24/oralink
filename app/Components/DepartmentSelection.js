@@ -27,22 +27,20 @@ export default function DepartmentSelection() {
                 </div>
 
                 <div className="col-12 col-sm-6 col-lg-4">
-                    <button
-                        className="d-flex flex-column bg-white rounded shadow action w-100 p-3"
-                        onClick={() => {
-                            setGeneralData({ ...generalData, department: 'Endodontics' });
-                            setState(state + 1);
-                        }}
-                    >
-                        <span className="w-25 mb-3 text-center bg-warning text-white rounded p-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-tooth w-7 h-7 text-white" aria-hidden="true">                                <path d="M12 5.5c1.5-1.5 4.5-1.5 6 0s1.5 4.5 0 6l-1.5 6.5c-.3 1.2-2.2 1.2-2.5 0L12 14l-2 4c-.3 1.2-2.2 1.2-2.5 0L6 11.5c-1.5-1.5-1.5-4.5 0-6s4.5-1.5 6 0Z" />                                <path d="M12 14v-4" /></svg>
-                        </span>
+                    <div className="d-flex flex-column bg-white rounded shadow w-100 p-3">
+                        <div className="d-flex align-items-center">
+                            <span className="w-25 mb-3 text-center bg-warning text-white rounded p-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-tooth w-7 h-7 text-white" aria-hidden="true">                                <path d="M12 5.5c1.5-1.5 4.5-1.5 6 0s1.5 4.5 0 6l-1.5 6.5c-.3 1.2-2.2 1.2-2.5 0L12 14l-2 4c-.3 1.2-2.2 1.2-2.5 0L6 11.5c-1.5-1.5-1.5-4.5 0-6s4.5-1.5 6 0Z" />                                <path d="M12 14v-4" /></svg>
+                            </span>
+
+                            <span className="ms-4 mb-3 text-danger fw-bold">Comming Soon !</span>
+                        </div>
 
                         <p className="text-start mb-2">Endodontics</p>
                         <p className="text-start m-0 text-truncate text-muted">
                             Root canal treatment and management of tooth pulp infections
                         </p>
-                    </button>
+                    </div>
                 </div>
 
                 <div className="col-12 col-sm-6 col-lg-4">

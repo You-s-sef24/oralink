@@ -10,7 +10,7 @@ import PeriodonticsPage3 from "./PeriodonticsPage3";
 
 export default function PeriodonticsFile() {
     const [step, setStep] = useState(1);
-    const { periodonticsData, setPeriodonticsData, handleSave } = useContext(PatientInfoContext);
+    const { periodonticsData, setPeriodonticsData, handleSave, isLoading, setIsLoading } = useContext(PatientInfoContext);
     const { state, setState } = useContext(StatesContext);
 
     function handleBack() {
@@ -54,8 +54,17 @@ export default function PeriodonticsFile() {
                 <p className="m-0">Page {step} / 4</p>
 
                 {step === 4 ? (
-                    <button className="btn btn-primary my-3" onClick={() => { handleSave('periodontics') }}>
-                        Save Full Patient File
+                    <button className="btn btn-primary my-3" disabled={isLoading} onClick={() => {
+                        handleSave('periodontics');
+                    }}>
+                        {isLoading ? (<div className="d-flex align-items-center gap-1">
+                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Saving...
+                        </div>
+                        ) : (<div className="d-flex align-items-center gap-1">
+                            <i className="bi bi-floppy"></i>
+                            Save Full Patient File
+                        </div>)}
                     </button>
                 ) : (
                     <button className="btn btn-primary my-3" onClick={handleNext}>
