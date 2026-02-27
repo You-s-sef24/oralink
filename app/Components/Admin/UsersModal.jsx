@@ -1,9 +1,10 @@
 "use client";
 
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function UsersModal({ show, isClose }) {
+export default function UsersModal({ show, isClose, refreshUsers }) {
   const [userData, setUserData] = useState({
     name: "",
     role: "",
@@ -13,8 +14,11 @@ export default function UsersModal({ show, isClose }) {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const emptyFields = Object.values(userData).some((value) => value === "");
+  const emptyFields = Object.values(userData).some(
+    (value) => value.trim() === "",
+  );
 
   async function handleSave() {
     if (emptyFields) {
@@ -31,12 +35,27 @@ export default function UsersModal({ show, isClose }) {
     setError("");
 
     try {
-      const response = await axios.post("/api/users", userData);
+      await axios.post("https://oralink.runasp.net/api/admin/create", userData);
+
+      setUserData({
+        name: "",
+        role: "",
+        email: "",
+        password: "",
+      });
+
+      if (refreshUsers) {
+        refreshUsers();
+      }
 
       isClose();
     } catch (err) {
       console.error("Error creating user:", err);
-      setError(err.response?.data?.message || "Failed to create user.");
+      setError(
+        err.response?.data?.message ||
+          err.response?.data?.error ||
+          "Failed to create user.",
+      );
     } finally {
       setLoading(false);
     }
@@ -63,21 +82,19 @@ export default function UsersModal({ show, isClose }) {
         className={`modal fade ${show ? "show d-block" : "d-none"}`}
         style={{ zIndex: 1045 }}
         tabIndex="-1"
-        role="dialog"
-        aria-hidden="true"
       >
-        <div className="modal-dialog modal-dialog-centered" role="document">
+        <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Add New User</h5>
               <button
                 type="button"
                 className="btn-close"
-                aria-label="Close"
                 onClick={isClose}
                 disabled={loading}
               />
             </div>
+
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -85,39 +102,28 @@ export default function UsersModal({ show, isClose }) {
               }}
             >
               <div className="modal-body">
-                {error && (
-                  <div className="alert alert-danger" role="alert">
-                    {error}
-                  </div>
-                )}
-                <div>
-                  <label htmlFor="name" className="form-label">
-                    Name
-                  </label>
+                {error && <div className="alert alert-danger">{error}</div>}
+
+                <div className="mb-3">
+                  <label className="form-label">Name</label>
                   <input
                     type="text"
-                    className="form-control mb-3"
-                    id="name"
-                    placeholder="Enter name"
+                    className="form-control"
                     value={userData.name}
                     onChange={(e) =>
                       setUserData({ ...userData, name: e.target.value })
                     }
-                    required
                   />
                 </div>
-                <div>
-                  <label htmlFor="role" className="form-label">
-                    Role
-                  </label>
+
+                <div className="mb-3">
+                  <label className="form-label">Role</label>
                   <select
-                    className="form-select mb-3"
-                    id="role"
+                    className="form-select"
                     value={userData.role}
                     onChange={(e) =>
                       setUserData({ ...userData, role: e.target.value })
                     }
-                    required
                   >
                     <option value="">Select role</option>
                     <option value="Student">Student</option>
@@ -126,41 +132,35 @@ export default function UsersModal({ show, isClose }) {
                     <option value="Head of Department">
                       Head of Department
                     </option>
+                    <option value="Admin">Admin</option>
                   </select>
                 </div>
-                <div>
-                  <label htmlFor="email" className="form-label">
-                    Email
-                  </label>
+
+                <div className="mb-3">
+                  <label className="form-label">Email</label>
                   <input
                     type="email"
-                    className="form-control mb-3"
-                    id="email"
-                    placeholder="Enter email"
+                    className="form-control"
                     value={userData.email}
                     onChange={(e) =>
                       setUserData({ ...userData, email: e.target.value })
                     }
-                    required
                   />
                 </div>
-                <div>
-                  <label htmlFor="password" className="form-label">
-                    Password
-                  </label>
+
+                <div className="mb-3">
+                  <label className="form-label">Password</label>
                   <input
                     type="password"
-                    className="form-control mb-3"
-                    id="password"
-                    placeholder="Enter password"
+                    className="form-control"
                     value={userData.password}
                     onChange={(e) =>
                       setUserData({ ...userData, password: e.target.value })
                     }
-                    required
                   />
                 </div>
               </div>
+
               <div className="modal-footer">
                 <button
                   type="button"
@@ -170,6 +170,7 @@ export default function UsersModal({ show, isClose }) {
                 >
                   Cancel
                 </button>
+
                 <button
                   type="submit"
                   className="btn btn-primary"
@@ -177,11 +178,7 @@ export default function UsersModal({ show, isClose }) {
                 >
                   {loading ? (
                     <>
-                      <span
-                        className="spinner-border spinner-border-sm me-2"
-                        role="status"
-                        aria-hidden="true"
-                      />
+                      <span className="spinner-border spinner-border-sm me-2" />
                       Saving...
                     </>
                   ) : (

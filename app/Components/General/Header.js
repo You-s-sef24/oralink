@@ -8,7 +8,7 @@ import axios from "axios";
 
 export default function Header({ title, desc, page }) {
     const { setIsEditing, isEditing, setSubmitModal, file, setFile, setIsLoading, isLoading } = useContext(PatientInfoContext);
-    const { currentUser } = useContext(UsersContext);
+    const { currentUser, setShowEditAdminModal } = useContext(UsersContext);
 
     async function handleEdit() {
         if (!currentUser?.id) {
@@ -55,7 +55,7 @@ export default function Header({ title, desc, page }) {
             console.log("Updating file with data:", formData);
 
             const res = await axios.put(
-                `https://oralink.runasp.net/api/patient-files/${file.fileId}`,
+                `https://oralink.runasp.net/api/patient-files/${file.fileId}/update`,
                 formData,
                 {
                     headers: {
@@ -105,6 +105,17 @@ export default function Header({ title, desc, page }) {
                     <h3>{title}</h3>
                     <p className="m-0">{page === "Patient File" ? `File Id: ${file?.fileId}` : desc}</p>
                 </div>
+
+                {page === "Admin" ? (
+                    <div>
+                        <button className="btn btn-primary d-flex gap-1" onClick={() => { setShowEditAdminModal(true) }}>
+                            <i className="bi bi-pencil"></i>
+                            Edit Profile
+                        </button>
+                    </div>
+                ) : ('')
+                }
+
                 {page === "Patient File" && !file.isSubmitted ?
                     <div className="d-flex gap-2">
                         {isEditing ? (
@@ -112,7 +123,7 @@ export default function Header({ title, desc, page }) {
                                 Cancel
                             </button>
                         ) : ''}
-                        
+
                         <button className={`btn ${isEditing ? 'btn-primary' : 'btn-secondary'} `} onClick={handleEdit} disabled={isLoading}>
                             {isEditing ?
                                 <>

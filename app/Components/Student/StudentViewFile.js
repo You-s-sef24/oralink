@@ -60,7 +60,7 @@ export default function StudentViewFile() {
                 console.log("Fetching file:", fileId);
 
                 const res = await axios.get(
-                    `https://oralink.runasp.net/api/patient-files/${fileId}`,
+                    `https://oralink.runasp.net/api/patient-files/${fileId}/get-by-id`,
                     {
                         headers: {
                             'ngrok-skip-browser-warning': 'true',

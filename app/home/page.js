@@ -17,7 +17,7 @@ export default function HomePage() {
 
     return (
         <div className="container-fluid">
-            <Header title={`${currentUser?.role} Dashboard`} desc={currentUser?.role === "Student" ? `Welcome back, ${currentUser?.email}` : `Welcome back, Dr. ${currentUser?.name}`} />
+            <Header title={`${currentUser?.role} Dashboard`} desc={currentUser?.role === "Student" ? `Welcome back, ${currentUser?.name}` : `Welcome back, Dr. ${currentUser?.name}`} page={currentUser?.role === "Admin" ? "Admin" : ''} />
 
             <hr className="m-0" />
 

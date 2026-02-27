@@ -1,5 +1,5 @@
 import Header from "../Components/General/Header";
-import PatientFiles from "../Components/General/PatientFiles";
+// import PatientFiles from "../Components/General/PatientFiles";
 
 export default function PatientFilesPage() {
     return (
@@ -8,7 +8,7 @@ export default function PatientFilesPage() {
 
             <hr className="m-0" />
 
-            <PatientFiles />
+            {/* <PatientFiles /> */}
         </div>
     );
 }

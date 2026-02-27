@@ -1,11 +1,14 @@
 "use client";
 
-import { UsersContext } from "@/app/Contexts/UsersContext";
-import { useContext, useState } from "react";
 import axios from "axios";
+import { useState } from "react";
 
-export default function DeleteModal({ show, isClose, selectedUser }) {
-  const { setUsers } = useContext(UsersContext);
+export default function DeleteModal({
+  show,
+  isClose,
+  selectedUser,
+  refreshUsers,
+}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -16,12 +19,19 @@ export default function DeleteModal({ show, isClose, selectedUser }) {
     setError("");
 
     try {
-      await axios.delete(`/api/users/${selectedUser.id}`);
-      setUsers((prev) => prev.filter((u) => u.id !== selectedUser.id));
+      await axios.delete(
+        `https://oralink.runasp.net/api/admin/delete-user/${selectedUser.id}`,
+      );
+
+      if (refreshUsers) refreshUsers();
+
       isClose();
     } catch (err) {
       console.error("Error deleting user:", err);
-      setError("Failed to delete user. Please try again.");
+      setError(
+        err.response?.data?.message ||
+          "Failed to delete user. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -40,7 +50,7 @@ export default function DeleteModal({ show, isClose, selectedUser }) {
             backgroundColor: "rgba(0, 0, 0, 0.5)",
             zIndex: 1040,
           }}
-          onClick={isClose}
+          onClick={() => !loading && isClose()}
         />
       )}
 
@@ -59,10 +69,11 @@ export default function DeleteModal({ show, isClose, selectedUser }) {
                 type="button"
                 className="btn-close"
                 aria-label="Close"
-                onClick={isClose}
+                onClick={() => !loading && isClose()}
                 disabled={loading}
               />
             </div>
+
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -79,15 +90,17 @@ export default function DeleteModal({ show, isClose, selectedUser }) {
                 <strong>{selectedUser?.name}</strong>? This action cannot be
                 undone.
               </div>
+
               <div className="modal-footer">
                 <button
                   type="button"
                   className="btn btn-secondary"
-                  onClick={isClose}
+                  onClick={() => !loading && isClose()}
                   disabled={loading}
                 >
                   Cancel
                 </button>
+
                 <button
                   type="submit"
                   className="btn btn-danger"

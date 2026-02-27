@@ -814,7 +814,7 @@ export default function PatientInfoProvider({ children }) {
             console.log("------ FORM DATA END ------");
 
             await axios.post(
-                "https://oralink.runasp.net/api/patient-files",
+                "https://oralink.runasp.net/api/patient-files/create-patient-file",
                 formData,
                 {
                     headers: {

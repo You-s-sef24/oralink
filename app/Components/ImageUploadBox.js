@@ -10,13 +10,11 @@ export default function ImageUploadBox({ time, type, fileData, setFileData }) {
     const [isDragging, setIsDragging] = useState(false);
     const [file, setFile] = useState(null);
 
-    // Determine the field in state
     const getFieldName = () => {
         if (type === 'xray') return 'xRay';
         return time === 'pre' ? 'prePatientImage' : 'postPatientImage';
     }
 
-    // Sync internal file state if editing existing fileData
     useEffect(() => {
         const field = getFieldName();
         if (fileData && fileData[field]) {
@@ -26,25 +24,20 @@ export default function ImageUploadBox({ time, type, fileData, setFileData }) {
         }
     }, [fileData, generalData]);
 
-    // Update file in both context and fileData
     const updateFileState = (selectedFile) => {
         if (!selectedFile) return;
 
         setFile(selectedFile);
         const field = getFieldName();
 
-        // Always update generalData
         setGeneralData({ ...generalData, [field]: selectedFile });
 
-        // Also update fileData if provided (editing mode)
+
         if (setFileData && fileData) {
             setFileData({ ...fileData, [field]: selectedFile });
         }
-
-        console.log(`Updated ${field}:`, selectedFile);
     }
 
-    // Drag and drop handlers
     function handleDragOver(e) {
         e.preventDefault();
         setIsDragging(true);
@@ -61,13 +54,11 @@ export default function ImageUploadBox({ time, type, fileData, setFileData }) {
         if (droppedFile) updateFileState(droppedFile);
     }
 
-    // File input select
     function handleFileSelect(e) {
         const selectedFile = e.target.files[0];
         if (selectedFile) updateFileState(selectedFile);
     }
 
-    // Cancel / remove image
     const handleCancel = () => {
         setFile(null);
         const field = getFieldName();

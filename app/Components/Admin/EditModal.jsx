@@ -1,25 +1,36 @@
 "use client";
 
 import axios from "axios";
-import { useContext, useState } from "react";
-import { UsersContext } from "@/app/Contexts/UsersContext";
+import { useEffect, useState } from "react";
 
 export default function EditModal({
   show,
   isClose,
   selectedUser,
   setSelectedUser,
+  refreshUsers,
 }) {
-
   const [userData, setUserData] = useState({
-    name: selectedUser?.name || "",
-    role: selectedUser?.role || "",
-    email: selectedUser?.email || "",
+    name: "",
+    role: "",
+    email: "",
     password: "",
   });
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (selectedUser) {
+      setUserData({
+        name: selectedUser.name || "",
+        role: selectedUser.role || "",
+        email: selectedUser.email || "",
+        password: "",
+      });
+      setError("");
+    }
+  }, [selectedUser]);
 
   const emptyFields = !userData.name || !userData.role || !userData.email;
 
@@ -45,17 +56,20 @@ export default function EditModal({
     setError("");
 
     try {
-      const response = await axios.put(
-        `/api/users/${selectedUser.id}`,
+      await axios.put(
+        `https://oralink.runasp.net/api/admin/update-user/${selectedUser.id}`,
         payload,
       );
 
       setSelectedUser(null);
+      if (refreshUsers) refreshUsers();
+
       isClose();
     } catch (err) {
       console.error("Error updating user:", err);
       setError(
         err.response?.data?.message ||
+          err.response?.data?.error ||
           "An error occurred while updating the user.",
       );
     } finally {
@@ -76,7 +90,7 @@ export default function EditModal({
             backgroundColor: "rgba(0, 0, 0, 0.5)",
             zIndex: 1040,
           }}
-          onClick={isClose}
+          onClick={() => !loading && isClose()}
         />
       )}
 
@@ -95,7 +109,7 @@ export default function EditModal({
                 type="button"
                 className="btn-close"
                 aria-label="Close"
-                onClick={isClose}
+                onClick={() => !loading && isClose()}
                 disabled={loading}
               />
             </div>
@@ -111,13 +125,14 @@ export default function EditModal({
                     {error}
                   </div>
                 )}
-                <div>
+
+                <div className="mb-3">
                   <label htmlFor="name" className="form-label">
                     Name
                   </label>
                   <input
                     type="text"
-                    className="form-control mb-3"
+                    className="form-control"
                     id="name"
                     placeholder="Enter name"
                     value={userData.name}
@@ -127,12 +142,13 @@ export default function EditModal({
                     required
                   />
                 </div>
-                <div>
+
+                <div className="mb-3">
                   <label htmlFor="role" className="form-label">
                     Role
                   </label>
                   <select
-                    className="form-select mb-3"
+                    className="form-select"
                     id="role"
                     value={userData.role}
                     onChange={(e) =>
@@ -147,15 +163,17 @@ export default function EditModal({
                     <option value="Head of Department">
                       Head of Department
                     </option>
+                    <option value="Admin">Admin</option>
                   </select>
                 </div>
-                <div>
+
+                <div className="mb-3">
                   <label htmlFor="email" className="form-label">
                     Email
                   </label>
                   <input
                     type="email"
-                    className="form-control mb-3"
+                    className="form-control"
                     id="email"
                     placeholder="Enter email"
                     value={userData.email}
@@ -165,7 +183,8 @@ export default function EditModal({
                     required
                   />
                 </div>
-                <div>
+
+                <div className="mb-3">
                   <label htmlFor="password" className="form-label">
                     Password{" "}
                     <span className="text-muted small">
@@ -174,7 +193,7 @@ export default function EditModal({
                   </label>
                   <input
                     type="password"
-                    className="form-control mb-3"
+                    className="form-control"
                     id="password"
                     placeholder="Enter new password"
                     value={userData.password}
@@ -184,11 +203,12 @@ export default function EditModal({
                   />
                 </div>
               </div>
+
               <div className="modal-footer">
                 <button
                   type="button"
                   className="btn btn-secondary"
-                  onClick={isClose}
+                  onClick={() => !loading && isClose()}
                   disabled={loading}
                 >
                   Cancel

@@ -13,7 +13,7 @@ export default function SubmitModal({ show, isClose, file, setFile }) {
       setIsLoading(true);
 
       await axios.put(
-        `https://oralink.runasp.net/api/patient-files/${file.fileId}/submit`,
+        `https://oralink.runasp.net/api/patient-files/${file.fileId}/Submit`,
         {},
         {
           headers: {

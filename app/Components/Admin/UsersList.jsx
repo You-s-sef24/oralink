@@ -1,85 +1,54 @@
 "use client";
 
+import axios from "axios";
 import { UsersContext } from "@/app/Contexts/UsersContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import DeleteModal from "./DeleteModal";
+import EditModal from "./EditModal";
+import UsersModal from "./UsersModal";
+import EditAdminModal from "./AdminModal";
 
 export default function UsersList() {
-  const users = [
-    {
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice.johnson@example.com",
-      role: "Student",
-    },
-    {
-      id: 2,
-      name: "Bob Smith",
-      email: "bob.smith@example.com",
-      role: "Doctor",
-    },
-    {
-      id: 3,
-      name: "Charlie Brown",
-      email: "charlie.brown@example.com",
-      role: "Head of Department",
-    },
-    {
-      id: 4,
-      name: "David Wilson",
-      email: "david.wilson@example.com",
-      role: "Supervisor",
-    },
-  ];
+  const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+
   const {
+    showUsersModal,
     setShowUsersModal,
+    showEditModal,
     setShowEditModal,
+    showDeleteModal,
     setShowDeleteModal,
+    selectedUser,
     setSelectedUser,
+    showEditAdminModal,
+    setShowEditAdminModal,
   } = useContext(UsersContext);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(
+        "https://oralink.runasp.net/api/admin/get-all-users",
+      );
+      setUsers(data?.data || data || []);
+    } catch (err) {
+      console.error("Failed to fetch users:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const filteredUsers = users.filter(
     (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()),
+      user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user?.email?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
-
-  const renderUsers = filteredUsers.map((user) => (
-    <div
-      key={user.id}
-      className="row text-center bg-white p-2 rounded border-bottom"
-    >
-      <div className="col-3">
-        <p className="fw-bold m-0">{user.name}</p>
-      </div>
-      <div className="col-3">
-        <p className="m-0 text-truncate">{user.email}</p>
-      </div>
-      <div className="col-3">
-        <p className="m-0">{user.role}</p>
-      </div>
-      <div className="col-3 d-flex justify-content-center gap-2">
-        <button
-          className="btn btn-sm btn-outline-primary"
-          onClick={() => {
-            setSelectedUser(user);
-            setShowEditModal(true);
-          }}
-        >
-          <i className="bi bi-pencil-square"></i>
-        </button>
-        <button
-          className="btn btn-sm btn-outline-danger"
-          onClick={() => {
-            setSelectedUser(user);
-            setShowDeleteModal(true);
-          }}
-        >
-          <i className="bi bi-trash"></i>
-        </button>
-      </div>
-    </div>
-  ));
 
   return (
     <div>
@@ -102,9 +71,7 @@ export default function UsersList() {
         <div className="col-12 col-sm-4 text-md-end">
           <button
             className="btn btn-primary w-100 w-md-auto"
-            onClick={() => {
-              setShowUsersModal(true);
-            }}
+            onClick={() => setShowUsersModal(true)}
           >
             <i className="bi bi-person-add me-2"></i>
             Add User
@@ -127,8 +94,91 @@ export default function UsersList() {
             <h5>Actions</h5>
           </div>
         </div>
-        {renderUsers}
+
+        {loading ? (
+          <div className="text-center py-3">
+            <span className="spinner-border spinner-border-sm"></span>
+          </div>
+        ) : filteredUsers.length === 0 ? (
+          <div className="text-center py-3 text-muted">No users found</div>
+        ) : (
+          filteredUsers.map((user) => (
+            <div
+              key={user.id}
+              className="row text-center bg-white p-2 rounded border-bottom"
+            >
+              <div className="col-3">
+                <p className="fw-bold m-0">{user.name || "-"}</p>
+              </div>
+
+              <div className="col-3">
+                <p className="m-0 text-truncate">{user.email || "-"}</p>
+              </div>
+
+              <div className="col-3">
+                <p className="m-0">{user.role || "-"}</p>
+              </div>
+
+              <div className="col-3 d-flex justify-content-center gap-2">
+                <button
+                  className="btn btn-sm btn-outline-primary"
+                  onClick={() => {
+                    setSelectedUser(user);
+                    setShowEditModal(true);
+                  }}
+                >
+                  <i className="bi bi-pencil-square"></i>
+                </button>
+
+                <button
+                  className="btn btn-sm btn-outline-danger"
+                  onClick={() => {
+                    setSelectedUser(user);
+                    setShowDeleteModal(true);
+                  }}
+                >
+                  <i className="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
+
+      {showUsersModal && (
+        <UsersModal
+          show={showUsersModal}
+          isClose={() => setShowUsersModal(false)}
+          refreshUsers={fetchUsers}
+        />
+      )}
+
+      {showEditModal && (
+        <EditModal
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+          show={showEditModal}
+          isClose={() => setShowEditModal(false)}
+          refreshUsers={fetchUsers}
+        />
+      )}
+
+      {showDeleteModal && (
+        <DeleteModal
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+          show={showDeleteModal}
+          isClose={() => setShowDeleteModal(false)}
+          refreshUsers={fetchUsers}
+        />
+      )}
+
+      {showEditAdminModal && (
+        <EditAdminModal
+          show={showEditAdminModal}
+          isClose={() => setShowEditAdminModal(false)}
+        />
+      )}
     </div>
   );
 }

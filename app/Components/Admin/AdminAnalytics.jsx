@@ -1,13 +1,53 @@
+"use client";
+
+import axios from "axios";
+import { useEffect, useState } from "react";
+
 export default function AdminAnalytics() {
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalStudents: 0,
+    totalSupervisors: 0,
+    totalDoctors: 0,
+    totalHods: 0,
+  });
+
+  useEffect(() => {
+    let interval;
+
+    const fetchStatistics = async () => {
+      try {
+        const { data } = await axios.get(
+          "https://oralink.runasp.net/api/admin/statistics",
+        );
+
+        setStats({
+          totalUsers: data.totalUsers || 0,
+          totalStudents: data.students || 0,
+          totalSupervisors: data.supervisors || 0,
+          totalDoctors: data.doctors || 0,
+          totalHods: data.hoDs || 0,
+        });
+      } catch (error) {
+        console.error("Failed to fetch statistics:", error);
+      }
+    };
+
+    fetchStatistics();
+    interval = setInterval(fetchStatistics, 5000); // auto update every 5s
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div>
       <div className="row g-2">
-        <div className="col col-sm-6 col-lg-3">
+        <div className="col col-sm-6 col-lg">
           <div className="bg-white rounded shadow action p-3">
             <div className="row d-flex align-items-center justify-content-around">
               <div className="col-9">
-                <p className="text-muted">Total Students</p>
-                <h2 className="fw-bold">1,234</h2>
+                <p className="text-muted">Total Users</p>
+                <h2 className="fw-bold">{stats.totalUsers}</h2>
               </div>
               <div className="col-3">
                 <span className="rounded p-2 text-white bg-primary">
@@ -34,12 +74,41 @@ export default function AdminAnalytics() {
           </div>
         </div>
 
-        <div className="col col-sm-6 col-lg-3">
+        <div className="col col-sm-6 col-lg">
+          <div className="bg-white rounded shadow action p-3">
+            <div className="row d-flex align-items-center justify-content-around">
+              <div className="col-9">
+                <p className="text-muted">Total Students</p>
+                <h2 className="fw-bold">{stats.totalStudents}</h2>
+              </div>
+              <div className="col-3">
+                <span className="rounded p-2 text-white bg-primary pb-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col col-sm-6 col-lg">
           <div className="bg-white rounded shadow action p-3">
             <div className="row d-flex align-items-center justify-content-around">
               <div className="col-9">
                 <p className="text-muted">Total Supervisors</p>
-                <h2 className="fw-bold">1,234</h2>
+                <h2 className="fw-bold">{stats.totalSupervisors}</h2>
               </div>
               <div className="col-3">
                 <span className="rounded p-2 text-white bg-primary">
@@ -65,12 +134,12 @@ export default function AdminAnalytics() {
           </div>
         </div>
 
-        <div className="col col-sm-6 col-lg-3 ">
+        <div className="col col-sm-6 col-lg">
           <div className="bg-white rounded shadow action p-3">
             <div className="row d-flex align-items-center justify-content-around">
               <div className="col-9">
                 <p className="text-muted">Total Doctors</p>
-                <h2 className="fw-bold">1,234</h2>
+                <h2 className="fw-bold">{stats.totalDoctors}</h2>
               </div>
               <div className="col-3">
                 <span className="rounded p-2 text-white bg-primary">
@@ -98,12 +167,12 @@ export default function AdminAnalytics() {
           </div>
         </div>
 
-        <div className="col col-sm-6 col-lg-3">
+        <div className="col col-sm-6 col-lg">
           <div className="bg-white rounded shadow action p-3">
             <div className="row d-flex align-items-center justify-content-around">
               <div className="col-9">
                 <p className="text-muted">Total Head of Department</p>
-                <h2 className="fw-bold">1</h2>
+                <h2 className="fw-bold">{stats.totalHods}</h2>
               </div>
               <div className="col-3">
                 <span className="rounded p-2 text-white bg-primary">

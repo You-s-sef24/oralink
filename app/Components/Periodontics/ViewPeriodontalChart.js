@@ -8,8 +8,6 @@ export default function ViewPeriodontalChart({ file }) {
     const upperTeeth = teeth.slice(0, 16);
     const lowerTeeth = teeth.slice(16, 32);
 
-    console.log('teeth: ',teeth);
-
     if (!teeth.length) return <p>Loading periodontal chart...</p>;
 
     const renderSiteValues = (data, sites) => (

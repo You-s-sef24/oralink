@@ -14,6 +14,7 @@ export default function UsersProvider({ children }) {
     const [isAuthReady, setIsAuthReady] = useState(false);
     const [showUsersModal, setShowUsersModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showEditAdminModal, setShowEditAdminModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const router = useRouter();
@@ -65,7 +66,7 @@ export default function UsersProvider({ children }) {
     };
 
     return (
-        <UsersContext.Provider value={{ currentUser, setCurrentUser, isLoggedIn, setIsLoggedIn, token, logout, showUsersModal, setShowUsersModal, showEditModal, setShowEditModal, showDeleteModal, setShowDeleteModal, selectedUser, setSelectedUser }}>
+        <UsersContext.Provider value={{ currentUser, setCurrentUser, isLoggedIn, setIsLoggedIn, token, logout, showUsersModal, setShowUsersModal, showEditModal, setShowEditModal, showDeleteModal, setShowDeleteModal, selectedUser, setSelectedUser, showEditAdminModal, setShowEditAdminModal }}>
             {children}
         </UsersContext.Provider>
     );

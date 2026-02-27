@@ -1,5 +1,5 @@
 import Header from "../Components/General/Header";
-import Students from "../Components/General/Students";
+// import Students from "../Components/General/Students";
 
 export default function StudentsPage() {
     return (
@@ -8,7 +8,7 @@ export default function StudentsPage() {
 
             <hr className="m-0" />
 
-            <Students />
+            {/* <Students /> */}
         </div>
     );
 }

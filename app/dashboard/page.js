@@ -1,7 +1,7 @@
 "use client";
 
 import Header from "../Components/General/Header";
-import HodDashboard from "../Components/HODDashboard/HodDashboard";
+// import HodDashboard from "../Components/HODDashboard/HodDashboard";
 import { useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { UsersContext } from "../Contexts/UsersContext";
@@ -16,7 +16,7 @@ export default function Dashboard() {
 
             <hr className="m-0" />
 
-            <HodDashboard />
+            {/* <HodDashboard /> */}
         </div>
     );
 }
