@@ -42,7 +42,7 @@ export default function AdminAnalytics() {
   return (
     <div>
       <div className="row g-2">
-        <div className="col col-sm-6 col-lg">
+        <div className="col-12 col-sm-6 col-lg">
           <div className="bg-white rounded shadow action p-3">
             <div className="row d-flex align-items-center justify-content-around">
               <div className="col-9">
@@ -74,7 +74,7 @@ export default function AdminAnalytics() {
           </div>
         </div>
 
-        <div className="col col-sm-6 col-lg">
+        <div className="col-12 col-sm-6 col-lg">
           <div className="bg-white rounded shadow action p-3">
             <div className="row d-flex align-items-center justify-content-around">
               <div className="col-9">
@@ -103,7 +103,7 @@ export default function AdminAnalytics() {
           </div>
         </div>
 
-        <div className="col col-sm-6 col-lg">
+        <div className="col-12 col-sm-6 col-lg">
           <div className="bg-white rounded shadow action p-3">
             <div className="row d-flex align-items-center justify-content-around">
               <div className="col-9">
@@ -134,7 +134,7 @@ export default function AdminAnalytics() {
           </div>
         </div>
 
-        <div className="col col-sm-6 col-lg">
+        <div className="col-12 col-sm-6 col-lg">
           <div className="bg-white rounded shadow action p-3">
             <div className="row d-flex align-items-center justify-content-around">
               <div className="col-9">
@@ -167,7 +167,7 @@ export default function AdminAnalytics() {
           </div>
         </div>
 
-        <div className="col col-sm-6 col-lg">
+        <div className="col-12 col-sm-6 col-lg">
           <div className="bg-white rounded shadow action p-3">
             <div className="row d-flex align-items-center justify-content-around">
               <div className="col-9">

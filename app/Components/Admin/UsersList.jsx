@@ -7,6 +7,7 @@ import DeleteModal from "./DeleteModal";
 import EditModal from "./EditModal";
 import UsersModal from "./UsersModal";
 import EditAdminModal from "./AdminModal";
+import ExcelModal from "./ExelModal";
 
 export default function UsersList() {
   const [users, setUsers] = useState([]);
@@ -24,6 +25,8 @@ export default function UsersList() {
     setSelectedUser,
     showEditAdminModal,
     setShowEditAdminModal,
+    showExelModal,
+    setShowExelModal,
   } = useContext(UsersContext);
 
   const fetchUsers = async () => {
@@ -68,13 +71,68 @@ export default function UsersList() {
           </div>
         </div>
 
-        <div className="col-12 col-sm-4 text-md-end">
+        <div className="col-12 col-sm-4 text-md-end d-flex gap-2">
           <button
-            className="btn btn-primary w-100 w-md-auto"
+            className="btn btn-primary w-50 w-md-auto"
             onClick={() => setShowUsersModal(true)}
           >
             <i className="bi bi-person-add me-2"></i>
             Add User
+          </button>
+
+          <button
+            className="btn btn-success w-50 w-md-auto"
+            onClick={() => setShowExelModal(true)}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 64 64"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect x="16" y="6" width="36" height="52" rx="4" fill="#E9ECEF" />
+
+              <rect x="8" y="12" width="20" height="40" rx="3" fill="#198754" />
+
+              <path
+                d="M14 24 L20 32 L14 40 H18 L22 34 L26 40 H30 L24 32 L30 24 H26 L22 30 L18 24 Z"
+                fill="white"
+              />
+
+              <line
+                x1="22"
+                y1="18"
+                x2="46"
+                y2="18"
+                stroke="#ADB5BD"
+                stroke-width="2"
+              />
+              <line
+                x1="22"
+                y1="26"
+                x2="46"
+                y2="26"
+                stroke="#ADB5BD"
+                stroke-width="2"
+              />
+              <line
+                x1="22"
+                y1="34"
+                x2="46"
+                y2="34"
+                stroke="#ADB5BD"
+                stroke-width="2"
+              />
+              <line
+                x1="22"
+                y1="42"
+                x2="46"
+                y2="42"
+                stroke="#ADB5BD"
+                stroke-width="2"
+              />
+            </svg>
+            Import Exel Sheet
           </button>
         </div>
       </div>
@@ -179,6 +237,8 @@ export default function UsersList() {
           isClose={() => setShowEditAdminModal(false)}
         />
       )}
+
+      {showExelModal && <ExcelModal onClose={() => setShowExelModal(false)} />}
     </div>
   );
 }
