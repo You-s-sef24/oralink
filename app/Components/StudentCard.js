@@ -1,7 +1,7 @@
 export default function StudentCard({ student }) {
     const files = student?.files || [];
-    const gradedFiles = files.filter(file => file.grade > 0);
-    const avgGrade = gradedFiles.length > 0 ? (gradedFiles.reduce((sum, f) => sum + f.grade, 0) / gradedFiles.length).toFixed(1) : 0;
+    const gradedFiles = 0;
+    const avgGrade =  0;
 
     return (
         <div className="shadow rounded bg-white p-4 my-4">
@@ -27,7 +27,7 @@ export default function StudentCard({ student }) {
                             <p className="text-muted">Total Files</p>
                         </div>
                         <div className="text-success">
-                            <h3>{gradedFiles?.length}</h3>
+                            <h3>{gradedFiles}</h3>
                             <p>Graded</p>
                         </div>
                         <div className="text-warning">

@@ -108,7 +108,7 @@ export default function Navbar() {
                                         <p className="m-0">Grading</p>
                                     </Link>
                                 </>
-                            ) : currentUser?.role === "Head of department" ? (
+                            ) : currentUser?.role === "Head of Department" ? (
                                 <>
                                     <Link href="/home" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/home")} rounded border-0 mb-2 gap-2`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-house-door" viewBox="0 0 16 16">

@@ -1,5 +1,5 @@
-// import GradingStats from "../Components/GradingStats";
-// import GradingTabs from "../Components/GradingTabs";
+import GradingStats from "../Components/GradingStats";
+import GradingTabs from "../Components/GradingTabs";
 import Header from "../Components/General/Header";
 
 export default function GradingPanelPage() {
@@ -9,9 +9,9 @@ export default function GradingPanelPage() {
 
             <hr className="m-0" />
 
-            {/* <GradingStats />
+            <GradingStats />
 
-            <GradingTabs /> */}
+            <GradingTabs />
         </div>
     );
 }

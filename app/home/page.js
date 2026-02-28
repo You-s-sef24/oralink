@@ -25,7 +25,7 @@ export default function HomePage() {
                 <StudentHome />
             ) : currentUser?.role === "Supervisor" ? (
                 <SupervisorHome />
-            ) : currentUser?.role === "Head of department" ? (
+            ) : currentUser?.role === "Head of Department" ? (
                 <HodHome />
             ) : currentUser?.role === "Doctor" ? (
                 <Loading />

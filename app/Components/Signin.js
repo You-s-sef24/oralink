@@ -27,6 +27,11 @@ export default function Signin() {
             return;
         }
 
+        if (data.password && data.password.length < 8) {
+            setError({ status: true, msg: "Password too short." });
+            return;
+        }
+
         try {
             setIsLoading(true);
             const res = await axios.post(
@@ -86,6 +91,7 @@ export default function Signin() {
                             value={data.email}
                             onChange={(e) => setData({ ...data, email: e.target.value })}
                             placeholder="123456789@o6u.edu.eg"
+                            required
                         />
                     </div>
                     <div className="mb-3">
@@ -97,6 +103,8 @@ export default function Signin() {
                             value={data.password}
                             onChange={(e) => setData({ ...data, password: e.target.value })}
                             placeholder="********"
+                            required
+                            minLength={8}
                         />
                     </div>
                     <button type="submit" className="btn btn-primary w-100" disabled={isLoading}>Sign In</button>

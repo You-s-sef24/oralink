@@ -36,9 +36,6 @@ export default function StudentFiles({ student }) {
                     {file.patientName}
                 </div>
                 <div className="col text-truncate">
-                    {file.department}
-                </div>
-                <div className="col text-truncate">
                     {file.creationDate}
                 </div>
                 <div className="col-2 d-none d-md-block text-truncate">
@@ -78,9 +75,6 @@ export default function StudentFiles({ student }) {
                 </div>
                 <div className="col-3 text-truncate">
                     Patient Name
-                </div>
-                <div className="col text-truncate">
-                    Department
                 </div>
                 <div className="col text-truncate">
                     Created Date
