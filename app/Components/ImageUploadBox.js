@@ -17,6 +17,7 @@ export default function ImageUploadBox({ time, type, fileData, setFileData }) {
 
     useEffect(() => {
         const field = getFieldName();
+
         if (fileData && fileData[field]) {
             setFile(fileData[field]);
         } else if (generalData[field]) {
@@ -77,7 +78,11 @@ export default function ImageUploadBox({ time, type, fileData, setFileData }) {
             {file ? (
                 <div className="d-flex justify-content-center position-relative">
                     <img
-                        src={URL.createObjectURL(file)}
+                        src={
+                            file instanceof File
+                                ? URL.createObjectURL(file)
+                                : file
+                        }
                         alt="Preview"
                         className="img-fluid w-100"
                         style={{ maxHeight: "420px", maxWidth: "100%", objectFit: "contain" }}

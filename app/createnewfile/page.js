@@ -18,6 +18,19 @@ export default function CreateNewFilePage() {
     const { state, setState } = useContext(StatesContext);
     const router = useRouter();
 
+    useEffect(() => {
+        const handleBeforeUnload = (e) => {
+            e.preventDefault();
+            e.returnValue = "";
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, []);
+
     return (
         <div className="container-fluid">
             <Header title={'Create New Patient File'} desc={'Complete all required forms to register a new patient'} />
