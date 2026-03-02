@@ -1,39 +1,43 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { UsersContext } from "../Contexts/UsersContext";
-import './home.css';
+import "./home.css";
 import Header from "../Components/General/Header";
 import Loading from "../loading";
 import StudentHome from "../Components/Student/StudentHome";
 import SupervisorHome from "../Components/Supervisor/SupervisorHome";
 import HodHome from "../Components/HOD/HodHome";
-import { useRouter } from "next/navigation";
 import AdminDashboard from "../Components/Admin/AdminDashboard";
+import DoctorHome from "../Components/Doctor/DoctorHome";
+import ProtectedRoute from "../Components/General/ProtectedRoute";
 
 export default function HomePage() {
-    const { currentUser, token, isAuthReady } = useContext(UsersContext);
-    const router = useRouter();
+    const { currentUser } = useContext(UsersContext);
 
     return (
-        <div className="container-fluid">
-            <Header title={`${currentUser?.role} Dashboard`} desc={currentUser?.role === "Student" ? `Welcome back, ${currentUser?.name}` : `Welcome back, Dr. ${currentUser?.name}`} page={currentUser?.role === "Admin" ? "Admin" : ''} />
+        <ProtectedRoute>
+            <div className="container-fluid">
 
-            <hr className="m-0" />
+                <Header
+                    title={`${currentUser?.role} Dashboard`}
+                    desc={
+                        currentUser?.role === "Student"
+                            ? `Welcome back, ${currentUser?.name}`
+                            : `Welcome back, Dr. ${currentUser?.name}`
+                    }
+                    page={currentUser?.role === "Admin" ? "Admin" : ""}
+                />
 
-            {currentUser?.role === "Student" ? (
-                <StudentHome />
-            ) : currentUser?.role === "Supervisor" ? (
-                <SupervisorHome />
-            ) : currentUser?.role === "Head of Department" ? (
-                <HodHome />
-            ) : currentUser?.role === "Doctor" ? (
-                <Loading />
-            ) : currentUser?.role === "Admin" ? (
-                <AdminDashboard />
-            ) : (
-                <Loading />
-            )}
-        </div>
+                <hr className="m-0" />
+
+                {currentUser?.role === "Student" && <StudentHome />}
+                {currentUser?.role === "Supervisor" && <SupervisorHome />}
+                {currentUser?.role === "Head of Department" && <HodHome />}
+                {currentUser?.role === "Doctor" && <DoctorHome />}
+                {currentUser?.role === "Admin" && <AdminDashboard />}
+
+            </div>
+        </ProtectedRoute>
     );
 }
