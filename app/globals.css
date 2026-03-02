@@ -65,7 +65,9 @@ body {
   border-radius: 40% 40% 20% 20% / 40% 40% 20% 20%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   margin: 20px;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
   cursor: pointer;
 }
 
@@ -79,7 +81,9 @@ body {
   border-radius: 50%;
   bottom: -25px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
 }
 
 .tooth::before {
@@ -107,4 +111,23 @@ body {
   position: absolute;
   top: 0;
   right: 25%;
+}
+
+.action {
+  border: 1px solid transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.action:hover {
+  border-color: #0d6efd;
+  cursor: pointer;
+  transform: translateY(-3px);
+}
+
+.action span {
+  transition: transform 0.3s ease-in-out;
+}
+
+.action:hover span {
+  transform: scale(1.15);
 }

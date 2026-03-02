@@ -7,6 +7,7 @@ import UsersProvider from "./Contexts/UsersContext";
 import PatientInfoProvider from "./Contexts/PatientInfoContext";
 import StatesProvider from "./Contexts/StatesContext";
 import UIProvider from "./Contexts/UIContext";
+import Footer from "./Components/General/Footer";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
             <PatientInfoProvider>
               <StatesProvider>
                 {children}
+                <Footer />
                 <BootstrapClient />
               </StatesProvider>
             </PatientInfoProvider>

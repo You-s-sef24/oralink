@@ -1,15 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useContext } from "react";
 import { UsersContext } from "../../Contexts/UsersContext";
 import Loading from "../../loading";
 
 export default function Navbar() {
     const pathname = usePathname();
-    const router = useRouter();
-    const { setIsLoggedIn, currentUser, setCurrentUser, logout } = useContext(UsersContext);
+    const { currentUser, logout } = useContext(UsersContext);
 
     const linkClasses = (href) =>
         `list-group-item list-group-item-action py-3 ${pathname === href ? "active text-white bg-primary" : "text-dark"

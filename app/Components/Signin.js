@@ -3,6 +3,7 @@
 import { useContext, useState } from "react";
 import '../globals.css';
 import { UsersContext } from "../Contexts/UsersContext";
+import Image from "next/image";
 
 export default function Signin() {
     const { handleLogin, loading, loginData, setLoginData, loginError, setLoginError } = useContext(UsersContext);
@@ -13,7 +14,7 @@ export default function Signin() {
             <div className="d-flex flex-column border rounded shadow bg-white w-75 p-4">
 
                 <div className="d-flex justify-content-center">
-                    <img className="w-50" src="/OraLink (1).png" alt="OraLink" loading="lazy" />
+                    <Image className="w-50" width={150} height={70} src="/OraLink (1).png" alt="OraLink" />
                 </div>
                 <p className="text-muted text-center mb-2">Academic Dental Clinic Management</p>
 
