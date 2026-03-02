@@ -6,10 +6,12 @@ import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
 import { UsersContext } from "../../Contexts/UsersContext";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { UIContext } from "@/app/Contexts/UIContext";
 
 export default function Header({ title, desc, page }) {
     const { setIsEditing, isEditing, setSubmitModal, file, setFile, setIsLoading, isLoading } = useContext(PatientInfoContext);
-    const { currentUser, setShowEditAdminModal } = useContext(UsersContext);
+    const { currentUser } = useContext(UsersContext);
+    const { setShowEditAdminModal } = useContext(UIContext);
     const router = useRouter();
 
     async function handleEdit() {

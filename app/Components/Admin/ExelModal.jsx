@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import * as XLSX from "xlsx";
+import axios from "axios";
 
-export default function ExcelModal({ onClose = () => {} }) {
+export default function ExcelModal({ onClose = () => {}, refreshUsers }) {
   const [loading, setLoading] = useState(false);
   const [previewData, setPreviewData] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
@@ -43,7 +44,55 @@ export default function ExcelModal({ onClose = () => {} }) {
     }
 
     if (previewData.length === 0) {
-      setError("No data found in file.");
+      setError("No data to import. Please upload a valid Excel file.");
+      return;
+    }
+
+    const emailSet = new Set();
+    const duplicatesSet = new Set();
+    const errorsList = [];
+
+    previewData.forEach((user, index) => {
+      const rowNum = index + 2;
+      const { email, password, name } = user;
+      const userErrors = [];
+
+      if (!password || password.length < 8) {
+        userErrors.push("Password too short (< 8 characters)");
+      }
+
+      if (!email || !email.endsWith("@o6u.edu.eg")) {
+        userErrors.push("Email must end with @o6u.edu.eg");
+      }
+
+      if (emailSet.has(email)) {
+        duplicatesSet.add(email);
+        userErrors.push("Duplicate email in file");
+      } else {
+        emailSet.add(email);
+      }
+
+      if (userErrors.length > 0) {
+        errorsList.push({
+          row: rowNum,
+          name,
+          email,
+          issues: userErrors,
+        });
+      }
+    });
+
+    if (errorsList.length > 0) {
+      const msg = errorsList
+        .map(
+          (err) =>
+            `Row ${err.row} (${err.name} / ${err.email}): ${err.issues.join(
+              ", ",
+            )}`,
+        )
+        .join("\n");
+
+      setError(msg);
       return;
     }
 
@@ -51,26 +100,25 @@ export default function ExcelModal({ onClose = () => {} }) {
       setLoading(true);
       setError("");
 
-      const usersToSend = previewData.map((user) => ({
-        ...user,
+      const payload = {
         role: selectedRole,
-      }));
+        users: previewData,
+      };
 
-      const res = await fetch("/api/users/bulk-create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(usersToSend),
-      });
-
-      if (!res.ok) throw new Error("Failed to import");
+      await axios.post(
+        "https://oralink.runasp.net/api/admin/upload-users-excel",
+        payload,
+        { headers: { "Content-Type": "application/json" } },
+      );
 
       alert("Users imported successfully ✅");
+      refreshUsers();
       onClose();
     } catch (err) {
-      console.error(err);
-      setError("Something went wrong while importing.");
+      console.error("Upload error:", err.response?.data || err.message);
+      setError(
+        err.response?.data?.message || "Something went wrong while importing.",
+      );
     } finally {
       setLoading(false);
     }
@@ -85,7 +133,6 @@ export default function ExcelModal({ onClose = () => {} }) {
         <div className="modal-content p-4">
           <h4 className="mb-3">Import Users From Excel</h4>
 
-          {/* Role Selector */}
           <div className="mb-3">
             <label className="form-label">Select Role For All Users</label>
             <select
@@ -102,7 +149,6 @@ export default function ExcelModal({ onClose = () => {} }) {
             </select>
           </div>
 
-          {/* File Input */}
           <input
             type="file"
             accept=".xlsx, .xls"
@@ -110,10 +156,15 @@ export default function ExcelModal({ onClose = () => {} }) {
             onChange={handleFileUpload}
           />
 
-          {/* Error */}
-          {error && <div className="alert alert-danger py-2">{error}</div>}
+          {error && (
+            <div
+              className="alert alert-danger py-2"
+              style={{ whiteSpace: "pre-line" }}
+            >
+              {error}
+            </div>
+          )}
 
-          {/* Preview */}
           {previewData.length > 0 && (
             <div
               className="border rounded p-2 mb-3"
@@ -130,7 +181,7 @@ export default function ExcelModal({ onClose = () => {} }) {
                 <tbody>
                   {previewData.slice(0, 5).map((user, index) => (
                     <tr key={index}>
-                      <td>{user.name}</td>
+                      <td className="text-truncate">{user.name}</td>
                       <td>{user.email}</td>
                       <td>{user.password}</td>
                     </tr>
@@ -143,7 +194,6 @@ export default function ExcelModal({ onClose = () => {} }) {
             </div>
           )}
 
-          {/* Buttons */}
           <div className="d-flex justify-content-end gap-2">
             <button
               className="btn btn-secondary"

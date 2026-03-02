@@ -16,7 +16,7 @@ export default function EditModal({
     email: "",
     password: "",
   });
-
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -163,7 +163,6 @@ export default function EditModal({
                     <option value="Head of Department">
                       Head of Department
                     </option>
-                    <option value="Admin">Admin</option>
                   </select>
                 </div>
 
@@ -191,16 +190,30 @@ export default function EditModal({
                       (leave blank to keep current)
                     </span>
                   </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="password"
-                    placeholder="Enter new password"
-                    value={userData.password}
-                    onChange={(e) =>
-                      setUserData({ ...userData, password: e.target.value })
-                    }
-                  />
+                  <div className="input-group">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="form-control"
+                      id="password"
+                      placeholder="Enter new password"
+                      value={userData.password}
+                      onChange={(e) =>
+                        setUserData({ ...userData, password: e.target.value })
+                      }
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => setShowPassword(!showPassword)}
+                      tabIndex={-1}
+                    >
+                      {showPassword ? (
+                        <i className="bi bi-eye-slash-fill"></i>
+                      ) : (
+                        <i className="bi bi-eye-fill"></i>
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
 

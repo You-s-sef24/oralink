@@ -1,13 +1,13 @@
 "use client";
 
 import axios from "axios";
-import { UsersContext } from "@/app/Contexts/UsersContext";
 import { useContext, useEffect, useState } from "react";
 import DeleteModal from "./DeleteModal";
 import EditModal from "./EditModal";
 import UsersModal from "./UsersModal";
 import EditAdminModal from "./AdminModal";
 import ExcelModal from "./ExelModal";
+import { UIContext } from "@/app/Contexts/UIContext";
 
 export default function UsersList() {
   const [users, setUsers] = useState([]);
@@ -27,7 +27,7 @@ export default function UsersList() {
     setShowEditAdminModal,
     showExelModal,
     setShowExelModal,
-  } = useContext(UsersContext);
+  } = useContext(UIContext);
 
   const fetchUsers = async () => {
     try {
@@ -105,7 +105,7 @@ export default function UsersList() {
                 x2="46"
                 y2="18"
                 stroke="#ADB5BD"
-                stroke-width="2"
+                strokeWidth="2"
               />
               <line
                 x1="22"
@@ -113,7 +113,7 @@ export default function UsersList() {
                 x2="46"
                 y2="26"
                 stroke="#ADB5BD"
-                stroke-width="2"
+                strokeWidth="2"
               />
               <line
                 x1="22"
@@ -121,7 +121,7 @@ export default function UsersList() {
                 x2="46"
                 y2="34"
                 stroke="#ADB5BD"
-                stroke-width="2"
+                strokeWidth="2"
               />
               <line
                 x1="22"
@@ -129,7 +129,7 @@ export default function UsersList() {
                 x2="46"
                 y2="42"
                 stroke="#ADB5BD"
-                stroke-width="2"
+                strokeWidth="2"
               />
             </svg>
             Import Exel Sheet
@@ -238,7 +238,12 @@ export default function UsersList() {
         />
       )}
 
-      {showExelModal && <ExcelModal onClose={() => setShowExelModal(false)} />}
+      {showExelModal && (
+        <ExcelModal
+          onClose={() => setShowExelModal(false)}
+          refreshUsers={fetchUsers}
+        />
+      )}
     </div>
   );
 }

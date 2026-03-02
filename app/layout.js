@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./globals.css";
@@ -6,14 +6,10 @@ import BootstrapClient from "./Components/BootstrapClient";
 import UsersProvider from "./Contexts/UsersContext";
 import PatientInfoProvider from "./Contexts/PatientInfoContext";
 import StatesProvider from "./Contexts/StatesContext";
+import UIProvider from "./Contexts/UIContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const roboto = Roboto({
+  variable: "--font-roboto",
   subsets: ["latin"],
 });
 
@@ -25,14 +21,19 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        <link rel="icon" href="/favicon.png" />
+      </head>
+      <body className={`${roboto.variable}`}>
         <UsersProvider>
-          <PatientInfoProvider>
-            <StatesProvider>
-              {children}
-              <BootstrapClient />
-            </StatesProvider>
-          </PatientInfoProvider>
+          <UIProvider>
+            <PatientInfoProvider>
+              <StatesProvider>
+                {children}
+                <BootstrapClient />
+              </StatesProvider>
+            </PatientInfoProvider>
+          </UIProvider>
         </UsersProvider>
       </body>
     </html>

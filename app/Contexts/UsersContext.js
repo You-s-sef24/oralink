@@ -1,73 +1,124 @@
 "use client";
 
-import { createContext, useEffect, useMemo, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import axios from "axios";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export const UsersContext = createContext();
 
 export default function UsersProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(null);
+    const [token, setToken] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [token, setToken] = useState(null);
-    const [isAuthReady, setIsAuthReady] = useState(false);
-    const [showUsersModal, setShowUsersModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [showEditAdminModal, setShowEditAdminModal] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [showExelModal, setShowExelModal] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
+
+    const [loginData, setLoginData] = useState({
+        email: "",
+        password: ""
+    });
+
+    const [loginError, setLoginError] = useState({
+        status: false,
+        msg: ""
+    });
+
     const router = useRouter();
 
     useEffect(() => {
         const storedToken = localStorage.getItem("token");
-        const storedUser = localStorage.getItem("user");
 
-        if (storedToken && storedUser) {
+        if (!storedToken) {
+            setLoading(false);
+            return;
+        }
+
+        axios.defaults.headers.common["Authorization"] =
+            `Bearer ${storedToken}`;
+
+        setToken(storedToken);
+
+        axios.get("https://oralink.runasp.net/api/Auth/me")
+            .then(res => {
+                setCurrentUser(res.data);
+                setIsLoggedIn(true);
+            })
+            .catch(() => {
+                logout();
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
+
+    async function handleLogin(e) {
+        e.preventDefault();
+
+        if (!loginData.email || !loginData.password) {
+            setLoginError({ status: true, msg: "All fields are required." });
+            return;
+        }
+
+        if (loginData.password.length < 8) {
+            setLoginError({ status: true, msg: "Password too short." });
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            const res = await axios.post(
+                "https://oralink.runasp.net/api/auth/login",
+                loginData
+            );
+
+            const receivedToken = res.data.token;
+
+            localStorage.setItem("token", receivedToken);
+
             axios.defaults.headers.common["Authorization"] =
-                `Bearer ${storedToken}`;
-            setCurrentUser(JSON.parse(storedUser));
-            setToken(storedToken);
+                `Bearer ${receivedToken}`;
+
+            setToken(receivedToken);
+            setCurrentUser(res.data.user);
             setIsLoggedIn(true);
-            setIsAuthReady(true);
+            setLoginError({ status: false, msg: "" });
+
+            router.replace("/home");
+        } catch (err) {
+            setLoginError({
+                status: true,
+                msg: err.response?.data?.message || "Login failed"
+            });
+        } finally {
+            setLoading(false);
         }
-    }, []);
+    }
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem("currentUser");
-        const storedLoginStatus = localStorage.getItem("isLoggedIn");
-
-        if (storedUser !== null && storedUser !== "null") {
-            setCurrentUser(JSON.parse(storedUser));
-        }
-        if (storedLoginStatus === "true") {
-            setIsLoggedIn(true);
-        }
-        setLoading(false);
-    }, []);
-
-
-    useEffect(() => {
-        if (loading) return;
-
-        localStorage.setItem("currentUser", JSON.stringify(currentUser));
-        localStorage.setItem("isLoggedIn", isLoggedIn.toString());
-
-    }, [currentUser, isLoggedIn, loading]);
-
-    const logout = () => {
-        setCurrentUser(null);
-        setToken('');
-        setIsLoggedIn(false);
-        localStorage.removeItem("user");
+    function logout() {
         localStorage.removeItem("token");
         delete axios.defaults.headers.common["Authorization"];
+
+        setCurrentUser(null);
+        setToken(null);
+        setIsLoggedIn(false);
+
         router.replace("/");
-    };
+    }
 
     return (
-        <UsersContext.Provider value={{ currentUser, setCurrentUser, isLoggedIn, setIsLoggedIn, token, logout, showUsersModal, setShowUsersModal, showEditModal, setShowEditModal, showDeleteModal, setShowDeleteModal, selectedUser, setSelectedUser, showEditAdminModal, setShowEditAdminModal, showExelModal, setShowExelModal }}>
+        <UsersContext.Provider
+            value={{
+                currentUser,
+                isLoggedIn,
+                loading,
+                loginData,
+                setLoginData,
+                loginError,
+                setLoginError,
+                handleLogin,
+                logout
+            }}
+        >
             {children}
         </UsersContext.Provider>
     );
