@@ -4,11 +4,11 @@ import Link from "next/link";
 
 export default function CreditsPage() {
     const team = [
-        { name: "Youssef Mahmoud", role: "Frontend Developer", linkedin: "" },
-        { name: "Youssef Sherif", role: "Backend Developer", linkedin: "" },
-        { name: "Youssef Ahmed", role: "Backend Developer", linkedin: "" },
-        { name: "Youssef Sawy", role: "Backend Developer", linkedin: "" },
-        { name: "Mohamed Ragab", role: "AI Developer", linkedin: "" },
+        { name: "Youssef Mahmoud", role: "Frontend Developer", linkedin: "www.linkedin.com/in/you-s-sef24" },
+        { name: "Youssef Sawy", role: "Backend Developer", linkedin: "https://www.linkedin.com/in/youssif-s-a2b717214/" },
+        { name: "Youssef Sherif", role: "Backend Developer", linkedin: "https://www.linkedin.com/in/youssef-mohamed-sheref-42204228b/" },
+        { name: "Youssef Ahmed", role: "Backend Developer", linkedin: "https://www.linkedin.com/in/youssefahmed22/" },
+        { name: "Mohamed Ragab", role: "AI Developer", linkedin: "https://www.linkedin.com/in/mohamed-ragab-4a90a1264/" },
         { name: "Mohamed Mahmoud", role: "UI/UX Designer", linkedin: "" },
         { name: "Ahmed Wagih", role: "QA & Testing", linkedin: "" },
     ];
