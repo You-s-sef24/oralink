@@ -26,9 +26,6 @@ export default function CreditsPage() {
                     </div>
                 ))}
             </div>
-            <p className="text-center text-muted mt-4">
-                © {new Date().getFullYear()} October 6 University. All rights reserved.
-            </p>
         </div>
     );
 }

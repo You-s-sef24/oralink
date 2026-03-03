@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { UIContext } from "@/app/Contexts/UIContext";
 
 export default function Header({ title, desc, page }) {
-    const { setIsEditing, isEditing, setSubmitModal, file, setFile, setIsLoading, isLoading } = useContext(PatientInfoContext);
+    const { setIsEditing, isEditing, setSubmitModal, file, setFile, setIsLoading, isLoading, formErrors, setFormErrors, validateFile } = useContext(PatientInfoContext);
     const { currentUser } = useContext(UsersContext);
     const { setShowEditAdminModal } = useContext(UIContext);
     const router = useRouter();
@@ -29,6 +29,10 @@ export default function Header({ title, desc, page }) {
             alert("Submitted files cannot be edited.");
             return;
         }
+
+        const newErrors = validateFile(file);
+        setFormErrors(newErrors);
+        if (Object.keys(newErrors).length > 0) return;
 
         try {
             setIsLoading(true);

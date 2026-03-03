@@ -3,10 +3,9 @@
 import { useContext } from "react";
 import { PatientInfoContext } from "../Contexts/PatientInfoContext";
 import ImageUploadBox from "./ImageUploadBox";
-import Image from "next/image";
 
 export default function ViewGeneralForm() {
-    const { isEditing, file, setFile } = useContext(PatientInfoContext);
+    const { isEditing, file, setFile, formErrors: errors } = useContext(PatientInfoContext);
 
     const ReadOnlyField = ({ label, value }) => (
         <div className="mb-2">
@@ -31,7 +30,12 @@ export default function ViewGeneralForm() {
                                 <div className="row g-2 mb-3">
                                     <div className="col-md-6">
                                         <label htmlFor="name" className="form-label">Name:</label>
-                                        <input type="text" id="name" className="form-control" value={file.patientName} onChange={(e) => { setFile({ ...file, patientName: e.target.value }) }} required />
+                                        <input type="text" id="name"
+                                            className={`form-control ${errors.patientName ? "is-invalid" : ""}`}
+                                            value={file.patientName}
+                                            onChange={(e) => { setFile({ ...file, patientName: e.target.value }) }}
+                                        />
+                                        {errors.patientName && <div className="invalid-feedback">{errors.patientName}</div>}
                                     </div>
                                     <div className="col-md-6">
                                         <label className="form-label">Gender:</label>
@@ -45,6 +49,7 @@ export default function ViewGeneralForm() {
                                                 <label htmlFor="genderFemale" className="form-check-label">Female</label>
                                             </div>
                                         </div>
+                                        {errors.gender && <div className="text-danger small mt-1">{errors.gender}</div>}
                                     </div>
                                     <div className="col-6">
                                         <label className="form-label">Marital Status:</label>
@@ -57,19 +62,39 @@ export default function ViewGeneralForm() {
                                     </div>
                                     <div className="col-6">
                                         <label className="form-label">Birth Date:</label>
-                                        <input type="date" className="form-control" value={file.birthDate} onChange={(e) => { setFile({ ...file, birthDate: e.target.value }) }} required />
+                                        <input type="date"
+                                            className={`form-control ${errors.birthDate ? "is-invalid" : ""}`}
+                                            value={file.birthDate}
+                                            onChange={(e) => { setFile({ ...file, birthDate: e.target.value }) }}
+                                        />
+                                        {errors.birthDate && <div className="invalid-feedback">{errors.birthDate}</div>}
                                     </div>
                                     <div className="col-12">
                                         <label className="form-label">Address:</label>
-                                        <input type="text" className="form-control" value={file.address} onChange={(e) => { setFile({ ...file, address: e.target.value }) }} required />
+                                        <input type="text"
+                                            className={`form-control ${errors.address ? "is-invalid" : ""}`}
+                                            value={file.address}
+                                            onChange={(e) => { setFile({ ...file, address: e.target.value }) }}
+                                        />
+                                        {errors.address && <div className="invalid-feedback">{errors.address}</div>}
                                     </div>
                                     <div className="col-6">
                                         <label className="form-label">Phone Number:</label>
-                                        <input type="tel" className="form-control" value={file.phone} onChange={(e) => { setFile({ ...file, phone: e.target.value }) }} required />
+                                        <input type="tel"
+                                            className={`form-control ${errors.phone ? "is-invalid" : ""}`}
+                                            value={file.phone}
+                                            onChange={(e) => { setFile({ ...file, phone: e.target.value }) }}
+                                        />
+                                        {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
                                     </div>
                                     <div className="col-6">
                                         <label className="form-label">Occupation:</label>
-                                        <input type="text" className="form-control" value={file.occupation} onChange={(e) => { setFile({ ...file, occupation: e.target.value }) }} required />
+                                        <input type="text"
+                                            className={`form-control ${errors.occupation ? "is-invalid" : ""}`}
+                                            value={file.occupation}
+                                            onChange={(e) => { setFile({ ...file, occupation: e.target.value }) }}
+                                        />
+                                        {errors.occupation && <div className="invalid-feedback">{errors.occupation}</div>}
                                     </div>
                                     <div className="col-6 col-md-6">
                                         <label className="form-label">Physican&apos;s Name:</label>
@@ -77,7 +102,12 @@ export default function ViewGeneralForm() {
                                     </div>
                                     <div className="col-6 col-md-6">
                                         <label className="form-label">Physican&apos;s Phone No:</label>
-                                        <input type="tel" className="form-control" value={file.physicianPhone} onChange={(e) => { setFile({ ...file, physicianPhone: e.target.value }) }} />
+                                        <input type="tel"
+                                            className={`form-control ${errors.physicianPhone ? "is-invalid" : ""}`}
+                                            value={file.physicianPhone}
+                                            onChange={(e) => { setFile({ ...file, physicianPhone: e.target.value }) }}
+                                        />
+                                        {errors.physicianPhone && <div className="invalid-feedback">{errors.physicianPhone}</div>}
                                     </div>
                                     <div className="col-6 col-md-4">
                                         <label className="form-label">Date of Last Visit:</label>
@@ -156,27 +186,15 @@ export default function ViewGeneralForm() {
                                 <div className="d-flex">
                                     <input id="mh-heartProblems" className="form-check-input me-2" type="checkbox"
                                         checked={file.medicalHistory.heartProblems}
-                                        onChange={(e) =>
-                                            setFile({
-                                                ...file,
-                                                medicalHistory: { ...file.medicalHistory, heartProblems: e.target.checked }
-                                            })
-                                        }
+                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, heartProblems: e.target.checked } })}
                                     />
-                                    <label htmlFor="mh-heartProblems" className="form-check-label">
-                                        Have you had heart problems? Or hypertensions?
-                                    </label>
+                                    <label htmlFor="mh-heartProblems" className="form-check-label">Have you had heart problems? Or hypertensions?</label>
                                 </div>
 
                                 <div className="d-flex">
                                     <input id="mh-diabetes" className="form-check-input me-2" type="checkbox"
                                         checked={file.medicalHistory.diabetes}
-                                        onChange={(e) =>
-                                            setFile({
-                                                ...file,
-                                                medicalHistory: { ...file.medicalHistory, diabetes: e.target.checked }
-                                            })
-                                        }
+                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, diabetes: e.target.checked } })}
                                     />
                                     <label htmlFor="mh-diabetes" className="form-check-label">Are you diabetic?</label>
                                 </div>
@@ -184,12 +202,7 @@ export default function ViewGeneralForm() {
                                 <div className="d-flex">
                                     <input id="mh-liverProblems" className="form-check-input me-2" type="checkbox"
                                         checked={file.medicalHistory.liverProblems}
-                                        onChange={(e) =>
-                                            setFile({
-                                                ...file,
-                                                medicalHistory: { ...file.medicalHistory, liverProblems: e.target.checked }
-                                            })
-                                        }
+                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, liverProblems: e.target.checked } })}
                                     />
                                     <label htmlFor="mh-liverProblems" className="form-check-label">Have you had any liver problems?</label>
                                 </div>
@@ -197,12 +210,7 @@ export default function ViewGeneralForm() {
                                 <div className="d-flex">
                                     <input id="mh-kidneyProblems" className="form-check-input me-2" type="checkbox"
                                         checked={file.medicalHistory.kidneyProblems}
-                                        onChange={(e) =>
-                                            setFile({
-                                                ...file,
-                                                medicalHistory: { ...file.medicalHistory, kidneyProblems: e.target.checked }
-                                            })
-                                        }
+                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, kidneyProblems: e.target.checked } })}
                                     />
                                     <label htmlFor="mh-kidneyProblems" className="form-check-label">Have you had any kidney problems?</label>
                                 </div>
@@ -210,12 +218,7 @@ export default function ViewGeneralForm() {
                                 <div className="d-flex">
                                     <input id="mh-lungProblems" className="form-check-input me-2" type="checkbox"
                                         checked={file.medicalHistory.lungProblems}
-                                        onChange={(e) =>
-                                            setFile({
-                                                ...file,
-                                                medicalHistory: { ...file.medicalHistory, lungProblems: e.target.checked }
-                                            })
-                                        }
+                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, lungProblems: e.target.checked } })}
                                     />
                                     <label htmlFor="mh-lungProblems" className="form-check-label">Have you had any lungs problems?</label>
                                 </div>
@@ -223,12 +226,7 @@ export default function ViewGeneralForm() {
                                 <div className="d-flex">
                                     <input id="mh-thyroidProblems" className="form-check-input me-2" type="checkbox"
                                         checked={file.medicalHistory.thyroidProblems}
-                                        onChange={(e) =>
-                                            setFile({
-                                                ...file,
-                                                medicalHistory: { ...file.medicalHistory, thyroidProblems: e.target.checked }
-                                            })
-                                        }
+                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, thyroidProblems: e.target.checked } })}
                                     />
                                     <label htmlFor="mh-thyroidProblems" className="form-check-label">Have you had any thyroid problems?</label>
                                 </div>
@@ -236,12 +234,7 @@ export default function ViewGeneralForm() {
                                 <div className="d-flex">
                                     <input id="mh-pregnancy" className="form-check-input me-2" type="checkbox"
                                         checked={file.medicalHistory.pregnancy}
-                                        onChange={(e) =>
-                                            setFile({
-                                                ...file,
-                                                medicalHistory: { ...file.medicalHistory, pregnancy: e.target.checked }
-                                            })
-                                        }
+                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, pregnancy: e.target.checked } })}
                                     />
                                     <label htmlFor="mh-pregnancy" className="form-check-label">If female, are you pregnant?</label>
                                 </div>
@@ -249,110 +242,56 @@ export default function ViewGeneralForm() {
                                 <div className="d-flex">
                                     <input id="mh-medications" className="form-check-input me-2" type="checkbox"
                                         checked={file.medicalHistory.medications}
-                                        onChange={(e) =>
-                                            setFile({
-                                                ...file,
-                                                medicalHistory: { ...file.medicalHistory, medications: e.target.checked }
-                                            })
-                                        }
+                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, medications: e.target.checked } })}
                                     />
-                                    <label htmlFor="mh-medications" className="form-check-label">
-                                        Are you taking any medications? Which ones?
-                                    </label>
+                                    <label htmlFor="mh-medications" className="form-check-label">Are you taking any medications? Which ones?</label>
                                 </div>
 
                                 <div className="d-flex">
                                     <input id="mh-surgeries" className="form-check-input me-2" type="checkbox"
                                         checked={file.medicalHistory.surgeries}
-                                        onChange={(e) =>
-                                            setFile({
-                                                ...file,
-                                                medicalHistory: { ...file.medicalHistory, surgeries: e.target.checked }
-                                            })
-                                        }
+                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, surgeries: e.target.checked } })}
                                     />
-                                    <label htmlFor="mh-surgeries" className="form-check-label">
-                                        Have you had any previous surgeries or hospitalization?
-                                    </label>
+                                    <label htmlFor="mh-surgeries" className="form-check-label">Have you had any previous surgeries or hospitalization?</label>
                                 </div>
 
                                 <div className="d-flex">
                                     <input id="mh-fainted" className="form-check-input me-2" type="checkbox"
                                         checked={file.medicalHistory.fainted}
-                                        onChange={(e) =>
-                                            setFile({
-                                                ...file,
-                                                medicalHistory: { ...file.medicalHistory, fainted: e.target.checked }
-                                            })
-                                        }
+                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, fainted: e.target.checked } })}
                                     />
-                                    <label htmlFor="mh-fainted" className="form-check-label">
-                                        Have you ever fainted in dental office?
-                                    </label>
+                                    <label htmlFor="mh-fainted" className="form-check-label">Have you ever fainted in dental office?</label>
                                 </div>
 
                                 <div className="d-flex">
                                     <input id="mh-prolongedBleeding" className="form-check-input me-2" type="checkbox"
                                         checked={file.medicalHistory.prolongedBleeding}
-                                        onChange={(e) =>
-                                            setFile({
-                                                ...file,
-                                                medicalHistory: { ...file.medicalHistory, prolongedBleeding: e.target.checked }
-                                            })
-                                        }
+                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, prolongedBleeding: e.target.checked } })}
                                     />
-                                    <label htmlFor="mh-prolongedBleeding" className="form-check-label">
-                                        Have you had prolonged bleeding from acute tooth extraction or other injury?
-                                    </label>
+                                    <label htmlFor="mh-prolongedBleeding" className="form-check-label">Have you had prolonged bleeding from acute tooth extraction or other injury?</label>
                                 </div>
 
                                 <div className="d-flex">
                                     <input id="mh-allergies" className="form-check-input me-2" type="checkbox"
                                         checked={file.medicalHistory.allergies}
-                                        onChange={(e) =>
-                                            setFile({
-                                                ...file,
-                                                medicalHistory: { ...file.medicalHistory, allergies: e.target.checked }
-                                            })
-                                        }
+                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, allergies: e.target.checked } })}
                                     />
-                                    <label htmlFor="mh-allergies" className="form-check-label">
-                                        Are you allergic to anesthetics, antibiotics, other drugs?
-                                    </label>
+                                    <label htmlFor="mh-allergies" className="form-check-label">Are you allergic to anesthetics, antibiotics, other drugs?</label>
                                 </div>
 
                                 <div>
                                     <div className="d-flex">
                                         <input id="mh-other" className="form-check-input me-2" type="checkbox"
                                             checked={file.medicalHistory.other.found}
-                                            onChange={(e) =>
-                                                setFile({
-                                                    ...file,
-                                                    medicalHistory: {
-                                                        ...file.medicalHistory,
-                                                        other: { ...file.medicalHistory.other, found: e.target.checked }
-                                                    }
-                                                })
-                                            }
+                                            onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, other: { ...file.medicalHistory.other, found: e.target.checked } } })}
                                         />
-                                        <label htmlFor="mh-other" className="form-check-label">
-                                            Do you have any disease or condition not listed above?
-                                        </label>
+                                        <label htmlFor="mh-other" className="form-check-label">Do you have any disease or condition not listed above?</label>
                                     </div>
-
                                     <input
                                         type="text"
                                         className="form-control mt-2"
                                         value={file.medicalHistory.other.details}
-                                        onChange={(e) =>
-                                            setFile({
-                                                ...file,
-                                                medicalHistory: {
-                                                    ...file.medicalHistory,
-                                                    other: { ...file.medicalHistory.other, details: e.target.value }
-                                                }
-                                            })
-                                        }
+                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, other: { ...file.medicalHistory.other, details: e.target.value } } })}
                                         disabled={!file.medicalHistory.other.found}
                                         placeholder="If yes, please specify"
                                     />
@@ -365,36 +304,14 @@ export default function ViewGeneralForm() {
                                             type="text"
                                             className="form-control mt-2"
                                             value={file.medicalHistory.familyAndSocialHistory.diseases}
-                                            onChange={(e) =>
-                                                setFile({
-                                                    ...file,
-                                                    medicalHistory: {
-                                                        ...file.medicalHistory,
-                                                        familyAndSocialHistory: {
-                                                            ...file.medicalHistory.familyAndSocialHistory,
-                                                            diseases: e.target.value
-                                                        }
-                                                    }
-                                                })
-                                            }
+                                            onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, familyAndSocialHistory: { ...file.medicalHistory.familyAndSocialHistory, diseases: e.target.value } } })}
                                             placeholder="Diabetes"
                                         />
                                         <input
                                             type="text"
                                             className="form-control mt-2"
                                             value={file.medicalHistory.familyAndSocialHistory.person}
-                                            onChange={(e) =>
-                                                setFile({
-                                                    ...file,
-                                                    medicalHistory: {
-                                                        ...file.medicalHistory,
-                                                        familyAndSocialHistory: {
-                                                            ...file.medicalHistory.familyAndSocialHistory,
-                                                            person: e.target.value
-                                                        }
-                                                    }
-                                                })
-                                            }
+                                            onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, familyAndSocialHistory: { ...file.medicalHistory.familyAndSocialHistory, person: e.target.value } } })}
                                             placeholder="Father"
                                         />
                                     </div>
@@ -559,7 +476,11 @@ export default function ViewGeneralForm() {
                     </div>
                 </div>
 
-            </form >
+                <div className="d-flex justify-content-end my-3">
+                    <button type="submit" className="btn btn-primary">Save Changes</button>
+                </div>
+
+            </form>
             :
             <div className="p-4">
                 <div className="row align-items-start g-3">
@@ -600,7 +521,6 @@ export default function ViewGeneralForm() {
                         </div>
                     </div>
 
-                    {/* ========= History of Chief Complaint ========= */}
                     <div className="col-12 col-md-6">
                         <div className="position-relative border border-primary rounded-3 p-4 bg-white">
                             <span className="position-absolute top-0 start-0 translate-middle-y ms-4 px-2 bg-white text-primary fw-semibold">
@@ -629,7 +549,6 @@ export default function ViewGeneralForm() {
                         </div>
                     </div>
 
-                    {/* ========= Medical History ========= */}
                     <div className="col-12 col-md-6">
                         <div className="position-relative border border-primary rounded-3 p-4 bg-white">
                             <span className="position-absolute top-0 start-0 translate-middle-y ms-4 px-2 bg-white text-primary fw-semibold">
@@ -689,7 +608,6 @@ export default function ViewGeneralForm() {
                         </div>
                     </div>
 
-                    {/* ========= Dental History ========= */}
                     <div className="col-12 col-md-6">
                         <div className="position-relative border border-primary rounded-3 p-4 bg-white">
                             <span className="position-absolute top-0 start-0 translate-middle-y ms-4 px-2 bg-white text-primary fw-semibold">
@@ -742,12 +660,8 @@ export default function ViewGeneralForm() {
                                     <ReadOnlyField label="Last Dental X-ray:" value={file.dentalHistory.lastDentalXray} />
                                 </div>
                                 <div className="col-sm-6 col-md-4">
-                                    <ReadOnlyField
-                                        label="Smoking:"
-                                        value={file.dentalHistory.smoking.isSmoking ? "Yes" : "No"}
-                                    />
+                                    <ReadOnlyField label="Smoking:" value={file.dentalHistory.smoking.isSmoking ? "Yes" : "No"} />
                                 </div>
-
                                 {file.dentalHistory.smoking.isSmoking && (
                                     <div className="col-sm-6 col-md-8">
                                         <ReadOnlyField label="Since When(Per Day):" value={`${file.dentalHistory.smoking.sinceWhen} (${file.dentalHistory.smoking.howManyPerDay})`} />
@@ -760,7 +674,6 @@ export default function ViewGeneralForm() {
                         </div>
                     </div>
 
-                    {/* ========= Images ========= */}
                     <div className="col-12 col-sm-6">
                         <img src={file.prePatientImage} alt="Pre dental image" className="img-fluid rounded" />
                     </div>

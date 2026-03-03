@@ -10,6 +10,39 @@ export const PatientInfoContext = createContext();
 export default function PatientInfoProvider({ children }) {
     const { currentUser, setCurrentUser, users, setUsers, token } = useContext(UsersContext);
     const router = useRouter();
+    const [formErrors, setFormErrors] = useState({});
+
+    function validateFile(file) {
+        const newErrors = {};
+
+        if (!file.patientName?.trim())
+            newErrors.patientName = "Name is required";
+
+        if (!file.gender)
+            newErrors.gender = "Gender is required";
+
+        if (!file.birthDate)
+            newErrors.birthDate = "Birth date is required";
+
+        if (!file.address?.trim())
+            newErrors.address = "Address is required";
+
+        if (!file.phone?.trim()) {
+            newErrors.phone = "Phone number is required";
+        } else if (!/^\+?[\d\s\-()]{7,15}$/.test(file.phone.trim())) {
+            newErrors.phone = "Please enter a valid phone number";
+        }
+
+        if (file.physicianPhone?.trim() &&
+            !/^\+?[\d\s\-()]{7,15}$/.test(file.physicianPhone.trim())) {
+            newErrors.physicianPhone = "Please enter a valid Egyptian phone number";
+        }
+
+        if (!file.occupation?.trim())
+            newErrors.occupation = "Occupation is required";
+
+        return newErrors;
+    }
 
     const [generalData, setGeneralData] = useState({
         patientName: "",
@@ -835,7 +868,17 @@ export default function PatientInfoProvider({ children }) {
     }
 
     return (
-        <PatientInfoContext.Provider value={{ generalData, setGeneralData, endodonticsData, setEndodonticsData, periodonticsData, setPeriodonticsData, handleSave, isEditing, setIsEditing, file, setFile, submitModal, setSubmitModal, isLoading, setIsLoading }}>
+        <PatientInfoContext.Provider value={{
+            generalData, setGeneralData,
+            endodonticsData, setEndodonticsData,
+            periodonticsData, setPeriodonticsData,
+            handleSave,
+            isEditing, setIsEditing,
+            file, setFile,
+            submitModal, setSubmitModal,
+            isLoading, setIsLoading,
+            formErrors, setFormErrors, validateFile  // add this
+        }}>
             {children}
         </PatientInfoContext.Provider>
     );

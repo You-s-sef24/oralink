@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="text-center text-muted py-2 bg-light border-top">
+    <footer className="position-fixed bottom-0 w-100 text-center text-muted py-2 bg-light border-top">
       <small>
         © {new Date().getFullYear()} October 6 University. All rights reserved.{" "}
         <br />

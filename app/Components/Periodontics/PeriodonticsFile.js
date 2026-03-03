@@ -13,6 +13,7 @@ export default function PeriodonticsFile() {
     const [step, setStep] = useState(1);
     const { periodonticsData, setPeriodonticsData, generalData, setGeneralData, handleSave, isLoading, setIsLoading } = useContext(PatientInfoContext);
     const { state, setState } = useContext(StatesContext);
+    const [error, setError] = useState();
 
     function handleBack() {
         if (step === 1) {
@@ -30,10 +31,37 @@ export default function PeriodonticsFile() {
         return;
     }
 
+    function handleSaveWithValidation() {
+        const procedures = generalData.treatmentProcedures;
+        const step1 = procedures?.[0];
+
+        if (!step1?.title?.trim() || !step1?.desc?.trim() || !step1?.date) {
+            setError("Please fill in all Treatment Procedure fields before saving.");
+            return;
+        }
+
+        handleSave('periodontics');
+    }
+
     return (
         <div className="bg-white rounded shadow p-3">
             <h1 className="fw-bold text-center text-primary">Department of Oral Medicine, Periodontology and Diagnosis</h1>
             <p className="text-center">Faculty of Dentistry</p>
+            {error && <div
+                className="alert alert-danger alert-dismissible fade show"
+                role="alert"
+            >
+                <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                    onClick={() => { setError() }}
+                ></button>
+
+                <strong>Please fill in all Treatment Procedure fields before saving.</strong>
+            </div>
+            }
             <hr />
             {step === 1 ? (
                 <PeriodonticsPage1 info={periodonticsData} setInfo={setPeriodonticsData} />
@@ -58,7 +86,7 @@ export default function PeriodonticsFile() {
 
                 {step === 5 ? (
                     <button className="btn btn-primary my-3" disabled={isLoading} onClick={() => {
-                        handleSave('periodontics');
+                        handleSaveWithValidation('periodontics');
                     }}>
                         {isLoading ? (<div className="d-flex align-items-center gap-1">
                             <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

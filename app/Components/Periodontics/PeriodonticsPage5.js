@@ -28,6 +28,7 @@ export default function PeriodonticsPage5({ info, setInfo }) {
                             placeholder="e.g. Scaling - Upper Right"
                             value={step.title}
                             onChange={(e) => handleChange("title", e.target.value)}
+                            required
                         />
                     </div>
                     <div className="col-12 col-md-4">
@@ -38,6 +39,7 @@ export default function PeriodonticsPage5({ info, setInfo }) {
                             placeholder="Describe what was done..."
                             value={step.desc}
                             onChange={(e) => handleChange("desc", e.target.value)}
+                            required
                         />
                     </div>
                     <div className="col-12 col-md-4">
@@ -47,6 +49,7 @@ export default function PeriodonticsPage5({ info, setInfo }) {
                             className="form-control"
                             value={step.date}
                             onChange={(e) => handleChange("date", e.target.value)}
+                            required
                         />
                     </div>
                 </div>

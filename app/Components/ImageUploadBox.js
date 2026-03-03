@@ -101,7 +101,6 @@ export default function ImageUploadBox({ time, type, fileData, setFileData }) {
                         accept="image/png, image/jpeg, .dcm"
                         name={getFieldName()}
                         className="d-none"
-                        required={type !== 'xray'}
                         onChange={handleFileSelect}
                     />
                     <div className="upload-content">

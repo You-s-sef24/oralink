@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { StatesContext } from "../Contexts/StatesContext";
 import { PatientInfoContext } from "../Contexts/PatientInfoContext";
 import ImageUploadBox from "./ImageUploadBox";
@@ -8,10 +8,50 @@ import ImageUploadBox from "./ImageUploadBox";
 export default function GeneralForm() {
     const { generalData, setGeneralData } = useContext(PatientInfoContext);
     const { state, setState } = useContext(StatesContext);
+    const [errors, setErrors] = useState({});
+
+    function validate() {
+        const newErrors = {};
+
+        if (!generalData.patientName?.trim())
+            newErrors.patientName = "Name is required";
+
+        if (!generalData.gender)
+            newErrors.gender = "Gender is required";
+
+        if (!generalData.birthDate)
+            newErrors.birthDate = "Birth date is required";
+
+        if (!generalData.address?.trim())
+            newErrors.address = "Address is required";
+
+        if (!generalData.phone?.trim()) {
+            newErrors.phone = "Phone number is required";
+        } else if (!/^\+?[\d\s\-()]{7,15}$/.test(generalData.phone.trim())) {
+            newErrors.phone = "Please enter a valid phone number";
+        }
+
+        if (generalData.physicianPhone?.trim() &&
+            !/^\+?[\d\s\-()]{7,15}$/.test(generalData.physicianPhone.trim())) {
+            newErrors.physicianPhone = "Please enter a valid phone number";
+        }
+
+        if (!generalData.occupation?.trim())
+            newErrors.occupation = "Occupation is required";
+
+        if (!generalData.prePatientImage)
+            newErrors.prePatientImage = "Pre Patient Image is required";
+
+        return newErrors;
+    }
 
     function handleSubmit(e) {
         e.preventDefault();
-        setState(state + 1)
+        const newErrors = validate();
+        setErrors(newErrors);
+        if (Object.keys(newErrors).length === 0) {
+            setState(state + 1);
+        }
     }
 
     return (
@@ -27,8 +67,15 @@ export default function GeneralForm() {
                             <div className="row g-2 mb-3">
                                 <div className="col-md-6">
                                     <label htmlFor="name" className="form-label">Name:</label>
-                                    <input type="text" id="name" className="form-control" value={generalData.patientName} onChange={(e) => { setGeneralData({ ...generalData, patientName: e.target.value }) }} required />
+                                    <input type="text" id="name"
+                                        className={`form-control ${errors.patientName ? "is-invalid" : ""}`}
+                                        value={generalData.patientName}
+                                        onChange={(e) => { setGeneralData({ ...generalData, patientName: e.target.value }) }}
+                                        required
+                                    />
+                                    {errors.patientName && <div className="invalid-feedback">{errors.patientName}</div>}
                                 </div>
+
                                 <div className="col-md-6">
                                     <label className="form-label">Gender:</label>
                                     <div className="d-flex gap-2 pt-2">
@@ -40,8 +87,10 @@ export default function GeneralForm() {
                                             <input className="form-check-input" type="radio" id="genderFemale" value={"Female"} checked={generalData.gender === "Female"} onChange={(e) => { setGeneralData({ ...generalData, gender: e.target.value }) }} />
                                             <label htmlFor="genderFemale" className="form-check-label">Female</label>
                                         </div>
+                                        {errors.gender && <div className="text-danger small mt-1">{errors.gender}</div>}
                                     </div>
                                 </div>
+
                                 <div className="col-6">
                                     <label className="form-label">Marital Status:</label>
                                     <select className="form-select" value={generalData.maritalStatus} onChange={(e) => { setGeneralData({ ...generalData, maritalStatus: e.target.value }) }}>
@@ -53,28 +102,60 @@ export default function GeneralForm() {
                                 </div>
                                 <div className="col-6">
                                     <label className="form-label">Birth Date:</label>
-                                    <input type="date" className="form-control" value={generalData.birthDate} onChange={(e) => { setGeneralData({ ...generalData, birthDate: e.target.value }) }} required />
+                                    <input type="date"
+                                        className={`form-control ${errors.birthDate ? "is-invalid" : ""}`}
+                                        value={generalData.birthDate}
+                                        onChange={(e) => { setGeneralData({ ...generalData, birthDate: e.target.value }) }}
+                                        required />
+                                    {errors.birthDate && <div className="invalid-feedback">{errors.birthDate}</div>}
                                 </div>
+
                                 <div className="col-12">
                                     <label className="form-label">Address:</label>
-                                    <input type="text" className="form-control" value={generalData.address} onChange={(e) => { setGeneralData({ ...generalData, address: e.target.value }) }} required />
+                                    <input type="text"
+                                        className={`form-control ${errors.address ? "is-invalid" : ""}`}
+                                        value={generalData.address}
+                                        onChange={(e) => { setGeneralData({ ...generalData, address: e.target.value }) }}
+                                        required />
+                                    {errors.address && <div className="invalid-feedback">{errors.address}</div>}
                                 </div>
+
                                 <div className="col-6">
                                     <label className="form-label">Phone Number:</label>
-                                    <input type="tel" className="form-control" value={generalData.phone} onChange={(e) => { setGeneralData({ ...generalData, phone: e.target.value }) }} required />
+                                    <input type="tel"
+                                        className={`form-control ${errors.phone ? "is-invalid" : ""}`}
+                                        pattern="^\+?[\d\s\-()]{7,15}$"
+                                        title="Please enter a valid phone number"
+                                        value={generalData.phone}
+                                        onChange={(e) => { setGeneralData({ ...generalData, phone: e.target.value }) }} required />
+                                    {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
                                 </div>
+
                                 <div className="col-6">
                                     <label className="form-label">Occupation:</label>
-                                    <input type="text" className="form-control" value={generalData.occupation} onChange={(e) => { setGeneralData({ ...generalData, occupation: e.target.value }) }} required />
+                                    <input type="text"
+                                        className={`form-control ${errors.occupation ? "is-invalid" : ""}`}
+                                        value={generalData.occupation}
+                                        onChange={(e) => { setGeneralData({ ...generalData, occupation: e.target.value }) }}
+                                        required />
+                                    {errors.occupation && <div className="invalid-feedback">{errors.occupation}</div>}
                                 </div>
+
                                 <div className="col-6 col-md-6">
                                     <label className="form-label">Physican&apos;s Name:</label>
                                     <input type="text" className="form-control" value={generalData.physicianName} onChange={(e) => { setGeneralData({ ...generalData, physicianName: e.target.value }) }} />
                                 </div>
                                 <div className="col-6 col-md-6">
                                     <label className="form-label">Physican&apos;s Phone No:</label>
-                                    <input type="tel" className="form-control" value={generalData.physicianPhone} onChange={(e) => { setGeneralData({ ...generalData, physicianPhone: e.target.value }) }} />
+                                    <input type="tel"
+                                        className={`form-control ${errors.physicianPhone ? "is-invalid" : ""}`}
+                                        pattern="^\+?[\d\s\-()]{7,15}$"
+                                        title="Please enter a valid phone number"
+                                        value={generalData.physicianPhone}
+                                        onChange={(e) => { setGeneralData({ ...generalData, physicianPhone: e.target.value }) }} />
+                                    {errors.physicianPhone && <div className="text-danger small mt-1">{errors.physicianPhone}</div>}
                                 </div>
+
                                 <div className="col-6 col-md-4">
                                     <label className="form-label">Date of Last Visit:</label>
                                     <input type="date" className="form-control" value={generalData.lastVisit} onChange={(e) => { setGeneralData({ ...generalData, lastVisit: e.target.value }) }} />
@@ -561,6 +642,9 @@ export default function GeneralForm() {
                 </div>
 
                 <div className="col">
+                    {errors.prePatientImage && (
+                        <h3 className="text-danger small mb-2">{errors.prePatientImage}</h3>
+                    )}
                     <ImageUploadBox time={'pre'} type={''} />
                 </div>
             </div>
