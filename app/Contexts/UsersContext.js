@@ -116,6 +116,7 @@ export default function UsersProvider({ children }) {
                 loginError,
                 setLoginError,
                 handleLogin,
+                token
                 logout
             }}
         >
