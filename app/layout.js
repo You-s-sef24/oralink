@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="icon" href="/favicon.png" />
       </head>
-      <body className={`${roboto.variable}`}>
+      <body className={`${roboto.variable} d-flex flex-column min-vh-100`}>
         <UsersProvider>
           <UIProvider>
             <PatientInfoProvider>

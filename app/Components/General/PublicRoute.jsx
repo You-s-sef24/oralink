@@ -10,13 +10,17 @@ export default function PublicRoute({ children }) {
 
   useEffect(() => {
     if (loading) return;
-    if (isLoggedIn) {
+    const token = localStorage.getItem("token");
+    if (token) {
       router.replace("/home");
     }
   }, [isLoggedIn, loading, router]);
 
   if (loading) return null;
-  if (isLoggedIn) return null;
+
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  if (token) return null;
 
   return children;
 }

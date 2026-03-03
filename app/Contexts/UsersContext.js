@@ -21,6 +21,7 @@ export default function UsersProvider({ children }) {
         status: false,
         msg: ""
     });
+    const [loggingOut, setLoggingOut] = useState(false);
 
     const router = useRouter();
 
@@ -101,9 +102,15 @@ export default function UsersProvider({ children }) {
         setCurrentUser(null);
         setToken(null);
         setIsLoggedIn(false);
-
-        router.replace("/");
+        setLoggingOut(true);
     }
+
+    useEffect(() => {
+        if (loggingOut && !isLoggedIn) {
+            setLoggingOut(false);
+            router.replace("/");
+        }
+    }, [loggingOut, isLoggedIn]);
 
     return (
         <UsersContext.Provider
