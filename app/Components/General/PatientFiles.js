@@ -1,57 +1,53 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { UsersContext } from "../../Contexts/UsersContext";
 import Link from "next/link";
+import axios from "axios";
 
 export default function PatientFiles({ page }) {
     const [search, setSearch] = useState('');
     const [status, setStatus] = useState('');
-    const { currentUser } = useContext(UsersContext);
+    const [files, setFiles] = useState([]);
+    const [loading, setLoading] = useState(true); const { currentUser } = useContext(UsersContext);
 
-    const students = [
-        {
-            id: 1,
-            name: "dfdfd",
-            email: "sdsds",
-            files: [
-                {
-                    fileId: 1,
-                    patientName: "John Doe",
-                    creationDate: "2026-02-27",
-                    grade: 50
-                }
-            ]
-        },
-        { id: 2, name: "dgdgf", email: "hghgh", files: [] }
-    ];
+    useEffect(() => {
+        const fetchFiles = async () => {
+            try {
+                setLoading(true);
 
-    function getAllFiles() {
-        const allFiles = [];
+                const response = await axios.get(
+                    "https://oralink.runasp.net/api/files"
+                );
 
-        students.forEach(student => {
-            (student.files || []).forEach(file => {
-                allFiles.push({
+                const formattedFiles = response.data.map(file => ({
                     fileId: file.fileId,
-                    studentId: student.id,
-                    studentName: student.name || "-",
+                    studentId: file.studentId ?? null,
+                    studentName: file.studentName || "-",
                     patientName: file.patientName || "-",
-                    creationDate: file.creationDate || "-",
+                    submittedDate: file.submittedDate || "-",
                     grade: file.grade ?? 0
-                });
-            });
-        });
+                }));
+                setFiles(formattedFiles);
+            } catch (error) {
+                console.error("Error fetching files:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        return allFiles;
-    }
+        fetchFiles();
+    }, []);
 
-    const filess = getAllFiles(students, currentUser);
+    let filteredFiles = files.filter(file => {
 
-    let filteredFiles = filess.filter(file => {
         if (page === "graded") return file.grade > 0;
         if (page === "ungraded") return file.grade === 0;
 
-        const matchesSearch = (file.patientName || "").toLowerCase().includes(search.toLowerCase());
+        const matchesSearch =
+            file.patientName.toLowerCase().includes(search.toLowerCase()) ||
+            file.studentName.toLowerCase().includes(search.toLowerCase());
+
         const matchesStatus =
             status === "" ||
             status === "All Status" ||
@@ -61,27 +57,13 @@ export default function PatientFiles({ page }) {
         return matchesSearch && matchesStatus;
     });
 
-    const patientFiles = filteredFiles.map(file => (
-        <div className="row text-center align-items-center" key={file.fileId}>
-            <div className="col-1 text-truncate">{file.fileId}</div>
-            <div className="col-3 text-truncate">{file.studentName}</div>
-            <div className="col-3 text-truncate">{file.patientName}</div>
-            <div className="col text-truncate">{file.creationDate}</div>
-            <div className="col text-truncate">{file.grade > 0 ? file.grade + "/100" : "—"}</div>
-            <div className="col d-flex justify-content-center text-truncate">
-                <Link href={`/students/${file.studentId}/files/${file.fileId}`} className="d-flex align-items-center btn btn-sm btn-primary gap-1">
-                    <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-eye w-75 h-4" aria-hidden="true">
-                            <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                    </span>
-                    {page === "graded" || page === "ungraded" ? "Grade Now" : "View"}
-                </Link>
+    if (loading) {
+        return (
+            <div className="text-center py-5">
+                <div className="spinner-border text-primary"></div>
             </div>
-            <hr className="mt-2" />
-        </div>
-    ));
+        );
+    }
 
     return (
         <div className={`border rounded p-3 ${page ? '' : 'mt-3'}`}>
@@ -96,7 +78,7 @@ export default function PatientFiles({ page }) {
                                 </svg>
                             </label>
                         </div>
-                        <input type="search" id="search" value={search} onChange={e => setSearch(e.target.value)} className="border-start-0 form-control p-3" placeholder="Search by patient name" aria-label="Search" aria-describedby="Search" />
+                        <input type="search" id="search" value={search} onChange={e => setSearch(e.target.value)} className="border-start-0 form-control p-3" placeholder="Search by patient name or student name" aria-label="Search" aria-describedby="Search" />
                     </div>
 
                     <div className="input-group">
@@ -119,7 +101,7 @@ export default function PatientFiles({ page }) {
             <hr />
 
             <div className="row text-center align-items-center">
-                <div className="col-1 text-truncate">File ID</div>
+                <div className="col-1 text-truncate">#</div>
                 <div className="col-3 text-truncate">Student Name</div>
                 <div className="col-3 text-truncate">Patient Name</div>
                 <div className="col text-truncate">Submitted</div>
@@ -129,8 +111,37 @@ export default function PatientFiles({ page }) {
 
             <hr />
 
-            {patientFiles.length > 0 ? patientFiles : <div className="text-center text-muted py-4">No files found.</div>}
-
+            {filteredFiles.length > 0 ? (
+                filteredFiles.map(file => (
+                    <div
+                        className="row text-center align-items-center"
+                        key={file.fileId}
+                    >
+                        <div className="col-1">{file.fileId}</div>
+                        <div className="col-3">{file.studentName}</div>
+                        <div className="col-3">{file.patientName}</div>
+                        <div className="col">{file.submittedDate}</div>
+                        <div className="col">
+                            {file.grade > 0 ? `${file.grade}/100` : "—"}
+                        </div>
+                        <div className="col">
+                            <Link
+                                href={`/students/${file.studentId}/files/${file.fileId}`}
+                                className="btn btn-sm btn-primary"
+                            >
+                                {page === "graded" || page === "ungraded"
+                                    ? "Grade Now"
+                                    : "View"}
+                            </Link>
+                        </div>
+                        <hr className="mt-2" />
+                    </div>
+                ))
+            ) : (
+                <div className="text-center text-muted py-4">
+                    No files found.
+                </div>
+            )}
         </div>
     );
 }

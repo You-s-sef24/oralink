@@ -1,8 +1,4 @@
 export default function StudentCard({ student }) {
-    const files = student?.files || [];
-    const gradedFiles = 0;
-    const avgGrade =  0;
-
     return (
         <div className="shadow rounded bg-white p-4 my-4">
             <div className="row align-items-center">
@@ -23,15 +19,15 @@ export default function StudentCard({ student }) {
                 <div className="col-12 col-sm-6">
                     <div className="d-flex justify-content-between text-center mt-3 mt-md-0">
                         <div>
-                            <h3>{files.length}</h3>
+                            <h3>{student.totalFiles}</h3>
                             <p className="text-muted">Total Files</p>
                         </div>
                         <div className="text-success">
-                            <h3>{gradedFiles}</h3>
+                            <h3>{student.totalGradedFiles}</h3>
                             <p>Graded</p>
                         </div>
                         <div className="text-warning">
-                            <h3>{avgGrade}</h3>
+                            <h3>{student.averageGrade}</h3>
                             <p>Avg Grade</p>
                         </div>
                     </div>

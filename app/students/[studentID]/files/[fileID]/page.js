@@ -2,8 +2,8 @@
 
 import Header from "@/app/Components/General/Header";
 import ProtectedRoute from "@/app/Components/General/ProtectedRoute";
-import SupervisorViewFile from "@/app/Components/Supervisor/SupervisorViewFile";
 import { useParams } from "next/navigation";
+import DoctorsViewFile from "@/app/Components/Doctor/DoctorViewFile";
 
 export default function File() {
     const { fileId } = useParams();
@@ -15,7 +15,7 @@ export default function File() {
 
                 <hr className="m-0" />
 
-                <SupervisorViewFile fileId={fileId} />
+                <DoctorsViewFile fileId={fileId} />
             </div>
         </ProtectedRoute>
     );

@@ -1,11 +1,6 @@
-"use client";
-
-import { useContext } from "react";
-import { UsersContext } from "../Contexts/UsersContext";
 import PatientFiles from "./General/PatientFiles";
 
-export default function GradingTabs() {
-
+export default function GradingTabs({ stats }) {
     return (
         <div>
             <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -20,7 +15,7 @@ export default function GradingTabs() {
                         aria-controls="ungradedFiles"
                         aria-selected="true"
                     >
-                        Ungraded Files (4)
+                        Ungraded Files ({stats.ungraded})
                     </button>
                 </li>
 
@@ -35,7 +30,7 @@ export default function GradingTabs() {
                         aria-controls="gradedFiles"
                         aria-selected="false"
                     >
-                        Graded Files (3)
+                        Graded Files ({stats.graded})
                     </button>
                 </li>
             </ul>

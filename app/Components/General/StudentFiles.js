@@ -1,27 +1,61 @@
 import Link from "next/link";
-import { useContext } from "react";
-import { UsersContext } from "../../Contexts/UsersContext";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+export default function StudentFiles({ id }) {
+    const [files, setFiles] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (!id) return;
+
+        const fetchFiles = async () => {
+            try {
+                setLoading(true);
+
+                const response = await axios.get(
+                    `https://oralink.runasp.net/api/students/${id}/files`
+                );
+
+                setFiles(response.data);
+                console.log(response.data);
+
+            } catch (err) {
+                console.error(err);
+                setError("Failed to load files");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchFiles();
+    }, [id]);
 
 
-export default function StudentFiles({ student }) {
-    const { currentUser } = useContext(UsersContext);
+    if (loading) {
+        return <div className="d-flex justify-content-center align-items-center">
+            <div
+                className="spinner-border text-primary spinner-border-sm"
+                role="status"
+            >
+                <span className="visually-hidden">Loading...</span>
+            </div>
+        </div>
+            ;
+    }
 
-    const allFiles = student?.files || [];
-
-    const files = allFiles.filter(file => {
-        if (currentUser?.role === "Head of department") {
-            return true;
-        }
-
-        return file.department === currentUser?.department;
-    });
+    if (error) {
+        return <div className="text-danger text-center py-4">{error}</div>;
+    }
 
     if (files.length === 0) {
         return (
-            <div className="d-flex flex-column text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-text w-16 h-16 text-gray-300 mx-auto mb-4" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>
-                <p>No files submitted yet</p>
-                <p className="text-muted">This student hasn&apos;t submitted any patient files</p>
+            <div className="text-center py-4">
+                <p className="mb-1">No files submitted yet</p>
+                <small className="text-muted">
+                    This student hasn&apos;t submitted any patient files
+                </small>
             </div>
         );
     }
@@ -54,10 +88,10 @@ export default function StudentFiles({ student }) {
                     </div>
                 </div>
                 <div className="col text-truncate">
-                    {file.grade}/100
+                    {file.grade || '-'}/100
                 </div>
                 <div className="col d-flex justify-content-center text-truncate">
-                    <Link href={`/students/${student.id}/files/${file.fileId}`} className="d-flex align-items-center btn btn-sm btn-primary gap-1">
+                    <Link href={`/students/${id}/files/${file.fileId}`} className="d-flex align-items-center btn btn-sm btn-primary gap-1">
                         <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-eye w-75 h-4" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg></span>
                         Open
                     </Link>
@@ -71,7 +105,7 @@ export default function StudentFiles({ student }) {
         <div className="shadow border rounded bg-white p-4 my-4">
             <div className="row text-center align-items-center">
                 <div className="col-1 text-truncate">
-                    File ID
+                    #
                 </div>
                 <div className="col-3 text-truncate">
                     Patient Name

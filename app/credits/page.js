@@ -10,7 +10,7 @@ export default function CreditsPage() {
         { name: "Youssef Ahmed", role: "Backend Developer", linkedin: "https://www.linkedin.com/in/youssefahmed22/" },
         { name: "Mohamed Ragab", role: "AI Developer", linkedin: "https://www.linkedin.com/in/mohamed-ragab-4a90a1264/" },
         { name: "Mohamed Mahmoud", role: "UI/UX Designer", linkedin: "" },
-        { name: "Ahmed Wagih", role: "QA & Testing", linkedin: "" },
+        { name: "Ahmed Wagih", role: "QA & Testing", linkedin: "https://eg.linkedin.com/in/ahmed-wagih1" },
     ];
 
     return (

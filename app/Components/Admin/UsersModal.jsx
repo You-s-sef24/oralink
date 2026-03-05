@@ -31,6 +31,11 @@ export default function UsersModal({ show, isClose, refreshUsers }) {
       return;
     }
 
+    if (!userData.email.endsWith("@o6u.edu.eg")) {
+      setError("Email must end with @o6u.edu.eg.");
+      return;
+    }
+
     setLoading(true);
     setError("");
 

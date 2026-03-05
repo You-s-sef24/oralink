@@ -1,31 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
+import axios from "axios";
 
 export default function Students() {
-    const students = [
-        { id: 1, name: "dfdfd", email: "sdsds", files: [] },
-        { id: 2, name: "dgdgf", email: "hghgh", files: [] }
-    
-    ];
-    const [search, setSearch] = useState('');
+    const [students, setStudents] = useState([]);
+    const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const filteredStudents = students.filter(student => {
+    useEffect(() => {
+        const fetchStudents = async () => {
+            try {
+                const response = await axios.get("https://oralink.runasp.net/api/students");
+                setStudents(response.data);
+            } catch (err) {
+                console.error(err);
+                setError("Failed to load students");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStudents();
+    }, []);
+
+    const filteredStudents = useMemo(() => {
         const term = search.trim().toLowerCase();
-        return (
+        return students.filter(student =>
             student.name.toLowerCase().includes(term) ||
-            student.id.toString().includes(term)
+            student.email.toLowerCase().includes(term)
         );
-    });
+    }, [students, search]);
 
     const renderStudents = filteredStudents.map((student) => {
         return (
             <div className="row text-center align-items-center" key={student.id}>
-                <div className="col-2 text-truncate">
+                <div className="col-1 text-truncate">
                     {student.id}
                 </div>
-                <div className="col-3 text-truncate">
+                <div className="col-4 text-truncate">
                     {student.name}
                 </div>
                 <div className="col-2 text-truncate">
@@ -35,7 +50,7 @@ export default function Students() {
                     <div className="d-inline-block">
                         <div className="d-flex justify-content-center bg-primary text-white rounded-pill px-3 py-2 gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-text w-4 h-4" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>
-                            {student.files?.length || 0}
+                            {student.submittedFiles}
                         </div>
                     </div>
                 </div>
@@ -50,6 +65,22 @@ export default function Students() {
         );
     });
 
+    if (loading) {
+        return <div className="d-flex justify-content-center align-items-center">
+            <div
+                className="spinner-border text-primary spinner-border-sm"
+                role="status"
+            >
+                <span className="visually-hidden">Loading...</span>
+            </div>
+        </div>
+            ;
+    }
+
+    if (error) {
+        return <div className="text-danger text-center py-5">{error}</div>;
+    }
+
     return (
         <div className="border rounded p-3 mt-5">
             <div className="input-group my-3">
@@ -58,14 +89,14 @@ export default function Students() {
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>
                     </label>
                 </div>
-                <input type="search" id="search" value={search} onChange={(e) => { setSearch(e.target.value) }} className="border-start-0 form-control p-3" placeholder="Search by student name or ID" aria-label="Search" aria-describedby="Search" />
+                <input type="search" id="search" value={search} onChange={(e) => { setSearch(e.target.value) }} className="border-start-0 form-control p-3" placeholder="Search by student name or email" aria-label="Search" aria-describedby="Search" />
             </div>
 
             <div className="row text-center align-items-center">
-                <div className="col-2 text-truncate">
-                    Student ID
+                <div className="col-1 text-truncate">
+                    #
                 </div>
-                <div className="col-3 text-truncate">
+                <div className="col-4 text-truncate">
                     Student Name
                 </div>
                 <div className="col-2 text-truncate">

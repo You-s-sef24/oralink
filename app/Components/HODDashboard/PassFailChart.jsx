@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,12 +23,33 @@ ChartJS.register(
 );
 
 export default function PassFailChart() {
-  const [stats, setStats] = useState({
-    passCount: 8,
-    failCount: 2,
-  });
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get(
+          "https://oralink.runasp.net/api/students/pass-fail",
+        );
+
+        setStats({
+          passCount: Number(res.data.passCount) || 0,
+          failCount: Number(res.data.failCount) || 0,
+        });
+      } catch (error) {
+        console.error("Error fetching pass/fail stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   const chartData = useMemo(() => {
+    if (!stats) return null;
+
     const total = stats.passCount + stats.failCount || 1;
 
     const passPercent = Number(((stats.passCount / total) * 100).toFixed(1));
@@ -45,12 +67,30 @@ export default function PassFailChart() {
     };
   }, [stats]);
 
+  if (loading) {
+    return (
+      <div className="bg-white shadow rounded p-4 text-center">Loading...</div>
+    );
+  }
+
+  if (!stats) {
+    return (
+      <div className="bg-white shadow rounded p-4 text-center text-danger">
+        Failed to load data.
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white shadow rounded p-4">
-      <h5 className="mb-3 text-center">Pass / Fail Percentage</h5>
+      <h5 className="mb-3 text-center">
+        Pass: {stats.passCount} | Fail: {stats.failCount}
+      </h5>
+
       <Bar
         data={chartData}
         options={{
+          responsive: true,
           scales: {
             y: {
               min: 0,
