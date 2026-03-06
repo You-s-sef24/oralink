@@ -16,9 +16,9 @@ import ViewPeriodonticsPage5 from "../Periodontics/ViewPeriodonticsPage5";
 
 export default function DoctorsViewFile({ fileId }) {
     const { state, setState } = useContext(StatesContext);
-    const { file, setFile } = useContext(PatientInfoContext);
     const { currentUser } = useContext(UsersContext);
 
+    const [file, setFile] = useState(null);
     const [grade, setGrade] = useState({ score: 0, feedback: "" });
     const [loading, setLoading] = useState(true);
 
@@ -46,14 +46,13 @@ export default function DoctorsViewFile({ fileId }) {
                 setFile(parsedFile);
             } catch (error) {
                 console.error("Error fetching file:", error);
-                setLoading(false);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchFile();
-    }, [fileId, setFile]);
+    }, [fileId]);
 
     useEffect(() => {
         if (!file) return;
@@ -66,7 +65,7 @@ export default function DoctorsViewFile({ fileId }) {
 
     const canEditGrade = currentUser?.role === "Head of Department";
     const canAddGrade = currentUser?.role === "Head of Department" ||
-        (currentUser?.role === "Doctor" && !file?.grade);
+        (currentUser?.role === "Doctor" && file?.grade);
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -82,7 +81,7 @@ export default function DoctorsViewFile({ fileId }) {
             );
             setFile({ ...file, grade: grade.score, feedback: grade.feedback });
             alert("Grade saved successfully!");
-            router.push(`/students/${file.studentId}`);
+            router.replace(`/students/${file.studentId}`);
 
         } catch (error) {
             console.error("Error saving grade:", error);
@@ -103,7 +102,7 @@ export default function DoctorsViewFile({ fileId }) {
 
     return (
         <div className="row">
-            <h4 className="text-center text-primary mt-2">Student Name: {file.student.name}</h4>
+            <h4 className="text-center text-primary mt-2">Student Name: {file?.student?.name}</h4>
             <div className="col-md-8">
                 {file?.department === 'Periodontics' ?
                     state === 1 ? <ViewGeneralForm />
