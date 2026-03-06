@@ -53,7 +53,7 @@ export default function DoctorsViewFile({ fileId }) {
         };
 
         fetchFile();
-    }, [fileId]);
+    }, [fileId, setFile]);
 
     useEffect(() => {
         if (!file) return;
