@@ -187,16 +187,19 @@ export default function UsersList() {
                 >
                   <i className="bi bi-pencil-square"></i>
                 </button>
-
-                <button
-                  className="btn btn-sm btn-outline-danger"
-                  onClick={() => {
-                    setSelectedUser(user);
-                    setShowDeleteModal(true);
-                  }}
-                >
-                  <i className="bi bi-trash"></i>
-                </button>
+                {user.role !== "Head of Department" ? (
+                  <button
+                    className="btn btn-sm btn-outline-danger"
+                    onClick={() => {
+                      setSelectedUser(user);
+                      setShowDeleteModal(true);
+                    }}
+                  >
+                    <i className="bi bi-trash"></i>
+                  </button>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
           ))

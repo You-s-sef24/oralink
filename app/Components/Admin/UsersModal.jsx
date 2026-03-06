@@ -134,9 +134,6 @@ export default function UsersModal({ show, isClose, refreshUsers }) {
                     <option value="Student">Student</option>
                     <option value="Supervisor">Supervisor</option>
                     <option value="Doctor">Doctor</option>
-                    <option value="Head of Department">
-                      Head of Department
-                    </option>
                   </select>
                 </div>
 

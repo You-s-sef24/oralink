@@ -142,29 +142,29 @@ export default function EditModal({
                     required
                   />
                 </div>
-
-                <div className="mb-3">
-                  <label htmlFor="role" className="form-label">
-                    Role
-                  </label>
-                  <select
-                    className="form-select"
-                    id="role"
-                    value={userData.role}
-                    onChange={(e) =>
-                      setUserData({ ...userData, role: e.target.value })
-                    }
-                    required
-                  >
-                    <option value="">Select role</option>
-                    <option value="Student">Student</option>
-                    <option value="Supervisor">Supervisor</option>
-                    <option value="Doctor">Doctor</option>
-                    <option value="Head of Department">
-                      Head of Department
-                    </option>
-                  </select>
-                </div>
+                {selectedUser.role !== "Head of Department" ? (
+                  <div className="mb-3">
+                    <label htmlFor="role" className="form-label">
+                      Role
+                    </label>
+                    <select
+                      className="form-select"
+                      id="role"
+                      value={userData.role}
+                      onChange={(e) =>
+                        setUserData({ ...userData, role: e.target.value })
+                      }
+                      required
+                    >
+                      <option value="">Select role</option>
+                      <option value="Student">Student</option>
+                      <option value="Supervisor">Supervisor</option>
+                      <option value="Doctor">Doctor</option>
+                    </select>
+                  </div>
+                ) : (
+                  ""
+                )}
 
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label">
