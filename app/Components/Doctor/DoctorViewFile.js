@@ -43,10 +43,10 @@ export default function DoctorsViewFile({ fileId }) {
                     feedback: data.feedBack ?? ""
                 };
                 console.log(response.data);
-                
                 setFile(parsedFile);
             } catch (error) {
                 console.error("Error fetching file:", error);
+                setLoading(false);
             } finally {
                 setLoading(false);
             }

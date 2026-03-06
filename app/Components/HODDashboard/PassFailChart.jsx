@@ -34,8 +34,8 @@ export default function PassFailChart() {
         );
 
         setStats({
-          passCount: Number(res.data.passCount) || 0,
-          failCount: Number(res.data.failCount) || 0,
+          passCount: Number(res.data.passPercentage) || 0,
+          failCount: Number(res.data.failPercentage) || 0,
         });
       } catch (error) {
         console.error("Error fetching pass/fail stats:", error);

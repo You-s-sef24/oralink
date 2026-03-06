@@ -21,7 +21,18 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
     }
   }, [isLoggedIn, currentUser, loading, allowedRoles, router]);
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        <div
+          className="spinner-border text-primary spinner-border-sm"
+          role="status"
+        >
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
   if (!isLoggedIn) return null;
 
   if (allowedRoles.length > 0 && !allowedRoles.includes(currentUser?.role)) {

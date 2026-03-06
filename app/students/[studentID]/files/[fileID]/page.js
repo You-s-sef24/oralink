@@ -6,7 +6,9 @@ import { useParams } from "next/navigation";
 import DoctorsViewFile from "@/app/Components/Doctor/DoctorViewFile";
 
 export default function File() {
-    const { fileId } = useParams();
+    const params = useParams();
+    const fileId = params?.fileId;
+    console.log("file id: ", fileId);
 
     return (
         <ProtectedRoute allowedRoles={["Head of Department", "Doctor"]}>

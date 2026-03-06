@@ -29,6 +29,8 @@ export default function PatientFiles({ page }) {
                     grade: file.grade ?? 0
                 }));
                 setFiles(formattedFiles);
+                console.log(response.data);
+                
             } catch (error) {
                 console.error("Error fetching files:", error);
             } finally {
