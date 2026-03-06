@@ -74,7 +74,7 @@ export default function StudentFiles({ id }) {
                 </div>
                 <div className="col-2 d-none d-md-block text-truncate">
                     <div className="d-inline-block">
-                        {file.grade > 0 ? (
+                        {file.graded ? (
                             <span className="d-flex justify-content-center align-items-center bg-success text-white rounded-pill px-2 py-1 gap-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-circle-check-big w-4 h-4" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
                                 <small>Graded</small>
@@ -88,7 +88,7 @@ export default function StudentFiles({ id }) {
                     </div>
                 </div>
                 <div className="col text-truncate">
-                    {file.grade || '-'}/100
+                    {file.graded ? `${file.grade}`:'-'}/100
                 </div>
                 <div className="col d-flex justify-content-center text-truncate">
                     <Link href={`/students/${id}/files/${file.fileId}`} className="d-flex align-items-center btn btn-sm btn-primary gap-1">

@@ -7,8 +7,7 @@ import DoctorsViewFile from "@/app/Components/Doctor/DoctorViewFile";
 
 export default function File() {
     const params = useParams();
-    const fileId = params?.fileID;
-    console.log("params", params);
+    const fileId = params?.fileId ?? params?.fileID;
     console.log("id", fileId);
 
     if (!fileId) {

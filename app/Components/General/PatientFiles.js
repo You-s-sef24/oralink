@@ -26,7 +26,7 @@ export default function PatientFiles({ page }) {
                     studentName: file.studentName || "-",
                     patientName: file.patientName || "-",
                     submittedDate: file.submittedDate || "-",
-                    grade: file.grade ?? 0
+                    grade: file.grade
                 }));
                 setFiles(formattedFiles);
                 console.log(response.data);
@@ -124,7 +124,7 @@ export default function PatientFiles({ page }) {
                         <div className="col-3">{file.patientName}</div>
                         <div className="col">{file.submittedDate}</div>
                         <div className="col">
-                            {file.grade > 0 ? `${file.grade}/100` : "—"}
+                            {file.grade ? `${file.grade}/100` : "—"}
                         </div>
                         <div className="col">
                             <Link
