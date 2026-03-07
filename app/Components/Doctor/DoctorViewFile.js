@@ -68,7 +68,7 @@ export default function DoctorsViewFile({ fileId }) {
                 `https://oralink.runasp.net/api/file/${fileId}/grade`,
                 {
                     grade: grade.score,
-                    feedBack: grade.feedback
+                    feedback: grade.feedback
                 }
             );
             setFile({ ...file, grade: grade.score, feedback: grade.feedback });
@@ -149,7 +149,7 @@ export default function DoctorsViewFile({ fileId }) {
 
                             <div className="mb-3">
                                 <label className="form-label">Grade (0-100)*</label>
-                                <input type="number" className="form-control" placeholder="Enter score" value={grade.score} onChange={(e) => {
+                                <input type="number" className="form-control" placeholder="Enter score" value={grade.score || 0} onChange={(e) => {
                                     if (!canAddGrade && !canEditGrade) return;
                                     const value = Number(e.target.value);
                                     if (value >= 0 && value <= 100) setGrade({ ...grade, score: value });

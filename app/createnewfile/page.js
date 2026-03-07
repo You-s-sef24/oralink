@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import GeneralForm from "../Components/GeneralForm";
 import Header from "../Components/General/Header";
 import './style.css';
@@ -9,14 +9,11 @@ import PeriodonticsFile from "../Components/Periodontics/PeriodonticsFile";
 import { StatesContext } from "../Contexts/StatesContext";
 import { PatientInfoContext } from "../Contexts/PatientInfoContext";
 import EndodonticsFile from "../Components/Endodontics/EndodonticsFile";
-import { useRouter } from "next/navigation";
-import { UsersContext } from "../Contexts/UsersContext";
 import ProtectedRoute from "../Components/General/ProtectedRoute";
 
 export default function CreateNewFilePage() {
-    const { isDirty, setIsDirty, generalData, setGeneralData, periodonticsData, setPeriodonticsData, setEndodonticsData } = useContext(PatientInfoContext);
+    const { isDirty, generalData, setGeneralData, periodonticsData, setPeriodonticsData, setEndodonticsData } = useContext(PatientInfoContext);
     const { state, setState } = useContext(StatesContext);
-    const router = useRouter();
 
     useEffect(() => {
         setGeneralData(prev => ({
@@ -26,7 +23,7 @@ export default function CreateNewFilePage() {
             xRay: null,
         }));
     }, []);
-    
+
     useEffect(() => {
         const draft = localStorage.getItem("formDraft");
         if (draft) {
