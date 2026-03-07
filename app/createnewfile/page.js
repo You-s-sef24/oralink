@@ -14,11 +14,32 @@ import { UsersContext } from "../Contexts/UsersContext";
 import ProtectedRoute from "../Components/General/ProtectedRoute";
 
 export default function CreateNewFilePage() {
-    const { currentUser } = useContext(UsersContext);
-    const { generalData } = useContext(PatientInfoContext);
+    const { isDirty, setIsDirty, generalData, setGeneralData, periodonticsData, setPeriodonticsData, setEndodonticsData } = useContext(PatientInfoContext);
     const { state, setState } = useContext(StatesContext);
-    const [isDirty, setIsDirty] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        setGeneralData(prev => ({
+            ...prev,
+            prePatientImage: null,
+            postPatientImage: null,
+            xRay: null,
+        }));
+    }, []);
+    
+    useEffect(() => {
+        const draft = localStorage.getItem("formDraft");
+        if (draft) {
+            const confirmed = window.confirm("You have a saved draft. Do you want to restore it?");
+            if (confirmed) {
+                const parsed = JSON.parse(draft);
+                setGeneralData(parsed.generalData);
+                setPeriodonticsData(parsed.periodonticsData);
+                setEndodonticsData(parsed.endodonticsData);
+            }
+            localStorage.removeItem("formDraft");
+        }
+    }, []);
 
     useEffect(() => {
         const handleBeforeUnload = (e) => {
@@ -61,7 +82,10 @@ export default function CreateNewFilePage() {
                 ) : state === 2 ? (
                     <>
                         <DepartmentSelection />
-                        <button className="d-flex align-items-center gap-1 btn btn-secondary my-3" onClick={() => { setState(state - 1) }}>
+                        <button className="d-flex align-items-center gap-1 btn btn-secondary my-3" onClick={() => {
+                            // setIsDirty(false);
+                            setState(state - 1);
+                        }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" className="lucide lucide-chevron-left w-4 h-4" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
                             Back to General Form
                         </button>

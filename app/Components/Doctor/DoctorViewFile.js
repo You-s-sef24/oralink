@@ -137,42 +137,41 @@ export default function DoctorsViewFile({ fileId }) {
             </div>
 
             <div className="col-md-4 d-lg-block">
-                {((file?.doctorGrade !== null && canEditGrade) || (file?.doctorGrade === null && canAddGrade)) &&
-                    <form className="position-sticky top-0 d-flex flex-column bg-white border border-primary rounded shadow p-4 w-sm-25 my-4" onSubmit={handleSubmit}>
-                        <p className="d-flex align-items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-award w-6 h-6 text-primary" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg>
-                            Grading Panel
-                        </p>
-
-                        <ReadOnlyTextField label={"Name"} value={file.student.name} />
-
-                        <div className="mb-3">
-                            <label className="form-label">Grade (0-100)*</label>
-                            <input type="number" className="form-control" placeholder="Enter score" value={grade.score} onChange={(e) => {
-                                if (!canAddGrade && !canEditGrade) return;
-                                const value = Number(e.target.value);
-                                if (value >= 0 && value <= 100) setGrade({ ...grade, score: value });
-                            }} required />
-                        </div>
-
-                        <div className="mb-3">
-                            <label className="form-label">Feedback & Comments *</label>
-                            <textarea className="form-control" placeholder="Provide constructive feedback for the student..." value={grade.feedback} onChange={(e) => {
-                                if (!canAddGrade && !canEditGrade) return;
-                                setGrade({ ...grade, feedback: e.target.value });
-                            }} style={{ height: "130px", resize: "none" }}></textarea>
-                        </div>
-
-                        <div className="d-flex justify-content-center">
-                            <button type="submit" className="btn btn-primary d-flex justify-content-center align-items-center w-50 gap-1" disabled={!canAddGrade && !canEditGrade}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-award w-6 h-6 text-blue-600" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg>
-                                Save Grade
-                            </button>
-                        </div>
-                    </form>
-                }
-                {((file?.doctorGrade === null && canEditGrade) || (file?.doctorGrade !== null && canAddGrade)) &&
+                {((file?.doctorGrade !== null && canEditGrade) || (file?.doctorGrade === null && canAddGrade)) ?
                     (
+                        <form className="position-sticky top-0 d-flex flex-column bg-white border border-primary rounded shadow p-4 w-sm-25 my-4" onSubmit={handleSubmit}>
+                            <p className="d-flex align-items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-award w-6 h-6 text-primary" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg>
+                                Grading Panel
+                            </p>
+
+                            <ReadOnlyTextField label={"Name"} value={file.student.name} />
+
+                            <div className="mb-3">
+                                <label className="form-label">Grade (0-100)*</label>
+                                <input type="number" className="form-control" placeholder="Enter score" value={grade.score} onChange={(e) => {
+                                    if (!canAddGrade && !canEditGrade) return;
+                                    const value = Number(e.target.value);
+                                    if (value >= 0 && value <= 100) setGrade({ ...grade, score: value });
+                                }} required />
+                            </div>
+
+                            <div className="mb-3">
+                                <label className="form-label">Feedback & Comments *</label>
+                                <textarea className="form-control" placeholder="Provide constructive feedback for the student..." value={grade.feedback || ""} onChange={(e) => {
+                                    if (!canAddGrade && !canEditGrade) return;
+                                    setGrade({ ...grade, feedback: e.target.value });
+                                }} style={{ height: "130px", resize: "none" }}></textarea>
+                            </div>
+
+                            <div className="d-flex justify-content-center">
+                                <button type="submit" className="btn btn-primary d-flex justify-content-center align-items-center w-50 gap-1" disabled={!canAddGrade && !canEditGrade}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-award w-6 h-6 text-blue-600" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg>
+                                    Save Grade
+                                </button>
+                            </div>
+                        </form>
+                    ) : (
                         <div className="position-sticky top-0 d-flex flex-column bg-white border border-primary rounded shadow p-4 w-sm-25 my-4">
                             <p className="d-flex align-items-center gap-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-award w-6 h-6 text-primary" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg>

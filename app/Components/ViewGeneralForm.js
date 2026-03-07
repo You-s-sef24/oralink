@@ -9,7 +9,7 @@ export default function ViewGeneralForm() {
 
     const ReadOnlyField = ({ label, value }) => (
         <div className="mb-2">
-            <label className="form-label fw-semibold">{label}</label>
+            <label className="form-label fw-semibold ">{label}</label>
             <p className="form-control-plaintext border rounded px-2 py-1 bg-light">
                 {value || "-"}
             </p>
