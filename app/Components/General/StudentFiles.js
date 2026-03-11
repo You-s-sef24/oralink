@@ -88,7 +88,7 @@ export default function StudentFiles({ id }) {
                     </div>
                 </div>
                 <div className="col text-truncate">
-                    {file.graded ? `${file.grade}`:'-'}/100
+                    {file.graded ? `${file.grade}` : '-'}/100
                 </div>
                 <div className="col d-flex justify-content-center text-truncate">
                     <Link href={`/students/${id}/files/${file.fileId}`} className="d-flex align-items-center btn btn-sm btn-primary gap-1">
