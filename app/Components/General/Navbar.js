@@ -11,7 +11,9 @@ export default function Navbar() {
     const { currentUser, logout } = useContext(UsersContext);
 
     const linkClasses = (href) =>
-        `list-group-item list-group-item-action py-3 ${pathname === href ? "active text-white bg-primary" : "text-dark"
+        `list-group-item list-group-item-action py-3 ${pathname === href || pathname.startsWith(href + "/")
+            ? "active text-white bg-primary"
+            : "text-dark"
         }`;
 
     function closeOffcanvas() {
@@ -92,19 +94,19 @@ export default function Navbar() {
                                         <p className="m-0">Home</p>
                                     </Link>
 
-                                    <Link href="/students" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/students")} rounded border-0 mb-2 gap-2`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-users w-5 h-5" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg>
-                                        <p className="m-0">Students</p>
-                                    </Link>
-
-                                    <Link href="/patientfiles" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/patientfiles")} rounded border-0 mb-2 gap-2`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-folder-open w-5 h-5" aria-hidden="true"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"></path></svg>
-                                        <p className="m-0">Patient Files</p>
-                                    </Link>
-
-                                    <Link href="/grading" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/grading")} rounded border-0 mb-2 gap-2`}>
+                                    <Link href="/pending-procedures" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/pending-procedures")} rounded border-0 mb-2 gap-2`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-clipboard-check w-5 h-5" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="m9 14 2 2 4-4"></path></svg>
-                                        <p className="m-0">Grading</p>
+                                        <p className="m-0">Pending Procedures</p>
+                                    </Link>
+
+                                    <Link href="/view-students" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/view-students")} rounded border-0 mb-2 gap-2`}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-users w-7 h-7" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                                        <p className="m-0">View All Students</p>
+                                    </Link>
+
+                                    <Link href="/view-cases" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/view-cases")} rounded border-0 mb-2 gap-2`}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-folder-open w-6 h-6" data-fg-d07u4="1.23:1.956:/src/app/components/quick-action-card.tsx:25:13:684:39:e:Icon"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"></path></svg>
+                                        <p className="m-0">View All Patient Cases</p>
                                     </Link>
                                 </>
                             ) : currentUser?.role === "Head of Department" ? (
