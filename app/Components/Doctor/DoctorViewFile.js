@@ -18,7 +18,7 @@ export default function DoctorsViewFile({ fileId }) {
     const { state, setState } = useContext(StatesContext);
     const { currentUser } = useContext(UsersContext);
 
-    const { file, setFile } = useContext(PatientInfoContext);
+    const { file, setFile, isLoading, setIsLoading } = useContext(PatientInfoContext);
     const [grade, setGrade] = useState({ score: 0, feedback: "" });
     const [loading, setLoading] = useState(true);
 
@@ -63,7 +63,7 @@ export default function DoctorsViewFile({ fileId }) {
         if (!canAddGrade && !canEditGrade) return;
 
         try {
-            console.log("Submitting grade:", grade.score, grade.feedback);
+            setIsLoading(true);
             await axios.patch(
                 `https://oralink.runasp.net/api/file/${fileId}/grade`,
                 {
@@ -77,6 +77,8 @@ export default function DoctorsViewFile({ fileId }) {
 
         } catch (error) {
             console.error("Error saving grade:", error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -165,9 +167,18 @@ export default function DoctorsViewFile({ fileId }) {
                             </div>
 
                             <div className="d-flex justify-content-center">
-                                <button type="submit" className="btn btn-primary d-flex justify-content-center align-items-center w-50 gap-1" disabled={!canAddGrade && !canEditGrade}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-award w-6 h-6 text-blue-600" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg>
-                                    Save Grade
+                                <button type="submit" className="btn btn-primary d-flex justify-content-center align-items-center w-50 gap-1" disabled={!canAddGrade && !canEditGrade || isLoading}>
+                                    {isLoading ? (
+                                        <div className="d-flex align-items-center gap-1">
+                                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving...
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-award w-6 h-6 text-blue-600" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg>
+                                            Save Grade
+                                        </>
+                                    )
+                                    }
                                 </button>
                             </div>
                         </form>
