@@ -1,4 +1,5 @@
-import PatientFiles from "./General/PatientFiles";
+import GradedFiles from "./GradedFiles";
+import UngradedFiles from "./UngradedFiles";
 
 export default function GradingTabs({ stats }) {
     return (
@@ -42,7 +43,7 @@ export default function GradingTabs({ stats }) {
                     role="tabpanel"
                     aria-labelledby="ungradedFiles-tab"
                 >
-                    <PatientFiles page={'ungraded'} />
+                    <UngradedFiles />
                 </div>
 
                 <div
@@ -51,7 +52,7 @@ export default function GradingTabs({ stats }) {
                     role="tabpanel"
                     aria-labelledby="gradedFiles-tab"
                 >
-                    <PatientFiles page={'graded'} />
+                    <GradedFiles />
                 </div>
             </div>
         </div>
