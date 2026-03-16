@@ -29,13 +29,27 @@ export default function UsersList() {
     setShowExelModal,
   } = useContext(UIContext);
 
+  const roleOrder = {
+    "Head of Department": 0,
+    Doctor: 1,
+    Supervisor: 2,
+    Student: 3,
+  };
+
   const fetchUsers = async () => {
     try {
       setLoading(true);
       const { data } = await axios.get(
         "https://oralink.runasp.net/api/admin/get-all-users",
       );
-      setUsers(data?.data || data || []);
+      setUsers(
+        (data?.data || data || []).sort((a, b) => {
+          const roleDiff =
+            (roleOrder[a.role] ?? 99) - (roleOrder[b.role] ?? 99);
+          if (roleDiff !== 0) return roleDiff;
+          return a.name.localeCompare(b.name);
+        }),
+      );
     } catch (err) {
       console.error("Failed to fetch users:", err);
     } finally {
@@ -91,14 +105,11 @@ export default function UsersList() {
               xmlns="http://www.w3.org/2000/svg"
             >
               <rect x="16" y="6" width="36" height="52" rx="4" fill="#E9ECEF" />
-
               <rect x="8" y="12" width="20" height="40" rx="3" fill="#198754" />
-
               <path
                 d="M14 24 L20 32 L14 40 H18 L22 34 L26 40 H30 L24 32 L30 24 H26 L22 30 L18 24 Z"
                 fill="white"
               />
-
               <line
                 x1="22"
                 y1="18"
@@ -137,73 +148,71 @@ export default function UsersList() {
         </div>
       </div>
 
-      <div className="rounded border py-2">
-        <div className="row bg-light text-center">
-          <div className="col-3">
-            <h5>Name</h5>
-          </div>
-          <div className="col-3">
-            <h5>Email</h5>
-          </div>
-          <div className="col-3">
-            <h5>Role</h5>
-          </div>
-          <div className="col-3">
-            <h5>Actions</h5>
+      <div className="card border shadow-sm">
+        <div className="card-body p-0">
+          <div className="table-responsive">
+            <table className="table table-hover align-middle mb-0">
+              <thead className="table-light text-center">
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+
+              <tbody className="text-center">
+                {loading ? (
+                  <tr>
+                    <td colSpan={4} className="py-4">
+                      <span className="spinner-border spinner-border-sm text-primary"></span>
+                    </td>
+                  </tr>
+                ) : filteredUsers.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="py-4 text-muted">
+                      No users found
+                    </td>
+                  </tr>
+                ) : (
+                  filteredUsers.map((user, i) => (
+                    <tr key={user.id}>
+                      <td className="text-muted">{i + 1}</td>
+                      <td className="fw-bold">{user.name || "-"}</td>
+                      <td className="text-muted">{user.email || "-"}</td>
+                      <td className="text-muted">{user.role || "-"}</td>
+                      <td>
+                        <div className="d-flex justify-content-center gap-2">
+                          <button
+                            className="btn btn-sm btn-outline-primary"
+                            onClick={() => {
+                              setSelectedUser(user);
+                              setShowEditModal(true);
+                            }}
+                          >
+                            <i className="bi bi-pencil-square"></i>
+                          </button>
+                          {user.role !== "Head of Department" && (
+                            <button
+                              className="btn btn-sm btn-outline-danger"
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setShowDeleteModal(true);
+                              }}
+                            >
+                              <i className="bi bi-trash"></i>
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
-
-        {loading ? (
-          <div className="text-center py-3">
-            <span className="spinner-border spinner-border-sm"></span>
-          </div>
-        ) : filteredUsers.length === 0 ? (
-          <div className="text-center py-3 text-muted">No users found</div>
-        ) : (
-          filteredUsers.map((user) => (
-            <div
-              key={user.id}
-              className="row text-center bg-white p-2 rounded border-bottom"
-            >
-              <div className="col-3">
-                <p className="fw-bold m-0">{user.name || "-"}</p>
-              </div>
-
-              <div className="col-3">
-                <p className="m-0 text-truncate">{user.email || "-"}</p>
-              </div>
-
-              <div className="col-3">
-                <p className="m-0">{user.role || "-"}</p>
-              </div>
-
-              <div className="col-3 d-flex justify-content-center gap-2">
-                <button
-                  className="btn btn-sm btn-outline-primary"
-                  onClick={() => {
-                    setSelectedUser(user);
-                    setShowEditModal(true);
-                  }}
-                >
-                  <i className="bi bi-pencil-square"></i>
-                </button>
-                {user.role !== "Head of Department" ? (
-                  <button
-                    className="btn btn-sm btn-outline-danger"
-                    onClick={() => {
-                      setSelectedUser(user);
-                      setShowDeleteModal(true);
-                    }}
-                  >
-                    <i className="bi bi-trash"></i>
-                  </button>
-                ) : (
-                  ""
-                )}
-              </div>
-            </div>
-          ))
-        )}
       </div>
 
       {showUsersModal && (

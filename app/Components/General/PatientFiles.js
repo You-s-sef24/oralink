@@ -25,7 +25,7 @@ export default function PatientFiles() {
                     submittedDate: file.submittedDate || "-",
                     grade: file.grade
                 }));
-                setFiles(formattedFiles);
+                setFiles(formattedFiles.sort((a, b) => new Date(a.submittedDate) - new Date(b.submittedDate)));
             } catch (error) {
                 console.error("Error fetching files:", error);
             } finally {
@@ -119,8 +119,8 @@ export default function PatientFiles() {
                                     <td>
                                         {file.grade ? (
                                             <span className={`badge rounded-pill px-3 py-2 ${file.grade >= 90 ? "bg-success" :
-                                                    file.grade >= 75 ? "bg-primary" :
-                                                        file.grade >= 60 ? "bg-warning" : "bg-danger"
+                                                file.grade >= 75 ? "bg-primary" :
+                                                    file.grade >= 60 ? "bg-warning" : "bg-danger"
                                                 }`}>
                                                 {file.grade}/100
                                             </span>

@@ -14,7 +14,7 @@ export default function Students() {
         const fetchStudents = async () => {
             try {
                 const response = await axios.get("https://oralink.runasp.net/api/students");
-                setStudents(response.data);
+                setStudents(response.data.sort((a, b) => a.name.localeCompare(b.name)));
             } catch (err) {
                 console.error(err);
                 setError("Failed to load students");
@@ -34,47 +34,14 @@ export default function Students() {
         );
     }, [students, search]);
 
-    const renderStudents = filteredStudents.map((student) => {
+    if (loading) {
         return (
-            <div className="row text-center align-items-center" key={student.id}>
-                <div className="col-1 text-truncate">
-                    {student.id}
+            <div className="d-flex justify-content-center align-items-center">
+                <div className="spinner-border text-primary spinner-border-sm" role="status">
+                    <span className="visually-hidden">Loading...</span>
                 </div>
-                <div className="col-4 text-truncate">
-                    {student.name}
-                </div>
-                <div className="col-2 text-truncate">
-                    {student.email}
-                </div>
-                <div className="col-3 text-truncate">
-                    <div className="d-inline-block">
-                        <div className="d-flex justify-content-center bg-primary text-white rounded-pill px-3 py-2 gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-text w-4 h-4" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>
-                            {student.submittedFiles}
-                        </div>
-                    </div>
-                </div>
-                <div className="col d-flex justify-content-center text-truncate">
-                    <Link href={`/students/${student.id}`} className="d-flex align-items-center btn btn-sm btn-primary gap-1">
-                        <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-eye w-75 h-4" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg></span>
-                        View
-                    </Link>
-                </div>
-                <hr className="mt-2" />
             </div>
         );
-    });
-
-    if (loading) {
-        return <div className="d-flex justify-content-center align-items-center">
-            <div
-                className="spinner-border text-primary spinner-border-sm"
-                role="status"
-            >
-                <span className="visually-hidden">Loading...</span>
-            </div>
-        </div>
-            ;
     }
 
     if (error) {
@@ -86,41 +53,82 @@ export default function Students() {
             <div className="input-group my-3">
                 <div className="input-group-prepend">
                     <label className="input-group-text text-secondary bg-white border-end-0 p-3" htmlFor="search">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="m21 21-4.34-4.34"></path>
+                            <circle cx="11" cy="11" r="8"></circle>
+                        </svg>
                     </label>
                 </div>
-                <input type="search" id="search" value={search} onChange={(e) => { setSearch(e.target.value) }} className="border-start-0 form-control p-3" placeholder="Search by student name or email" aria-label="Search" aria-describedby="Search" />
+                <input
+                    type="search"
+                    id="search"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="border-start-0 form-control p-3"
+                    placeholder="Search by student name or email"
+                    aria-label="Search"
+                />
             </div>
 
-            <div className="row text-center align-items-center">
-                <div className="col-1 text-truncate">
-                    #
-                </div>
-                <div className="col-4 text-truncate">
-                    Student Name
-                </div>
-                <div className="col-2 text-truncate">
-                    Email
-                </div>
-                <div className="col-3 text-truncate">
-                    Files Submitted
-                </div>
-                <div className="col text-truncate">
-                    Action
-                </div>
-            </div>
+            <div className="card border shadow-sm">
+                <div className="card-body p-0">
+                    <div className="table-responsive">
+                        <table className="table table-hover align-middle mb-0">
+                            <thead className="table-light text-center">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Student Name</th>
+                                    <th>Email</th>
+                                    <th>Files Submitted</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
 
-            <hr />
-
-            {
-                filteredStudents.length > 0 ? (
-                    renderStudents
-                ) : (
-                    <div className="text-center text-muted py-4">
-                        No students found.
+                            <tbody className="text-center">
+                                {filteredStudents.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={5} className="py-4 text-muted">
+                                            No students found.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    filteredStudents.map((student, i) => (
+                                        <tr key={student.id}>
+                                            <td className="text-muted">{i + 1}</td>
+                                            <td className="fw-bold">{student.name}</td>
+                                            <td className="text-muted">{student.email}</td>
+                                            <td>
+                                                <span className="badge bg-primary rounded-pill px-3 py-2 d-inline-flex align-items-center gap-1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                                        <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
+                                                        <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
+                                                        <path d="M10 9H8"></path>
+                                                        <path d="M16 13H8"></path>
+                                                        <path d="M16 17H8"></path>
+                                                    </svg>
+                                                    {student.submittedFiles}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <Link
+                                                    href={`/students/${student.id}`}
+                                                    className="btn btn-sm btn-primary d-inline-flex align-items-center gap-1"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                                        <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
+                                                        <circle cx="12" cy="12" r="3"></circle>
+                                                    </svg>
+                                                    View
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
                     </div>
-                )
-            }
+                </div>
+            </div>
         </div>
     );
 }
