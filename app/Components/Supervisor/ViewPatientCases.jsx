@@ -1,10 +1,42 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function ViewPatientCases() {
   const [search, setSearch] = useState("");
+  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const response = await axios.get(
+          "https://oralink.runasp.net/api/supervisor/all-files-with-last-procedure",
+        );
+        setFiles(
+          response.data.sort((a, b) =>
+            a.patientName.localeCompare(b.patientName),
+          ),
+        );
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load files");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFiles();
+  }, []);
+
+  const filtered = files.filter(
+    (f) =>
+      f.patientName.toLowerCase().includes(search.toLowerCase()) ||
+      f.studentName.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <div className="border rounded p-3 mt-3">
@@ -24,7 +56,6 @@ export default function ViewPatientCases() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="lucide lucide-search absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5"
               aria-hidden="true"
             >
               <path d="m21 21-4.34-4.34"></path>
@@ -36,9 +67,7 @@ export default function ViewPatientCases() {
           type="search"
           id="search"
           value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-          }}
+          onChange={(e) => setSearch(e.target.value)}
           className="border-start-0 form-control p-3"
           placeholder="Search by patient name or student name"
           aria-label="Search"
@@ -48,65 +77,61 @@ export default function ViewPatientCases() {
 
       <div className="card border shadow-sm">
         <div className="card-body">
-          <div className="table-responsive">
-            <table className="table table-hover align-middle rounded">
-              <thead className="table-light text-center rounded">
-                <tr>
-                  <th>Patient Name</th>
-                  <th>Student Name</th>
-                  <th>Procedure</th>
-                  <th>Step Number</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
+          {error && (
+            <div className="alert alert-danger">
+              <i className="bi bi-exclamation-circle me-2"></i>
+              {error}
+            </div>
+          )}
 
-              <tbody className="text-center">
-                <tr>
-                  <td class="fw-semibold">Sarah Johnson</td>
-                  <td class="text-muted">Mohammed Ali</td>
-                  <td class="text-muted">Root Canal Treatment</td>
-                  <td class="text-muted">Step 2</td>
-                  <td>
-                    <button className="btn btn-primary btn-sm">
-                      Review Step
-                    </button>
-                  </td>
-                </tr>
+          {loading ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary" role="status" />
+              <p className="text-muted mt-2 mb-0">Loading...</p>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-5">
+              <i className="bi bi-search fs-1 text-muted"></i>
+              <p className="text-muted mt-2 mb-0">No results found.</p>
+            </div>
+          ) : (
+            <div className="table-responsive">
+              <table className="table table-hover align-middle rounded">
+                <thead className="table-light text-center rounded">
+                  <tr>
+                    <th>#</th>
+                    <th>Patient Name</th>
+                    <th>Student Name</th>
+                    <th>Procedure</th>
+                    <th>Step Number</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
 
-                <tr>
-                  <td class="fw-semibold">Ahmed Hassan</td>
-                  <td class="text-muted">Fatima Zahra</td>
-                  <td class="text-muted">Crown Preparation</td>
-                  <td class="text-muted">Step 1</td>
-                  <td>
-                    <button class="btn btn-primary btn-sm">Review Step</button>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="fw-semibold">Emily Chen</td>
-                  <td class="text-muted">Omar Khalid</td>
-                  <td class="text-muted">Tooth Extraction</td>
-                  <td class="text-muted">Step 3</td>
-                  <td>
-                    <button class="btn btn-primary btn-sm">Review Step</button>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="fw-semibold">Michael Brown</td>
-                  <td class="text-muted">Layla Mansour</td>
-                  <td class="text-muted">Cavity Filling</td>
-                  <td class="text-muted">Step 2</td>
-                  <td>
-                    <Link href={""} class="btn btn-primary btn-sm">
-                      Review Case
-                    </Link>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                <tbody className="text-center">
+                  {filtered.map((f, i) => (
+                    <tr key={f.fileId}>
+                      <td className="text-muted">{i + 1}</td>
+                      <td className="fw-semibold">{f.patientName}</td>
+                      <td className="text-muted">{f.studentName}</td>
+                      <td className="text-muted">
+                        {f.lastProcedureName || "-"}
+                      </td>
+                      <td className="text-muted">Step {f.stepNumber}</td>
+                      <td>
+                        <Link
+                          href={`/view-students/${f.studentId}/files/${f.fileId}`}
+                          className="btn btn-primary btn-sm"
+                        >
+                          Review Step
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </div>

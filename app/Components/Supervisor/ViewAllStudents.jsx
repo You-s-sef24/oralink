@@ -5,29 +5,28 @@ import Link from "next/link";
 import axios from "axios";
 
 export default function ViewAllStudents() {
-  // const [students, setStudents] = useState([]);
-  const students = [{ id: 1, name: "sdsd", email: "1212" }];
+  const [students, setStudents] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // useEffect(() => {
-  //   const fetchStudents = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         "https://oralink.runasp.net/api/students",
-  //       );
-  //       setStudents(response.data);
-  //     } catch (err) {
-  //       console.error(err);
-  //       setError("Failed to load students");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get(
+          "https://oralink.runasp.net/api/supervisor/students",
+        );
+        setStudents(response.data.sort((a, b) => a.name.localeCompare(b.name)));
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load students");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchStudents();
-  // }, []);
+    fetchStudents();
+  }, []);
 
   const filteredStudents = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -38,18 +37,18 @@ export default function ViewAllStudents() {
     );
   }, [students, search]);
 
-  // if (loading) {
-  //   return (
-  //     <div className="d-flex justify-content-center align-items-center">
-  //       <div
-  //         className="spinner-border text-primary spinner-border-sm"
-  //         role="status"
-  //       >
-  //         <span className="visually-hidden">Loading...</span>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        <div
+          className="spinner-border text-primary spinner-border-sm"
+          role="status"
+        >
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     return <div className="text-danger text-center py-5">{error}</div>;
@@ -93,7 +92,7 @@ export default function ViewAllStudents() {
       <div className="table-responsive">
         <table className="table table-hover align-middle mb-0">
           <thead className="table-light">
-            <tr>
+            <tr className="text-center">
               <th>#</th>
               <th>Student Name</th>
               <th>Email</th>
@@ -104,7 +103,7 @@ export default function ViewAllStudents() {
           <tbody>
             {filteredStudents.length > 0 ? (
               filteredStudents.map((student, i) => (
-                <tr key={i}>
+                <tr key={i} className="text-center">
                   <td>{i + 1}</td>
                   <td>{student.name}</td>
                   <td>{student.email}</td>
@@ -128,7 +127,7 @@ export default function ViewAllStudents() {
                         <path d="M16 13H8"></path>
                         <path d="M16 17H8"></path>
                       </svg>
-                      <small>{student.submittedFiles}</small>
+                      <small>{student.filesCount}</small>
                     </span>
                   </td>
                   <td>

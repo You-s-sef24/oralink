@@ -1,7 +1,7 @@
 "use client";
 
 export default function PeriodonticsPage5({ info, setInfo }) {
-    const step = info.treatmentProcedures?.[0] || { title: "", desc: "", date: "" };
+    const step = info.treatmentProcedures?.[0] || { title: "", desc: "", date: "", status: "", feedback: "" };
 
     function handleChange(field, value) {
         setInfo((prev) => ({

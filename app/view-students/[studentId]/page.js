@@ -1,18 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/app/Components/General/Header";
 import { useParams } from "next/navigation";
 import ProtectedRoute from "@/app/Components/General/ProtectedRoute";
 import ViewStudentFiles from "@/app/Components/Supervisor/ViewStudentFiles";
+import axios from "axios";
 
 export default function ViewStudentProfile() {
-    const { studentID } = useParams();
-    // const [student, setStudent] = useState(null);
-    const [loading, setLoading] = useState(false); // EDIT IT 
+    const { studentId } = useParams();
+    const [student, setStudent] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const student = { studentID: 1, name: "dfdfdfdf", email: "sdsds", totalFiles: 3 };
+    useEffect(() => {
+        if (!studentId) return;
+
+        const fetchStudent = async () => {
+            try {
+                const response = await axios.get(`https://oralink.runasp.net/api/supervisor/students/${studentId}/student-card`);
+                setStudent(response.data);
+            } catch (err) {
+                console.error(err);
+                setError("Failed to load student profile");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStudent();
+    }, [studentId]);
+
     if (loading) {
         return <div className="d-flex justify-content-center align-items-center">
             <div
@@ -56,10 +74,22 @@ export default function ViewStudentProfile() {
                                 </div>
                             </div>
                         </div>
+                        <div className="col-12 col-sm-6">
+                            <div className="d-flex justify-content-around text-center mt-3 mt-md-0">
+                                <div className="text-warning">
+                                    <h3>{student?.pendingFilesCount}</h3>
+                                    <p>Pending Files</p>
+                                </div>
+                                <div>
+                                    <h3>{student?.savedFilesCount}</h3>
+                                    <p className="text-muted">Total Files</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <ViewStudentFiles id={studentID} />
+                <ViewStudentFiles id={studentId} />
             </div>
         </ProtectedRoute>
     );
