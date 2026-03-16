@@ -19,11 +19,11 @@ export default function StudentCard({ student }) {
                 <div className="col-12 col-sm-6">
                     <div className="d-flex justify-content-between text-center mt-3 mt-md-0">
                         <div>
-                            <h3>{student.totalFiles}</h3>
+                            <h3>{student.submittedFilesCount}</h3>
                             <p className="text-muted">Total Files</p>
                         </div>
                         <div className="text-success">
-                            <h3>{student.totalGradedFiles}</h3>
+                            <h3>{student.gradedFilesCount}</h3>
                             <p>Graded</p>
                         </div>
                         <div className="text-warning">

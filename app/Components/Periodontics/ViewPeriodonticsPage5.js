@@ -4,7 +4,7 @@ import { PatientInfoContext } from "@/app/Contexts/PatientInfoContext";
 import { useContext, useState, useEffect } from "react";
 
 export default function ViewPeriodonticsPage5() {
-    const { file, setFile, isEditing } = useContext(PatientInfoContext);
+    const { file, setFile, isEditing, formErrors } = useContext(PatientInfoContext);
     const [isAddingStep, setIsAddingStep] = useState(false);
 
     const proceduresRaw =
@@ -46,13 +46,10 @@ export default function ViewPeriodonticsPage5() {
             let updated;
 
             if (!last || last.status === "approved") {
-                // Append new step
                 updated = [...current, { title: "", desc: "", date: "", status: "pending", [field]: value }];
             } else if (last.status === "rejected") {
-                // Replace the rejected step
                 updated = [...current.slice(0, -1), { title: "", desc: "", date: "", status: "pending", [field]: value }];
             } else {
-                // Update existing pending draft
                 updated = [...current];
                 updated[updated.length - 1] = { ...updated[updated.length - 1], [field]: value };
             }
@@ -96,7 +93,6 @@ export default function ViewPeriodonticsPage5() {
 
                 <div className="d-flex flex-column gap-3 mb-3">
                     {procedures.map((proc, index) => {
-                        // Don't render the draft step as a card while editing
                         if (isAddingStep && index === procedures.length - 1) return null;
 
                         return (
@@ -166,28 +162,37 @@ export default function ViewPeriodonticsPage5() {
                                 <label className="form-label">Title</label>
                                 <input
                                     type="text"
-                                    className="form-control"
+                                    className={`form-control ${formErrors?.procedureTitle ? "is-invalid" : ""}`}
                                     value={draftStep?.title || ""}
                                     onChange={(e) => handleNewStepChange("title", e.target.value)}
                                 />
+                                {formErrors?.procedureTitle && (
+                                    <div className="invalid-feedback">{formErrors.procedureTitle}</div>
+                                )}
                             </div>
                             <div className="col-12 col-md-4">
                                 <label className="form-label">Description</label>
                                 <input
                                     type="text"
-                                    className="form-control"
+                                    className={`form-control ${formErrors?.procedureDesc ? "is-invalid" : ""}`}
                                     value={draftStep?.desc || ""}
                                     onChange={(e) => handleNewStepChange("desc", e.target.value)}
                                 />
+                                {formErrors?.procedureDesc && (
+                                    <div className="invalid-feedback">{formErrors.procedureDesc}</div>
+                                )}
                             </div>
                             <div className="col-12 col-md-4">
                                 <label className="form-label">Date Performed</label>
                                 <input
                                     type="date"
-                                    className="form-control"
+                                    className={`form-control ${formErrors?.procedureDate ? "is-invalid" : ""}`}
                                     value={draftStep?.date || ""}
                                     onChange={(e) => handleNewStepChange("date", e.target.value)}
                                 />
+                                {formErrors?.procedureDate && (
+                                    <div className="invalid-feedback">{formErrors.procedureDate}</div>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -31,6 +31,17 @@ export default function Header({ title, desc, page }) {
         }
 
         const newErrors = validateFile(file);
+        const procedures = typeof file.treatmentProcedures === "string"
+            ? JSON.parse(file.treatmentProcedures || "[]")
+            : file.treatmentProcedures || [];
+
+        const lastProc = procedures[procedures.length - 1];
+        if (lastProc?.status === "pending") {
+            if (!lastProc.title?.trim()) newErrors.procedureTitle = "Procedure title is required";
+            if (!lastProc.desc?.trim()) newErrors.procedureDesc = "Procedure description is required";
+            if (!lastProc.date?.trim()) newErrors.procedureDate = "Procedure date is required";
+        }
+
         setFormErrors(newErrors);
         if (Object.keys(newErrors).length > 0) return;
 

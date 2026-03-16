@@ -15,6 +15,8 @@ export default function Students() {
             try {
                 const response = await axios.get("https://oralink.runasp.net/api/students");
                 setStudents(response.data.sort((a, b) => a.name.localeCompare(b.name)));
+                console.log(response.data);
+                
             } catch (err) {
                 console.error(err);
                 setError("Failed to load students");
@@ -106,12 +108,12 @@ export default function Students() {
                                                         <path d="M16 13H8"></path>
                                                         <path d="M16 17H8"></path>
                                                     </svg>
-                                                    {student.submittedFiles}
+                                                    {student.submittedFilesCount}
                                                 </span>
                                             </td>
                                             <td>
                                                 <Link
-                                                    href={`/students/${student.id}`}
+                                                    href={`/students/${student.studentId}`}
                                                     className="btn btn-sm btn-primary d-inline-flex align-items-center gap-1"
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

@@ -22,7 +22,6 @@ export default function StudentProfile() {
                 const response = await axios.get(`https://oralink.runasp.net/api/students/${studentID}`);
                 setStudent(response.data);
                 console.log(response.data);
-                
             } catch (err) {
                 console.error(err);
                 setError("Failed to load student profile");
