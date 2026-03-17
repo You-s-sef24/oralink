@@ -42,7 +42,6 @@ export default function DoctorsViewFile({ fileId }) {
                     grade: data.doctorGrade !== null && data.doctorGrade !== undefined ? Number(data.doctorGrade) : 0,
                     feedback: data.feedBack ?? ""
                 };
-                console.log(response.data);
                 setFile(parsedFile);
                 setGrade({ score: parsedFile.doctorGrade, feedback: parsedFile.feedBack });
             } catch (error) {

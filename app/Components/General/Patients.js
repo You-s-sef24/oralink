@@ -107,10 +107,10 @@ export default function Patients() {
                                 <tr>
                                     <th>#</th>
                                     <th>Patient Name</th>
-                                    <th>Birth Date</th>
                                     <th>Phone</th>
-                                    <th>Department</th>
-                                    <th>Created</th>
+                                    <th>Creation Date</th>
+                                    <th>Submission Date</th>
+                                    <th>Grade</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -127,10 +127,10 @@ export default function Patients() {
                                         <tr key={file.fileId}>
                                             <td className="text-muted">{i + 1}</td>
                                             <td className="fw-bold">{file.patientName}</td>
-                                            <td className="text-muted">{file.birthDate}</td>
                                             <td className="text-muted">{file.phone}</td>
-                                            <td className="text-muted">{file.department}</td>
                                             <td className="text-muted">{file.creationDate?.split("T")[0]}</td>
+                                            <td className="text-muted">{file.submittedDate?.split("T")[0] || '-'}</td>
+                                            <td className="text-muted">{file.doctorGrade || '-'}/100</td>
                                             <td>
                                                 <Link
                                                     href={`my-files/${file.fileId}`}

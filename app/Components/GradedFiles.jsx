@@ -59,7 +59,8 @@ export default function GradedFiles() {
               <th>#</th>
               <th>Student Name</th>
               <th>Patient Name</th>
-              <th className="d-none d-md-table-cell">Submitted Date</th>
+              <th>Creation Date</th>
+              <th>Submission Date</th>
               <th>Grade</th>
               <th>Action</th>
             </tr>
@@ -70,7 +71,8 @@ export default function GradedFiles() {
                 <td>{i + 1}</td>
                 <td>{file.studentName}</td>
                 <td>{file.patientName}</td>
-                <td className="d-none d-md-table-cell">{file.submittedDate}</td>
+                <td>{file.creationDate}</td>
+                <td>{file.submittedDate}</td>
                 <td>
                   <span
                     className={`badge rounded-pill px-3 py-2 ${

@@ -71,7 +71,6 @@ export default function Header({ title, desc, page }) {
             formData.append("studentId", currentUser.id);
             formData.append("updatedDate", new Date().toISOString());
 
-            console.log("Updating file with data:", formData);
 
             const res = await axios.put(
                 `https://oralink.runasp.net/api/patient-files/${file.fileId}/update`,
@@ -90,11 +89,11 @@ export default function Header({ title, desc, page }) {
                 ...updatedFile
             }));
 
-            console.log("------ FORM DATA START ------");
-            for (let pair of formData.entries()) {
-                console.log(pair[0], pair[1]);
-            }
-            console.log("------ FORM DATA END ------");
+            // console.log("------ FORM DATA START ------");
+            // for (let pair of formData.entries()) {
+            //     console.log(pair[0], pair[1]);
+            // }
+            // console.log("------ FORM DATA END ------");
 
             alert("File updated successfully!");
             setIsEditing(false);

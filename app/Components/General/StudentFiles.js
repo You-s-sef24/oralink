@@ -65,7 +65,8 @@ export default function StudentFiles({ id }) {
                                 <tr>
                                     <th>#</th>
                                     <th>Patient Name</th>
-                                    <th>Created Date</th>
+                                    <th>Creation Date</th>
+                                    <th>Submission Date</th>
                                     <th className="d-none d-md-table-cell">Status</th>
                                     <th>Grade</th>
                                     <th>Action</th>
@@ -77,6 +78,7 @@ export default function StudentFiles({ id }) {
                                         <td className="text-muted">{i + 1}</td>
                                         <td className="fw-bold">{file.patientName}</td>
                                         <td className="text-muted">{file.creationDate?.split("T")[0]}</td>
+                                        <td className="text-muted">{file.submittedDate?.split("T")[0]}</td>
                                         <td className="d-none d-md-table-cell">
                                             {file.graded ? (
                                                 <span className="badge bg-success rounded-pill px-3 py-2 d-inline-flex align-items-center gap-1">

@@ -15,8 +15,6 @@ export default function Students() {
             try {
                 const response = await axios.get("https://oralink.runasp.net/api/students");
                 setStudents(response.data.sort((a, b) => a.name.localeCompare(b.name)));
-                console.log(response.data);
-                
             } catch (err) {
                 console.error(err);
                 setError("Failed to load students");
@@ -95,7 +93,7 @@ export default function Students() {
                                     </tr>
                                 ) : (
                                     filteredStudents.map((student, i) => (
-                                        <tr key={student.id}>
+                                        <tr key={i}>
                                             <td className="text-muted">{i + 1}</td>
                                             <td className="fw-bold">{student.name}</td>
                                             <td className="text-muted">{student.email}</td>

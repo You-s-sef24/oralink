@@ -55,7 +55,6 @@ export default function SupervisorViewFile({ fileId }) {
               : 0,
           feedback: data.feedBack ?? "",
         };
-        console.log(data.treatmentProcedures);
         setFile(parsedFile);
       } catch (error) {
         console.error("Error fetching file:", error);

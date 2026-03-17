@@ -59,7 +59,8 @@ export default function UngradedFiles() {
               <th>#</th>
               <th>Student Name</th>
               <th>Patient Name</th>
-              <th>Submitted Date</th>
+              <th>Creation Date</th>
+              <th>Submission Date</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -69,6 +70,7 @@ export default function UngradedFiles() {
                 <td>{i + 1}</td>
                 <td>{file.studentName}</td>
                 <td>{file.patientName}</td>
+                <td>{file.creationDate}</td>
                 <td>{file.submittedDate}</td>
                 <td>
                   <Link

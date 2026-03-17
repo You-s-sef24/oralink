@@ -20,7 +20,6 @@ import ViewPeriodonticsPage5 from "../Periodontics/ViewPeriodonticsPage5";
 export default function StudentViewFile() {
     const { fileId } = useParams();
     const { token } = useContext(UsersContext);
-    const { currentUser } = useContext(UsersContext);
     const { file, setFile, submitModal, setSubmitModal } = useContext(PatientInfoContext);
     const { state, setState } = useContext(StatesContext);
     const [loading, setLoading] = useState(true);
@@ -36,7 +35,6 @@ export default function StudentViewFile() {
             return null;
         }
     };
-
 
     useEffect(() => {
         async function fetchFile() {
@@ -57,8 +55,6 @@ export default function StudentViewFile() {
                 setError(null);
                 setState(1);
 
-                console.log("Fetching file:", fileId);
-
                 const res = await axios.get(
                     `https://oralink.runasp.net/api/patient-files/${fileId}/get-by-id`,
                     {
@@ -68,8 +64,6 @@ export default function StudentViewFile() {
                         }
                     }
                 );
-
-                console.log("File fetched:", res.data);
 
                 const fetchedFile = res.data?.data || res.data;
 
@@ -82,7 +76,6 @@ export default function StudentViewFile() {
                     };
 
                     setFile(normalizedFile);
-                    console.log(normalizedFile);
                 } else {
                     setError("File not found");
                 }
@@ -137,6 +130,22 @@ export default function StudentViewFile() {
         );
     }
 
+    const ReadOnlyTextField = ({ label, value }) => (
+        <div className="mb-2">
+            <label className="form-label fw-semibold">{label}</label>
+            <p
+                className="border rounded px-2 py-2 bg-light"
+                style={{
+                    minHeight: "75px",
+                    whiteSpace: "pre-wrap",
+                    marginBottom: 0
+                }}
+            >
+                {value || "-"}
+            </p>
+        </div>
+    );
+
     return (
         <div className="container-fluid">
             <Header title={'Patient File'} desc={'View and Edit Patient File'} page={'Patient File'} file={file} setFile={setFile} />
@@ -158,6 +167,18 @@ export default function StudentViewFile() {
                             <ViewEndodonticsFile />
                         : <></>
             }
+            {file.doctorGrade && (
+                <div className="d-flex justify-content-center">
+                    <div className="d-flex flex-column bg-white border border-primary rounded shadow p-4 my-2 w-50">
+                        <p className="d-flex align-items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-award w-6 h-6 text-primary" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg>
+                            Grade & Feedback
+                        </p>
+                        <ReadOnlyTextField label={"Grade (0-100)"} value={file.doctorGrade} />
+                        <ReadOnlyTextField label={"Feedback & Comments"} value={file.feedBack} />
+                    </div>
+                </div>
+            )}
             {
                 file.department === "Periodontics" ?
                     <div className="d-flex justify-content-between m-3">
