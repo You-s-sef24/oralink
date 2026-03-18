@@ -57,7 +57,7 @@ export default function GradeDistributionChart() {
       labels: Object.keys(distribution),
       datasets: [
         {
-          label: "Number of Files",
+          label: "Number of Students",
           data: Object.values(distribution),
           backgroundColor: [
             "#4caf50",
@@ -78,7 +78,7 @@ export default function GradeDistributionChart() {
       legend: { display: false },
       tooltip: {
         callbacks: {
-          label: (context) => `${context.raw} files`,
+          label: (context) => `${context.raw} student(s)`,
         },
       },
     },

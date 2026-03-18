@@ -72,7 +72,7 @@ export default function DoctorsViewFile({ fileId }) {
             );
             setFile({ ...file, grade: grade.score, feedback: grade.feedback });
             alert("Grade saved successfully!");
-            router.replace(`/students/${file.studentId}`);
+            router.back();
 
         } catch (error) {
             console.error("Error saving grade:", error);

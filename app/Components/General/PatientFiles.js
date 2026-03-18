@@ -22,6 +22,7 @@ export default function PatientFiles() {
                     studentId: file.studentId ?? null,
                     studentName: file.studentName || "-",
                     patientName: file.patientName || "-",
+                    creationDate: file.creationDate || "-",
                     submittedDate: file.submittedDate || "-",
                     grade: file.grade
                 }));
@@ -103,7 +104,8 @@ export default function PatientFiles() {
                             <th>#</th>
                             <th>Student Name</th>
                             <th>Patient Name</th>
-                            <th>Submitted</th>
+                            <th>Creation Date</th>
+                            <th>Submission Date</th>
                             <th>Grade</th>
                             <th>Action</th>
                         </tr>
@@ -115,6 +117,7 @@ export default function PatientFiles() {
                                     <td>{i + 1}</td>
                                     <td>{file.studentName}</td>
                                     <td>{file.patientName}</td>
+                                    <td>{file.creationDate}</td>
                                     <td>{file.submittedDate}</td>
                                     <td>
                                         {file.grade ? (
