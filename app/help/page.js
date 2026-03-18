@@ -7,6 +7,8 @@ import ProtectedRoute from "../Components/General/ProtectedRoute";
 import Header from "../Components/General/Header";
 import AdminHelpPage from "../Components/Admin/AdminHelpPage";
 import SupervisorHelpPage from "../Components/Supervisor/SupervisorHelpPage";
+import DoctorHelpPage from "../Components/Doctor/DoctorHelpPage";
+import HodHelpPage from "../Components/HOD/HODHelpPage";
 
 export default function HelpPage() {
     const { currentUser } = useContext(UsersContext);
@@ -24,8 +26,8 @@ export default function HelpPage() {
 
                 {currentUser?.role === "Student" && <StudentHelpPage />}
                 {currentUser?.role === "Supervisor" && <SupervisorHelpPage/>}
-                {currentUser?.role === "Head of Department" && <></>}
-                {currentUser?.role === "Doctor" && <></>}
+                {currentUser?.role === "Head of Department" && <HodHelpPage/>}
+                {currentUser?.role === "Doctor" && <DoctorHelpPage/>}
                 {currentUser?.role === "Admin" && <AdminHelpPage />}
             </div>
         </ProtectedRoute>
