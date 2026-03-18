@@ -1,6 +1,7 @@
 "use client";
 
 import axios from "axios";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function DeleteModal({
@@ -91,34 +92,60 @@ export default function DeleteModal({
                 undone.
               </div>
 
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => !loading && isClose()}
-                  disabled={loading}
+              <div className="modal-footer d-flex justify-content-between">
+                <Link
+                  href={"/help"}
+                  onClick={() => {
+                    isClose();
+                  }}
                 >
-                  Cancel
-                </button>
+                  <div className="btn border-0">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                      <path d="M12 17h.01" />
+                    </svg>
+                  </div>
+                </Link>
+                <div className="d-flex gap-2">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => !loading && isClose()}
+                    disabled={loading}
+                  >
+                    Cancel
+                  </button>
 
-                <button
-                  type="submit"
-                  className="btn btn-danger"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <span
-                        className="spinner-border spinner-border-sm me-2"
-                        role="status"
-                        aria-hidden="true"
-                      />
-                      Deleting...
-                    </>
-                  ) : (
-                    "Yes, Delete"
-                  )}
-                </button>
+                  <button
+                    type="submit"
+                    className="btn btn-danger"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                        Deleting...
+                      </>
+                    ) : (
+                      "Yes, Delete"
+                    )}
+                  </button>
+                </div>
               </div>
             </form>
           </div>

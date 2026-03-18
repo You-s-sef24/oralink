@@ -139,7 +139,22 @@ export default function Navbar() {
                                     </Link>
                                 </>
                             ) : currentUser?.role === "Admin" ? (
-                                <></>
+                                <>
+                                    <Link href="/home" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/home")} rounded border-0 mb-2 gap-2`}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-house-door" viewBox="0 0 16 16">
+                                            <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z" />
+                                        </svg>
+                                        <p className="m-0">Home</p>
+                                    </Link>
+                                    <Link href="/help" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/help")} rounded border-0 mb-2 gap-2`}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                                            <path d="M12 17h.01" />
+                                        </svg>
+                                        <p className="m-0">Help & Guide</p>
+                                    </Link>
+                                </>
                             ) : currentUser?.role === "Doctor" ? (
                                 <>
                                     <Link href="/home" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/home")} rounded border-0 mb-2 gap-2`}>

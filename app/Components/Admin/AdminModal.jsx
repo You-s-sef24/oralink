@@ -2,6 +2,7 @@
 
 import { UsersContext } from "@/app/Contexts/UsersContext";
 import axios from "axios";
+import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 
 export default function EditAdminModal({ show, isClose }) {
@@ -183,39 +184,69 @@ export default function EditAdminModal({ show, isClose }) {
                       onClick={() => setShowPassword(!showPassword)}
                       tabIndex={-1}
                     >
-                      {showPassword ? (<i className="bi bi-eye-slash-fill"></i>) : (<i className="bi bi-eye-fill"></i>)}
+                      {showPassword ? (
+                        <i className="bi bi-eye-slash-fill"></i>
+                      ) : (
+                        <i className="bi bi-eye-fill"></i>
+                      )}
                     </button>
                   </div>
                 </div>
               </div>
 
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => !loading && isClose()}
-                  disabled={loading}
+              <div className="modal-footer d-flex justify-content-between">
+                <Link
+                  href={"/help"}
+                  onClick={() => {
+                    isClose();
+                  }}
                 >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={emptyFields || loading}
-                >
-                  {loading ? (
-                    <>
-                      <span
-                        className="spinner-border spinner-border-sm me-2"
-                        role="status"
-                        aria-hidden="true"
-                      />
-                      Saving...
-                    </>
-                  ) : (
-                    "Save"
-                  )}
-                </button>
+                  <div className="btn border-0">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                      <path d="M12 17h.01" />
+                    </svg>
+                  </div>
+                </Link>
+                <div className="d-flex gap-2">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => !loading && isClose()}
+                    disabled={loading}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={emptyFields || loading}
+                  >
+                    {loading ? (
+                      <>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                        Saving...
+                      </>
+                    ) : (
+                      "Save"
+                    )}
+                  </button>
+                </div>
               </div>
             </form>
           </div>
