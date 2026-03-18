@@ -23,7 +23,6 @@ export default function Patients() {
                     "https://oralink.runasp.net/api/patient-files/my-files",
                     {
                         headers: {
-                            'ngrok-skip-browser-warning': 'true',
                             'Content-Type': 'application/json',
                         }
                     }

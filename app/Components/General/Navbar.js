@@ -66,15 +66,14 @@ export default function Navbar() {
                     </div>
                     <div className="offcanvas-body">
                         <div className="list-group list-group-flush">
+                            <Link href="/home" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/home")} rounded border-0 mb-2 gap-2`}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-house-door" viewBox="0 0 16 16">
+                                    <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z" />
+                                </svg>
+                                <p className="m-0">Home</p>
+                            </Link>
                             {currentUser?.role === "Student" ? (
                                 <>
-                                    <Link href="/home" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/home")} rounded border-0 mb-2 gap-2`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-house-door" viewBox="0 0 16 16">
-                                            <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z" />
-                                        </svg>
-                                        <p className="m-0">Home</p>
-                                    </Link>
-
                                     <Link href="/my-files" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/my-files")} rounded border-0 mb-2 gap-2`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-folder-open w-5 h-5" aria-hidden="true"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"></path></svg>
                                         <p className="m-0">My Files</p>
@@ -87,13 +86,6 @@ export default function Navbar() {
                                 </>
                             ) : currentUser?.role === "Supervisor" ? (
                                 <>
-                                    <Link href="/home" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/home")} rounded border-0 mb-2 gap-2`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-house-door" viewBox="0 0 16 16">
-                                            <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z" />
-                                        </svg>
-                                        <p className="m-0">Home</p>
-                                    </Link>
-
                                     <Link href="/pending-procedures" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/pending-procedures")} rounded border-0 mb-2 gap-2`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-clipboard-check w-5 h-5" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="m9 14 2 2 4-4"></path></svg>
                                         <p className="m-0">Pending Procedures</p>
@@ -111,13 +103,6 @@ export default function Navbar() {
                                 </>
                             ) : currentUser?.role === "Head of Department" ? (
                                 <>
-                                    <Link href="/home" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/home")} rounded border-0 mb-2 gap-2`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-house-door" viewBox="0 0 16 16">
-                                            <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z" />
-                                        </svg>
-                                        <p className="m-0">Home</p>
-                                    </Link>
-
                                     <Link href="/dashboard" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/dashboard")} rounded border-0 mb-2 gap-2`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-layout-dashboard" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg>
                                         <p className="m-0">Dashboard</p>
@@ -140,30 +125,9 @@ export default function Navbar() {
                                 </>
                             ) : currentUser?.role === "Admin" ? (
                                 <>
-                                    <Link href="/home" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/home")} rounded border-0 mb-2 gap-2`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-house-door" viewBox="0 0 16 16">
-                                            <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z" />
-                                        </svg>
-                                        <p className="m-0">Home</p>
-                                    </Link>
-                                    <Link href="/help" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/help")} rounded border-0 mb-2 gap-2`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                                            <path d="M12 17h.01" />
-                                        </svg>
-                                        <p className="m-0">Help & Guide</p>
-                                    </Link>
                                 </>
                             ) : currentUser?.role === "Doctor" ? (
                                 <>
-                                    <Link href="/home" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/home")} rounded border-0 mb-2 gap-2`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-house-door" viewBox="0 0 16 16">
-                                            <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z" />
-                                        </svg>
-                                        <p className="m-0">Home</p>
-                                    </Link>
-
                                     <Link href="/students" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/students")} rounded border-0 mb-2 gap-2`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-users w-5 h-5" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg>
                                         <p className="m-0">Students</p>
@@ -181,6 +145,14 @@ export default function Navbar() {
                                 </>
                             ) : (<Loading />)}
 
+                            <Link href="/help" onClick={closeOffcanvas} className={`d-flex align-items-center ${linkClasses("/help")} rounded border-0 mb-2 gap-2`}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                                    <path d="M12 17h.01" />
+                                </svg>
+                                <p className="m-0">Help & Guide</p>
+                            </Link>
                             <button
                                 className="d-flex align-items-center list-group-item list-group-item-action py-3 text-danger rounded border-0 gap-2"
                                 onClick={() => {
