@@ -12,8 +12,7 @@ import HodHelpPage from "../Components/HOD/HODHelpPage";
 
 export default function HelpPage() {
     const { currentUser } = useContext(UsersContext);
-    console.log(currentUser);
-
+    
     return (
         <ProtectedRoute>
             <div className="container-fluid">

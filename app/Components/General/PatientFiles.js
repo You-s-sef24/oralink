@@ -1,7 +1,6 @@
 "use client";
 
-import { useContext, useState, useEffect } from "react";
-import { UsersContext } from "../../Contexts/UsersContext";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
 
@@ -10,7 +9,6 @@ export default function PatientFiles() {
     const [status, setStatus] = useState('');
     const [files, setFiles] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { currentUser } = useContext(UsersContext);
 
     useEffect(() => {
         const fetchFiles = async () => {

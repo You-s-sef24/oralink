@@ -603,7 +603,7 @@ export default function PatientInfoProvider({ children }) {
             return;
         }
         setIsDirty(true);
-    }, [generalData, periodonticsData]);
+    }, [generalData]);
 
     return (
         <PatientInfoContext.Provider value={{

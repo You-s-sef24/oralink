@@ -68,7 +68,7 @@ export default function PeriodonticsFile() {
             ) : step === 2 ? (
                 <PeriodonticsPage2 info={periodonticsData} setInfo={setPeriodonticsData} />
             ) : step === 3 ? (
-                <PeriodonticsPage3 info={periodonticsData} setInfo={setPeriodonticsData} />
+                <PeriodonticsPage3 />
             ) : step === 4 ? (
                 <PeriodonticsPage4 info={periodonticsData} setInfo={setPeriodonticsData} />
             ) : (

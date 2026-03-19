@@ -2,7 +2,6 @@
 
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function UsersModal({ show, isClose, refreshUsers }) {
@@ -15,7 +14,6 @@ export default function UsersModal({ show, isClose, refreshUsers }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const emptyFields = Object.values(userData).some(
     (value) => value.trim() === "",

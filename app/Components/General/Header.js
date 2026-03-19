@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useContext } from "react";
 import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
 import { UsersContext } from "../../Contexts/UsersContext";
