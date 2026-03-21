@@ -1,10 +1,11 @@
 import ProtectedRoute from "@/app/Components/General/ProtectedRoute";
 import StudentViewFile from "@/app/Components/Student/StudentViewFile";
 
-export default function ViewFile({ params }) {
+export default async function ViewFile({ params }) {
+    const { fileId } = await params;
     return (
         <ProtectedRoute allowedRoles={["Student"]}>
-            <StudentViewFile params={params} />
+            <StudentViewFile fileId={fileId} />
         </ProtectedRoute>
     );
 }

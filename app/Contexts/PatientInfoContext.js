@@ -132,9 +132,10 @@ const initialGeneralData = {
         },
         comments: ""
     },
+    isSubmitted: false,
     treatmentProcedures: [],
-    prePatientImage: null,
-    postPatientImage: null,
+    prePatientImage: [],
+    postPatientImage: [],
     xRay: null,
 };
 
@@ -437,7 +438,8 @@ export default function PatientInfoProvider({ children }) {
             },
             comments: ""
         },
-        prePatientImage: ""
+        prePatientImage: [],
+        postPatientImage: [],
     });
 
     const [isEditing, setIsEditing] = useState(false);
@@ -536,12 +538,24 @@ export default function PatientInfoProvider({ children }) {
                 }
             });
 
-            if (generalData.prePatientImage instanceof File) {
-                formData.append("PrePatientImage", generalData.prePatientImage);
-            }
-            if (generalData.postPatientImage instanceof File) {
-                formData.append("PostPatientImage", generalData.postPatientImage);
-            }
+            const preImages = Array.isArray(generalData.prePatientImage)
+                ? generalData.prePatientImage
+                : generalData.prePatientImage
+                    ? [generalData.prePatientImage]
+                    : [];
+            preImages.forEach((img) => {
+                if (img instanceof File) formData.append("PrePatientImages", img);
+            });
+
+            const postImages = Array.isArray(generalData.postPatientImage)
+                ? generalData.postPatientImage
+                : generalData.postPatientImage
+                    ? [generalData.postPatientImage]
+                    : [];
+            postImages.forEach((img) => {
+                if (img instanceof File) formData.append("PostPatientImages", img);
+            });
+
             if (generalData.xRay instanceof File) {
                 formData.append("XRay", generalData.xRay);
             }
@@ -586,9 +600,14 @@ export default function PatientInfoProvider({ children }) {
         const handleVisibilityChange = () => {
             if (document.visibilityState === "hidden" && isDirty) {
                 localStorage.setItem("formDraft", JSON.stringify({
-                    generalData,
+                    generalData: {
+                        ...generalData,
+                        prePatientImage: null,   // File objects can't be JSON serialized
+                        postPatientImage: null,
+                        xRay: null,
+                    },
                     periodonticsData,
-                    endodonticsData
+                    endodonticsData,
                 }));
             }
         };

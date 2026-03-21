@@ -35,6 +35,8 @@ export default function DoctorsViewFile({ fileId }) {
 
                 const parsedFile = {
                     ...data,
+                    prePatientImage: data.prePatientImages ?? [],
+                    postPatientImage: data.postPatientImages ?? [],
                     departmentData: data.departmentData ? JSON.parse(data.departmentData) : null,
                     medicalHistory: data.medicalHistory ? JSON.parse(data.medicalHistory) : null,
                     dentalHistory: data.dentalHistory ? JSON.parse(data.dentalHistory) : null,

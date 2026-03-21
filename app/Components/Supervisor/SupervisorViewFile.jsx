@@ -12,7 +12,6 @@ import { StatesContext } from "../../Contexts/StatesContext";
 import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
 import { UsersContext } from "@/app/Contexts/UsersContext";
 import { useRouter } from "next/navigation";
-import ViewPeriodonticsPage5 from "../Periodontics/ViewPeriodonticsPage5";
 import ViewProcedures from "./ViewProcedures";
 
 export default function SupervisorViewFile({ fileId }) {
@@ -37,6 +36,8 @@ export default function SupervisorViewFile({ fileId }) {
 
         const parsedFile = {
           ...data,
+          prePatientImage: data.prePatientImages ?? [],
+          postPatientImage: data.postPatientImages ?? [],
           departmentData: data.departmentData
             ? JSON.parse(data.departmentData)
             : null,

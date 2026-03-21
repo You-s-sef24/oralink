@@ -39,7 +39,7 @@ export default function GeneralForm() {
         if (!generalData.occupation?.trim())
             newErrors.occupation = "Occupation is required";
 
-        if (!generalData.prePatientImage)
+        if (!generalData.prePatientImage || generalData.prePatientImage.length === 0)
             newErrors.prePatientImage = "Pre Patient Image is required";
 
         return newErrors;

@@ -53,7 +53,7 @@ export default function UngradedFiles() {
   return (
     <div className="shadow border rounded bg-white p-4 my-4">
       <div className="table-responsive">
-        <table className="table table-hover align-middle mb-0">
+        <table className="table table-hover align-middle mb-0 text-center">
           <thead className="table-light">
             <tr>
               <th>#</th>
