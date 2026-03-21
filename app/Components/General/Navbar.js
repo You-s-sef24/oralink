@@ -77,6 +77,13 @@ const NAV_LINKS = {
     Admin: [],
 };
 
+function cleanupBootstrapBody() {
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
+    document.body.classList.remove("modal-open");
+    document.querySelectorAll(".offcanvas-backdrop").forEach(el => el.remove());
+}
+
 export default function Navbar() {
     const pathname = usePathname();
     const { currentUser, logout } = useContext(UsersContext);
@@ -96,6 +103,10 @@ export default function Navbar() {
         el.addEventListener("hidden.bs.offcanvas", handleHidden);
         return () => el.removeEventListener("hidden.bs.offcanvas", handleHidden);
     }, []);
+
+    useEffect(() => {
+        cleanupBootstrapBody();
+    }, [pathname]);
 
     function closeOffcanvas() {
         const el = offcanvasElRef.current;
