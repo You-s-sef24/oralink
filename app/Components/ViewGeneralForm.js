@@ -5,6 +5,7 @@ import { PatientInfoContext } from "../Contexts/PatientInfoContext";
 import ImageUploadBox from "./ImageUploadBox";
 import ImageLightbox from "./General/ImageLightBox";
 
+// ── Shared helper ─────────────────────────────────────────────────────────────
 function getUrl(img) {
     if (!img) return null;
     if (img instanceof File) return URL.createObjectURL(img);
@@ -12,6 +13,7 @@ function getUrl(img) {
     return null;
 }
 
+// ── Gallery shown in read-only mode ──────────────────────────────────────────
 function ImageGallery({ value, label }) {
     const [lightbox, setLightbox] = useState(null); // index or null
 
@@ -50,8 +52,8 @@ function ImageGallery({ value, label }) {
                                 onMouseLeave={e => e.currentTarget.style.opacity = "0"}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
-                                    <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                    <line x1="11" y1="8" x2="11" y2="14" /><line x1="8" y1="11" x2="14" y2="11" />
+                                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                    <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
                                 </svg>
                             </div>
 
@@ -76,8 +78,11 @@ function ImageGallery({ value, label }) {
     );
 }
 
+// ── Main component ────────────────────────────────────────────────────────────
 export default function ViewGeneralForm() {
     const { isEditing, file, setFile, formErrors: errors } = useContext(PatientInfoContext);
+
+
 
     const ReadOnlyField = ({ label, value }) => (
         <div className="mb-2">
@@ -388,6 +393,7 @@ export default function ViewGeneralForm() {
                 </div>
             </form>
         ) : (
+            // ── READ-ONLY VIEW ────────────────────────────────────────────────
             <div className="p-4">
                 <div className="row align-items-start g-3">
                     <div className="col-12 col-md-6">

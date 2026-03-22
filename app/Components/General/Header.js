@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
 import { UsersContext } from "../../Contexts/UsersContext";
 import axios from "axios";
@@ -26,13 +26,24 @@ export default function Header({ title, desc, page }) {
     const { setShowEditAdminModal } = useContext(UIContext);
     const router = useRouter();
 
+    // Snapshot of image URLs at the moment editing begins.
+    // Used to compute which images were deleted, since file state
+    // is mutated in place during editing and can't be diffed against itself.
+    const originalPreImages = useRef([]);
+    const originalPostImages = useRef([]);
+
     async function handleEdit() {
         if (!currentUser?.id) {
             alert("You must be logged in to edit.");
             return;
         }
 
+        // ── Entering edit mode ────────────────────────────────────────────────
         if (!isEditing) {
+            // Snapshot existing server URLs before any edits happen
+            originalPreImages.current = (file.prePatientImage ?? []).filter(img => typeof img === "string");
+            originalPostImages.current = (file.postPatientImage ?? []).filter(img => typeof img === "string");
+
             if (file?.departmentData?.periodontalChart) {
                 setPeriodonticsData((prev) => ({
                     ...prev,
@@ -43,6 +54,7 @@ export default function Header({ title, desc, page }) {
             return;
         }
 
+        // ── Saving edits ──────────────────────────────────────────────────────
         if (file.isSubmitted) {
             alert("Submitted files cannot be edited.");
             return;
@@ -64,7 +76,6 @@ export default function Header({ title, desc, page }) {
         if (Object.keys(newErrors).length > 0) return;
 
         const fileId = file.fileId ?? file.id;
-
         if (!fileId) {
             alert("Cannot save: file ID is missing.");
             return;
@@ -79,6 +90,7 @@ export default function Header({ title, desc, page }) {
                 : file.departmentData;
 
             const fileToSave = { ...file, departmentData: updatedDepartmentData };
+
             Object.entries(fileToSave).forEach(([key, value]) => {
                 if (["prePatientImage", "postPatientImage", "xRay", "fileId", "id"].includes(key)) return;
                 if (typeof value === "object" && value !== null) {
@@ -88,19 +100,35 @@ export default function Header({ title, desc, page }) {
                 }
             });
 
-            const preImages = Array.isArray(fileToSave.prePatientImage)
+            // ── Images ────────────────────────────────────────────────────────
+            // current arrays = mix of kept URL strings + new File objects
+            const currentPreImages = Array.isArray(fileToSave.prePatientImage)
                 ? fileToSave.prePatientImage
                 : fileToSave.prePatientImage ? [fileToSave.prePatientImage] : [];
-            preImages.forEach((img) => {
-                if (img instanceof File) formData.append("PrePatientImages", img);
-            });
 
-            const postImages = Array.isArray(fileToSave.postPatientImage)
+            const currentPostImages = Array.isArray(fileToSave.postPatientImage)
                 ? fileToSave.postPatientImage
                 : fileToSave.postPatientImage ? [fileToSave.postPatientImage] : [];
-            postImages.forEach((img) => {
+
+            // New uploads
+            currentPreImages.forEach((img) => {
+                if (img instanceof File) formData.append("PrePatientImages", img);
+            });
+            currentPostImages.forEach((img) => {
                 if (img instanceof File) formData.append("PostPatientImages", img);
             });
+
+            // Deleted URLs = snapshot at edit-start minus what's still in current arrays
+            const keptPreUrls = new Set(currentPreImages.filter(img => typeof img === "string"));
+            const keptPostUrls = new Set(currentPostImages.filter(img => typeof img === "string"));
+
+            const deletedPreUrls = originalPreImages.current.filter(url => !keptPreUrls.has(url));
+            const deletedPostUrls = originalPostImages.current.filter(url => !keptPostUrls.has(url));
+
+            if (deletedPreUrls.length > 0)
+                formData.append("DeletedPreImageUrls", deletedPreUrls.join(","));
+            if (deletedPostUrls.length > 0)
+                formData.append("DeletedPostImageUrls", deletedPostUrls.join(","));
 
             if (fileToSave.xRay instanceof File) {
                 formData.append("XRay", fileToSave.xRay);
@@ -116,17 +144,24 @@ export default function Header({ title, desc, page }) {
             );
 
             const raw = res.data?.data || res.data;
+            // If the backend returns updated image URLs, use them.
+            // Otherwise keep currentImages as-is (including new File objects)
+            // so the UI reflects what was just uploaded without needing a refresh.
             const normalizedFile = {
                 ...fileToSave,
                 fileId: fileId,
-                prePatientImage: raw?.prePatientImages ?? fileToSave.prePatientImage ?? [],
-                postPatientImage: raw?.postPatientImages ?? fileToSave.postPatientImage ?? [],
+                prePatientImage: raw?.prePatientImages?.length ? raw.prePatientImages : currentPreImages,
+                postPatientImage: raw?.postPatientImages?.length ? raw.postPatientImages : currentPostImages,
                 departmentData: safeParseJSON(raw?.departmentData) ?? updatedDepartmentData,
                 medicalHistory: safeParseJSON(raw?.medicalHistory) ?? file.medicalHistory,
                 dentalHistory: safeParseJSON(raw?.dentalHistory) ?? file.dentalHistory,
             };
 
             setFile(normalizedFile);
+
+            // Reset snapshot
+            originalPreImages.current = [];
+            originalPostImages.current = [];
 
             if (file.department === "Periodontics" && normalizedFile.departmentData?.periodontalChart) {
                 setPeriodonticsData((prev) => ({
@@ -147,6 +182,10 @@ export default function Header({ title, desc, page }) {
     }
 
     function handleCancel() {
+        // Reset snapshot on cancel too
+        originalPreImages.current = [];
+        originalPostImages.current = [];
+
         if (file?.departmentData?.periodontalChart) {
             setPeriodonticsData((prev) => ({
                 ...prev,

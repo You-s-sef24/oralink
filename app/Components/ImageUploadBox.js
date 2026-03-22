@@ -2,7 +2,7 @@
 
 import { PatientInfoContext } from '../Contexts/PatientInfoContext';
 import '../globals.css';
-import { useContext, useState, useRef, useMemo } from "react";
+import { useContext, useState, useRef } from "react";
 
 const MAX_IMAGES = 5;
 const MAX_SIZE_MB = 10;
@@ -31,33 +31,39 @@ export default function ImageUploadBox({ time, type, fileData, setFileData, read
 
     const isXray = type === "xray";
 
-    const fieldName = useMemo(() => {
-        if (isXray) return "xRay";
-        return time === "pre" ? "prePatientImage" : "postPatientImage";
-    }, [isXray, time]);
+    const fieldName = isXray ? "xRay" : time === "pre" ? "prePatientImage" : "postPatientImage";
 
     const label = isXray
         ? "X-Ray Image (Optional)"
         : time === "pre" ? "Pre-Patient Images" : "Post-Patient Images";
 
-    const contextValue = fileData?.[fieldName] ?? generalData[fieldName];
+    // In edit mode (fileData provided): read directly from fileData prop so React re-renders drive the UI.
+    // In create mode: read from generalData.
+    const rawValue = fileData ? fileData[fieldName] : generalData[fieldName];
+    const contextValue = rawValue;
 
-    const images = useMemo(() => {
-        if (isXray) return [];
-        if (!contextValue) return [];
-        return Array.isArray(contextValue) ? contextValue : [contextValue];
-    }, [isXray, contextValue]);
+    const images = isXray
+        ? []
+        : !contextValue
+            ? []
+            : Array.isArray(contextValue) ? contextValue : [contextValue];
 
     const pushToContext = (newArr) => {
-        setGeneralData((prev) => ({ ...prev, [fieldName]: newArr }));
-        if (setFileData && fileData)
-            setFileData((prev) => ({ ...prev, [fieldName]: newArr }));
+        // Spread into new array to guarantee a new reference, forcing React to re-render
+        const value = Array.isArray(newArr) ? [...newArr] : [];
+        if (setFileData) {
+            setFileData((prev) => ({ ...prev, [fieldName]: value }));
+        } else {
+            setGeneralData((prev) => ({ ...prev, [fieldName]: value }));
+        }
     };
 
-    const pushXrayToContext = (file) => {
-        setGeneralData((prev) => ({ ...prev, [fieldName]: file }));
-        if (setFileData && fileData)
-            setFileData((prev) => ({ ...prev, [fieldName]: file }));
+    const pushXrayToContext = (f) => {
+        if (setFileData) {
+            setFileData((prev) => ({ ...prev, [fieldName]: f }));
+        } else {
+            setGeneralData((prev) => ({ ...prev, [fieldName]: f }));
+        }
     };
 
     const addFiles = (fileList) => {
@@ -88,7 +94,7 @@ export default function ImageUploadBox({ time, type, fileData, setFileData, read
     const removeImage = (idx) => {
         if (isXray) { pushXrayToContext(null); return; }
         const next = images.filter((_, i) => i !== idx);
-        pushToContext(next.length ? next : null);
+        pushToContext(next);
     };
 
     const handleDragOver = (e) => { e.preventDefault(); setIsDragging(true); };
@@ -169,6 +175,7 @@ export default function ImageUploadBox({ time, type, fileData, setFileData, read
                 <div className="row g-2 mb-3">
                     {images.map((img, idx) => {
                         const url = getObjectUrl(img);
+                        const isExisting = typeof img === "string"; // server URL
                         return (
                             <div key={idx} className="col-6 col-sm-4 col-md-3 position-relative">
                                 <img
@@ -177,6 +184,13 @@ export default function ImageUploadBox({ time, type, fileData, setFileData, read
                                     className="w-100 rounded border"
                                     style={{ height: 120, objectFit: "cover" }}
                                 />
+                                {/* Badge to distinguish saved vs new */}
+                                <span
+                                    className={`position-absolute top-0 start-0 m-1 badge ${isExisting ? "bg-success" : "bg-primary"}`}
+                                    style={{ fontSize: 9 }}
+                                >
+                                    {isExisting ? "Saved" : "New"}
+                                </span>
                                 {!readOnly && (
                                     <button
                                         type="button"
