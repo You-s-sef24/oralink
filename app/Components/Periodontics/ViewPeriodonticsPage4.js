@@ -104,52 +104,6 @@ export default function ViewPeriodonticsPage4() {
                             <label className="form-label fw-semibold">Maintenance Phase:</label>
                             <textarea className="form-control" rows={4} value={file.departmentData.treatmentPlan.maintenancePhase} onChange={(e) => setFile({ ...file, departmentData: { ...file.departmentData, treatmentPlan: { ...file.departmentData.treatmentPlan, maintenancePhase: e.target.value } } })} ></textarea>
                         </div>
-
-                        {/* <div className="mt-4">
-                    <label className="form-label fw-semibold">Treatment Record Table:</label>
-                    <table className="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Procedure</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <input type="date" className="form-control" />
-                                </td>
-                                <td>
-                                    <input type="text" className="form-control" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="date" className="form-control" />
-                                </td>
-                                <td>
-                                    <input type="text" className="form-control" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="date" className="form-control" />
-                                </td>
-                                <td>
-                                    <input type="text" className="form-control" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="date" className="form-control" />
-                                </td>
-                                <td>
-                                    <input type="text" className="form-control" />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    </div> */}
                     </div>
                 </div>
 

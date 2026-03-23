@@ -26,9 +26,6 @@ export default function Header({ title, desc, page }) {
     const { setShowEditAdminModal } = useContext(UIContext);
     const router = useRouter();
 
-    // Snapshot of image URLs at the moment editing begins.
-    // Used to compute which images were deleted, since file state
-    // is mutated in place during editing and can't be diffed against itself.
     const originalPreImages = useRef([]);
     const originalPostImages = useRef([]);
 
@@ -38,9 +35,7 @@ export default function Header({ title, desc, page }) {
             return;
         }
 
-        // ── Entering edit mode ────────────────────────────────────────────────
         if (!isEditing) {
-            // Snapshot existing server URLs before any edits happen
             originalPreImages.current = (file.prePatientImage ?? []).filter(img => typeof img === "string");
             originalPostImages.current = (file.postPatientImage ?? []).filter(img => typeof img === "string");
 
@@ -54,7 +49,6 @@ export default function Header({ title, desc, page }) {
             return;
         }
 
-        // ── Saving edits ──────────────────────────────────────────────────────
         if (file.isSubmitted) {
             alert("Submitted files cannot be edited.");
             return;
@@ -100,8 +94,6 @@ export default function Header({ title, desc, page }) {
                 }
             });
 
-            // ── Images ────────────────────────────────────────────────────────
-            // current arrays = mix of kept URL strings + new File objects
             const currentPreImages = Array.isArray(fileToSave.prePatientImage)
                 ? fileToSave.prePatientImage
                 : fileToSave.prePatientImage ? [fileToSave.prePatientImage] : [];
@@ -110,7 +102,6 @@ export default function Header({ title, desc, page }) {
                 ? fileToSave.postPatientImage
                 : fileToSave.postPatientImage ? [fileToSave.postPatientImage] : [];
 
-            // New uploads
             currentPreImages.forEach((img) => {
                 if (img instanceof File) formData.append("PrePatientImages", img);
             });
@@ -118,7 +109,6 @@ export default function Header({ title, desc, page }) {
                 if (img instanceof File) formData.append("PostPatientImages", img);
             });
 
-            // Deleted URLs = snapshot at edit-start minus what's still in current arrays
             const keptPreUrls = new Set(currentPreImages.filter(img => typeof img === "string"));
             const keptPostUrls = new Set(currentPostImages.filter(img => typeof img === "string"));
 
@@ -144,9 +134,6 @@ export default function Header({ title, desc, page }) {
             );
 
             const raw = res.data?.data || res.data;
-            // If the backend returns updated image URLs, use them.
-            // Otherwise keep currentImages as-is (including new File objects)
-            // so the UI reflects what was just uploaded without needing a refresh.
             const normalizedFile = {
                 ...fileToSave,
                 fileId: fileId,
@@ -159,7 +146,6 @@ export default function Header({ title, desc, page }) {
 
             setFile(normalizedFile);
 
-            // Reset snapshot
             originalPreImages.current = [];
             originalPostImages.current = [];
 
@@ -182,7 +168,6 @@ export default function Header({ title, desc, page }) {
     }
 
     function handleCancel() {
-        // Reset snapshot on cancel too
         originalPreImages.current = [];
         originalPostImages.current = [];
 

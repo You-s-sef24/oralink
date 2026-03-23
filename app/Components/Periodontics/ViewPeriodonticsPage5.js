@@ -9,13 +9,7 @@ export default function ViewPeriodonticsPage5() {
 
     const proceduresRaw =
         typeof file?.treatmentProcedures === "string"
-            ? (() => {
-                try {
-                    return JSON.parse(file.treatmentProcedures);
-                } catch {
-                    return [];
-                }
-            })()
+            ? (() => { try { return JSON.parse(file.treatmentProcedures); } catch { return []; } })()
             : file?.treatmentProcedures || [];
 
     const procedures = proceduresRaw.map((p) => ({
@@ -25,13 +19,13 @@ export default function ViewPeriodonticsPage5() {
 
     const lastStep = procedures[procedures.length - 1];
     const canAddStep = !isAddingStep && (
-        procedures.length === 0 || lastStep?.status === "approved" || lastStep?.status === "rejected"
+        procedures.length === 0 ||
+        lastStep?.status === "approved" ||
+        lastStep?.status === "rejected"
     );
 
     useEffect(() => {
-        if (!isEditing) {
-            setIsAddingStep(false);
-        }
+        if (!isEditing) setIsAddingStep(false);
     }, [isEditing]);
 
     function handleNewStepChange(field, value) {
@@ -50,33 +44,20 @@ export default function ViewPeriodonticsPage5() {
             } else if (last.status === "rejected") {
                 updated = [...current.slice(0, -1), { title: "", desc: "", date: "", status: "pending", [field]: value }];
             } else {
-                updated = [...current];
-                updated[updated.length - 1] = { ...updated[updated.length - 1], [field]: value };
+                updated = current.map((p, i) =>
+                    i === current.length - 1 ? { ...p, [field]: value } : p
+                );
             }
 
             return { ...prev, treatmentProcedures: updated };
         });
     }
 
-    const statusColor = {
-        pending: "warning",
-        approved: "success",
-        rejected: "danger",
-    };
-
-    const statusIcon = {
-        pending: "bi-hourglass-split",
-        approved: "bi-check-circle-fill",
-        rejected: "bi-x-circle-fill",
-    };
-
-    const formatStatus = (status) => {
-        if (!status) return "Pending";
-        return status.charAt(0).toUpperCase() + status.slice(1);
-    };
-
-    const getStatusColor = (status) => statusColor[status] || "secondary";
-    const getStatusIcon = (status) => statusIcon[status] || "bi-question-circle";
+    const statusColor = { pending: "warning", approved: "success", rejected: "danger" };
+    const statusIcon = { pending: "bi-hourglass-split", approved: "bi-check-circle-fill", rejected: "bi-x-circle-fill" };
+    const formatStatus = (s) => !s ? "Pending" : s.charAt(0).toUpperCase() + s.slice(1);
+    const getStatusColor = (s) => statusColor[s] || "secondary";
+    const getStatusIcon = (s) => statusIcon[s] || "bi-question-circle";
 
     const draftStep = isAddingStep ? procedures[procedures.length - 1] : null;
 
@@ -94,22 +75,15 @@ export default function ViewPeriodonticsPage5() {
                 <div className="d-flex flex-column gap-3 mb-3">
                     {procedures.map((proc, index) => {
                         if (isAddingStep && index === procedures.length - 1) return null;
-
                         return (
-                            <div
-                                key={index}
-                                className={`card border-${getStatusColor(proc.status)}`}
-                            >
+                            <div key={index} className={`card border-${getStatusColor(proc.status)}`}>
                                 <div className={`card-header d-flex justify-content-between align-items-center bg-${getStatusColor(proc.status)} bg-opacity-10`}>
-                                    <span className="fw-bold">
-                                        Step {index + 1}: {proc.title || "Untitled"}
-                                    </span>
+                                    <span className="fw-bold">Step {index + 1}: {proc.title || "Untitled"}</span>
                                     <span className={`badge bg-${getStatusColor(proc.status)}`}>
                                         <i className={`bi ${getStatusIcon(proc.status)} me-1`}></i>
                                         {formatStatus(proc.status)}
                                     </span>
                                 </div>
-
                                 <div className="card-body">
                                     <div className="row g-2 mb-2">
                                         <div className="col-12 col-md-4">
@@ -125,21 +99,18 @@ export default function ViewPeriodonticsPage5() {
                                             <p className="mb-0 fw-medium">{proc.desc || "-"}</p>
                                         </div>
                                     </div>
-
                                     {proc.status === "rejected" && proc.feedback && (
                                         <div className="alert alert-danger mb-0 mt-2 py-2 small">
                                             <i className="bi bi-chat-left-text me-2"></i>
                                             <strong>Supervisor Feedback:</strong> {proc.feedback}
                                         </div>
                                     )}
-
                                     {proc.status === "pending" && (
                                         <div className="alert alert-warning mb-0 mt-2 py-2 small">
                                             <i className="bi bi-hourglass-split me-2"></i>
                                             Awaiting supervisor approval.
                                         </div>
                                     )}
-
                                     {proc.status === "approved" && (
                                         <div className="alert alert-success mb-0 mt-2 py-2 small">
                                             <i className="bi bi-check-circle-fill me-2"></i>
@@ -155,7 +126,7 @@ export default function ViewPeriodonticsPage5() {
                 {isEditing && (canAddStep || isAddingStep) && (
                     <div>
                         <p className="fw-semibold text-primary mb-2">
-                            Step {procedures.filter((p) => p.status === "approved").length + 1}
+                            Step {procedures.length + 1}
                         </p>
                         <div className="row g-3">
                             <div className="col-12 col-md-4">
@@ -166,9 +137,7 @@ export default function ViewPeriodonticsPage5() {
                                     value={draftStep?.title || ""}
                                     onChange={(e) => handleNewStepChange("title", e.target.value)}
                                 />
-                                {formErrors?.procedureTitle && (
-                                    <div className="invalid-feedback">{formErrors.procedureTitle}</div>
-                                )}
+                                {formErrors?.procedureTitle && <div className="invalid-feedback">{formErrors.procedureTitle}</div>}
                             </div>
                             <div className="col-12 col-md-4">
                                 <label className="form-label">Description</label>
@@ -178,9 +147,7 @@ export default function ViewPeriodonticsPage5() {
                                     value={draftStep?.desc || ""}
                                     onChange={(e) => handleNewStepChange("desc", e.target.value)}
                                 />
-                                {formErrors?.procedureDesc && (
-                                    <div className="invalid-feedback">{formErrors.procedureDesc}</div>
-                                )}
+                                {formErrors?.procedureDesc && <div className="invalid-feedback">{formErrors.procedureDesc}</div>}
                             </div>
                             <div className="col-12 col-md-4">
                                 <label className="form-label">Date Performed</label>
@@ -190,9 +157,7 @@ export default function ViewPeriodonticsPage5() {
                                     value={draftStep?.date || ""}
                                     onChange={(e) => handleNewStepChange("date", e.target.value)}
                                 />
-                                {formErrors?.procedureDate && (
-                                    <div className="invalid-feedback">{formErrors.procedureDate}</div>
-                                )}
+                                {formErrors?.procedureDate && <div className="invalid-feedback">{formErrors.procedureDate}</div>}
                             </div>
                         </div>
                     </div>
