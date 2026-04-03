@@ -48,6 +48,8 @@ export default function StudentViewFile({ fileId }) {
 
                 const fetchedFile = res.data?.data || res.data;
 
+                console.log(fetchedFile);
+
                 if (fetchedFile) {
                     setFile({
                         ...fetchedFile,
@@ -131,16 +133,41 @@ export default function StudentViewFile({ fileId }) {
 
             {file.doctorGrade && (
                 <div className="d-flex justify-content-center">
-                    <div className="d-flex flex-column bg-white border border-primary rounded shadow p-4 my-2 w-50">
-                        <p className="d-flex align-items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary" aria-hidden="true">
-                                <path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" />
-                                <circle cx="12" cy="8" r="6" />
-                            </svg>
-                            Grade &amp; Feedback
-                        </p>
-                        <ReadOnlyTextField label="Grade (0-100)" value={file.doctorGrade} />
-                        <ReadOnlyTextField label="Feedback & Comments" value={file.feedBack} />
+                    <div className="d-flex flex-column bg-white border-0 rounded-4 shadow-sm p-4 my-3 w-50">
+
+                        {/* Header */}
+                        <div className="d-flex align-items-center gap-2 mb-3">
+                            <div className="bg-primary bg-opacity-10 p-2 rounded-3">
+                                <i className="bi bi-award text-primary fs-4"></i>
+                            </div>
+                            <div>
+                                <h6 className="mb-0 fw-bold">Grade & Feedback</h6>
+                                <small className="text-muted">Evaluation by supervisor</small>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        {/* Grade */}
+                        <div className="text-center mb-3">
+                            <div className="display-5 fw-bold text-primary">{file.doctorGrade}</div>
+                            <small className="text-muted">Score</small>
+                        </div>
+
+                        {/* Feedback */}
+                        <div className="mb-3">
+                            <small className="text-muted">Feedback & Comments</small>
+                            <div className="bg-light p-3 rounded mt-1" style={{ whiteSpace: "pre-wrap" }}>
+                                {file.feedBack || "-"}
+                            </div>
+                        </div>
+
+                        {/* Doctor */}
+                        <div className="text-end mt-2">
+                            <small className="text-muted">Doctor:</small>
+                            <div className="fw-semibold">{file.gradedBy || "-"}</div>
+                        </div>
+
                     </div>
                 </div>
             )}

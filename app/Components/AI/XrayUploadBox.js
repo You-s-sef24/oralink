@@ -73,14 +73,6 @@ export default function XrayUploadBox() {
         setResultImage(null);
     }
 
-    function handleExport() {
-        if (!resultImage) return;
-        const a = document.createElement("a");
-        a.href = resultImage;
-        a.download = "ai_xray_result.png";
-        a.click();
-    }
-
     return (
         <div className="upload-container mt-4">
             <h4 className="mb-3">Upload X-ray Image</h4>
@@ -132,11 +124,8 @@ export default function XrayUploadBox() {
 
                 {!loading && file && isAnalyzed && (
                     <div className="d-flex gap-2 mt-4">
-                        <button className="btn btn-lg btn-light" onClick={handleUploadNew}>
+                        <button className="btn btn-primary btn-lg" onClick={handleUploadNew}>
                             Upload New X-ray
-                        </button>
-                        <button className="btn btn-lg btn-primary" onClick={handleExport}>
-                            Export Results
                         </button>
                     </div>
                 )}

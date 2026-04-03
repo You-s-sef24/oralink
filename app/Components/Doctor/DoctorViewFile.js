@@ -42,7 +42,8 @@ export default function DoctorsViewFile({ fileId }) {
                     dentalHistory: data.dentalHistory ? JSON.parse(data.dentalHistory) : null,
                     treatmentProcedures: data.treatmentProcedures ? JSON.parse(data.treatmentProcedures) : [],
                     grade: data.doctorGrade !== null && data.doctorGrade !== undefined ? Number(data.doctorGrade) : 0,
-                    feedback: data.feedBack ?? ""
+                    feedback: data.feedBack ?? "",
+                    gradedBy: data.gradedBy ?? ""
                 };
                 setFile(parsedFile);
                 setGrade({ score: parsedFile.doctorGrade, feedback: parsedFile.feedBack });
@@ -69,10 +70,11 @@ export default function DoctorsViewFile({ fileId }) {
                 `https://oralink.runasp.net/api/file/${fileId}/grade`,
                 {
                     grade: grade.score,
-                    feedback: grade.feedback
+                    feedback: grade.feedback,
+                    gradedBy: currentUser.name
                 }
             );
-            setFile({ ...file, grade: grade.score, feedback: grade.feedback });
+            setFile({ ...file, grade: grade.score, feedback: grade.feedback, gradedBy: currentUser.name });
             alert("Grade saved successfully!");
             router.back();
 
@@ -113,9 +115,6 @@ export default function DoctorsViewFile({ fileId }) {
 
     return (
         <div className="row">
-            <h4 className="d-block d-md-none text-center text-primary mt-2">
-                Student Name: {file?.student?.name}
-            </h4>
             <div className="col-md-8">
                 {file?.department === 'Periodontics' ?
                     state === 1 ? <ViewGeneralForm />
@@ -142,56 +141,130 @@ export default function DoctorsViewFile({ fileId }) {
             <div className="col-md-4 d-lg-block">
                 {((file?.doctorGrade !== null && canEditGrade) || (file?.doctorGrade === null && canAddGrade)) ?
                     (
-                        <form className="position-sticky top-0 d-flex flex-column bg-white border border-primary rounded shadow p-4 w-sm-25 my-4" onSubmit={handleSubmit}>
-                            <p className="d-flex align-items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-award w-6 h-6 text-primary" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg>
-                                Grading Panel
-                            </p>
+                        <form
+                            className="position-sticky top-0 bg-white border-0 rounded-4 shadow-sm p-4 my-4"
+                            onSubmit={handleSubmit}
+                        >
 
-                            <ReadOnlyTextField label={"Name"} value={file.student.name} />
+                            <div className="d-flex align-items-center gap-2 mb-3">
+                                <div className="bg-primary bg-opacity-10 p-2 rounded-3">
+                                    <i className="bi bi-award text-primary"></i>
+                                </div>
+                                <div>
+                                    <h6 className="mb-0 fw-bold">Grading Panel</h6>
+                                    <small className="text-muted">Evaluate student performance</small>
+                                </div>
+                            </div>
+
+                            <hr />
 
                             <div className="mb-3">
-                                <label className="form-label">Grade (0-100)*</label>
-                                <input type="number" className="form-control" placeholder="Enter score" value={grade.score || 0} onChange={(e) => {
-                                    if (!canAddGrade && !canEditGrade) return;
-                                    const value = Number(e.target.value);
-                                    if (value >= 0 && value <= 100) setGrade({ ...grade, score: value });
-                                }} required />
+                                <div className="p-2 rounded bg-light mb-2">
+                                    <small className="text-muted">Student</small>
+                                    <div className="fw-semibold">{file.student.name}</div>
+                                </div>
+
+                                <div className="p-2 rounded bg-light">
+                                    <small className="text-muted">Graded By</small>
+                                    <div className="fw-semibold">{file.gradedBy || "-"}</div>
+                                </div>
                             </div>
 
                             <div className="mb-3">
-                                <label className="form-label">Feedback & Comments *</label>
-                                <textarea className="form-control" placeholder="Provide constructive feedback for the student..." value={grade.feedback || ""} onChange={(e) => {
-                                    if (!canAddGrade && !canEditGrade) return;
-                                    setGrade({ ...grade, feedback: e.target.value });
-                                }} style={{ height: "130px", resize: "none" }}></textarea>
+                                <label className="form-label fw-semibold">
+                                    Grade <span className="text-muted">(0 - 100)</span>
+                                </label>
+
+                                <input
+                                    type="number"
+                                    className="form-control form-control-lg text-center fw-bold"
+                                    value={grade.score || 0}
+                                    onChange={(e) => {
+                                        if (!canAddGrade && !canEditGrade) return;
+                                        const value = Number(e.target.value);
+                                        if (value >= 0 && value <= 100) {
+                                            setGrade({ ...grade, score: value });
+                                        }
+                                    }}
+                                    required
+                                />
                             </div>
 
-                            <div className="d-flex justify-content-center">
-                                <button type="submit" className="btn btn-primary d-flex justify-content-center align-items-center w-50 gap-1" disabled={!canAddGrade && !canEditGrade || isLoading}>
-                                    {isLoading ? (
-                                        <div className="d-flex align-items-center gap-1">
-                                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving...
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-award w-6 h-6 text-blue-600" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg>
-                                            Save Grade
-                                        </>
-                                    )
-                                    }
-                                </button>
+                            <div className="mb-4">
+                                <label className="form-label fw-semibold">
+                                    Feedback & Comments
+                                </label>
+
+                                <textarea
+                                    className="form-control"
+                                    placeholder="Write clear, constructive feedback..."
+                                    value={grade.feedback || ""}
+                                    onChange={(e) => {
+                                        if (!canAddGrade && !canEditGrade) return;
+                                        setGrade({ ...grade, feedback: e.target.value });
+                                    }}
+                                    style={{ height: "140px", resize: "none" }}
+                                ></textarea>
                             </div>
+
+                            <button
+                                type="submit"
+                                className="btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2"
+                                disabled={!canAddGrade && !canEditGrade || isLoading}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <span className="spinner-border spinner-border-sm"></span>
+                                        Saving...
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="bi bi-check-circle"></i>
+                                        Save Grade
+                                    </>
+                                )}
+                            </button>
+
                         </form>
                     ) : (
-                        <div className="position-sticky top-0 d-flex flex-column bg-white border border-primary rounded shadow p-4 w-sm-25 my-4">
-                            <p className="d-flex align-items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-award w-6 h-6 text-primary" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg>
-                                Grading Panel
-                            </p>
-                            <ReadOnlyTextField label={"Name"} value={file.student.name} />
-                            <ReadOnlyTextField label={"Grade (0-100)"} value={file.doctorGrade} />
-                            <ReadOnlyTextField label={"Feedback & Comments"} value={file.feedBack} />
+                        <div className="position-sticky top-0 bg-white border-0 rounded-4 shadow-sm p-4 my-4">
+
+                            <div className="d-flex align-items-center gap-2 mb-3">
+                                <div className="bg-success bg-opacity-10 p-2 rounded-3">
+                                    <i className="bi bi-award text-success"></i>
+                                </div>
+                                <div>
+                                    <h6 className="mb-0 fw-bold">Final Evaluation</h6>
+                                    <small className="text-muted">Submitted grading result</small>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div className="mb-3">
+                                <small className="text-muted">Student</small>
+                                <div className="fw-semibold">{file.student.name}</div>
+                            </div>
+
+                            <div className="mb-3">
+                                <small className="text-muted">Graded By</small>
+                                <div className="fw-semibold">{file.gradedBy}</div>
+                            </div>
+
+                            <div className="text-center my-4">
+                                <div className="display-5 fw-bold text-primary">
+                                    {file.doctorGrade}
+                                </div>
+                                <small className="text-muted">Final Score</small>
+                            </div>
+
+                            <div>
+                                <small className="text-muted">Feedback</small>
+                                <div className="bg-light p-3 rounded mt-1" style={{ whiteSpace: "pre-wrap" }}>
+                                    {file.feedBack || "-"}
+                                </div>
+                            </div>
+
                         </div>
                     )
                 }

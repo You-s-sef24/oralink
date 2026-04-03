@@ -10,42 +10,50 @@ export default function Signin() {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <div className="d-flex justify-content-center align-items-center min-vh-100">
-            <div className="d-flex flex-column border rounded shadow bg-white w-75 p-4">
+        <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
 
-                <div className="d-flex justify-content-center">
-                    <Image className="w-50" width={150} height={70} src="/OraLink (1).png" alt="OraLink" />
-                </div>
-                <p className="text-muted text-center mb-2">Academic Dental Clinic Management</p>
-
-                <hr className="m-0 mb-3" />
-
-                <div className={`${loginError.status ? '' : 'd-none'} alert alert-danger alert-dismissible fade show`} role="alert">
-                    <button
-                        type="button"
-                        className="btn-close"
-                        onClick={() => { setLoginError({ status: false, msg: "" }) }}
-                        aria-label="Close"
-                    ></button>
-
-                    <strong>{loginError.msg}</strong>
+            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5" style={{ width: "100%", maxWidth: "480px" }}>
+                <div className="text-center mb-3">
+                    <Image width={200} height={60} src="/OraLink (1).png" alt="OraLink" />
+                    <p className="text-muted small mt-2 mb-0">
+                        Academic Dental Clinic Management
+                    </p>
                 </div>
 
-                <form className="d-flex flex-column" onSubmit={handleLogin}>
-                    <div className="">
-                        <label htmlFor="email" className="form-label fw-semibold">Email</label>
+                <hr className="mb-4" />
+
+                {loginError.status && (
+                    <div className="alert alert-danger d-flex justify-content-between align-items-center py-2">
+                        <small className="fw-semibold">{loginError.msg}</small>
+                        <button
+                            type="button"
+                            className="btn-close"
+                            onClick={() => setLoginError({ status: false, msg: "" })}
+                        ></button>
+                    </div>
+                )}
+
+                <form onSubmit={handleLogin} className="d-flex flex-column gap-3">
+                    <div>
+                        <label htmlFor="email" className="form-label fw-semibold small">
+                            Email
+                        </label>
                         <input
                             type="email"
                             id="email"
-                            className="form-control mb-2"
+                            className="form-control"
                             value={loginData?.email}
                             onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                             placeholder="123456789@o6u.edu.eg"
                             required
                         />
                     </div>
-                    <div className="mb-3 position-relative">
-                        <label htmlFor="password" className="form-label fw-semibold">Password</label>
+
+                    <div>
+                        <label htmlFor="password" className="form-label fw-semibold small">
+                            Password
+                        </label>
+
                         <div className="input-group">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -63,17 +71,32 @@ export default function Signin() {
                                 type="button"
                                 className="btn btn-outline-secondary"
                                 onClick={() => setShowPassword(!showPassword)}
-                                tabIndex={-1}
                             >
-                                {showPassword ? (<i className="bi bi-eye-slash-fill"></i>) : (<i className="bi bi-eye-fill"></i>)}
+                                {showPassword
+                                    ? <i className="bi bi-eye-slash-fill"></i>
+                                    : <i className="bi bi-eye-fill"></i>}
                             </button>
                         </div>
                     </div>
-                    <button type="submit" className="btn btn-primary w-100" disabled={loading}>Sign In</button>
-                    <hr />
-                    <p className="text-center text-muted m-0">Accounts are pre-registered by administrators</p>
-                </form>
 
+                    <button
+                        type="submit"
+                        className="btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2"
+                        disabled={loading}
+                    >
+                        {loading && (
+                            <span className="spinner-border spinner-border-sm"></span>
+                        )}
+                        Sign In
+                    </button>
+
+                    <hr className="my-2" />
+
+                    <p className="text-center text-muted small m-0">
+                        Accounts are pre-registered by administrators
+                    </p>
+
+                </form>
             </div>
         </div>
     );

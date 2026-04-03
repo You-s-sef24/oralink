@@ -27,7 +27,6 @@ export default function SubmitModal({ show, isClose, file, setFile }) {
       isClose();
       router.replace("/my-files");
     } catch (err) {
-      console.error(err.response?.data || err);
       alert(err.response?.data?.message || "Failed to submit file");
     } finally {
       setIsLoading(false);
