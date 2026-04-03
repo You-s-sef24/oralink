@@ -94,7 +94,7 @@ export default function PeriodonticsPage2({ info, setInfo }) {
                         </div>
 
                         <div className="col-12 col-sm-6 d-flex flex-column">
-                            <label className="form-label fw-semibold">Function Involvment</label>
+                            <label className="form-label fw-semibold">Furcation Involvment</label>
                             <input type="text" className="form-control mb-3" value={info.periodontalExamination.gingiva.functionInvolvment} onChange={(e) => setInfo({ ...info, periodontalExamination: { ...info.periodontalExamination, gingiva: { ...info.periodontalExamination.gingiva, functionInvolvment: e.target.value } } })} />
                         </div>
 

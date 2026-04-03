@@ -159,7 +159,7 @@ export default function ViewPeriodonticsPage2() {
                         <div className="col-sm-6"><ReadOnlyField label="Recession" value={pe.gingiva.recession} /></div>
                         <div className="col-sm-6"><ReadOnlyField label="Bleeding on Probing" value={pe.gingiva.bleedingOnProbing} /></div>
                         <div className="col-sm-6"><ReadOnlyField label="Suppuration / Exudates" value={pe.gingiva.exudate} /></div>
-                        <div className="col-sm-6"><ReadOnlyField label="Function Involvement" value={pe.gingiva.functionInvolvment} /></div>
+                        <div className="col-sm-6"><ReadOnlyField label="Furcation Involvement" value={pe.gingiva.functionInvolvment} /></div>
                         <div className="col-sm-6"><ReadOnlyField label="Mucogingival Problems" value={pe.gingiva.mucogingivalProblems} /></div>
                         <div className="col-sm-6"><ReadOnlyField label="Occlusal Relationship" value={pe.gingiva.occlusalRelationship} /></div>
                         <div className="col-sm-6"><ReadOnlyField label="Fremitus" value={pe.gingiva.fremitus} /></div>
