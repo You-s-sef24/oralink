@@ -54,22 +54,38 @@ export default function Header({ title, desc, page }) {
             return;
         }
 
-        const newErrors = validateFile(file);
-        const procedures = typeof file.treatmentProcedures === "string"
-            ? JSON.parse(file.treatmentProcedures || "[]")
-            : file.treatmentProcedures || [];
+        let updatedFile = { ...file };
 
-        const lastProc = procedures[procedures.length - 1];
-        if (lastProc?.status === "pending") {
-            if (!lastProc.title?.trim()) newErrors.procedureTitle = "Procedure title is required";
-            if (!lastProc.desc?.trim()) newErrors.procedureDesc = "Procedure description is required";
-            if (!lastProc.date?.trim()) newErrors.procedureDate = "Procedure date is required";
+        let procedures =
+            typeof updatedFile.treatmentProcedures === "string"
+                ? JSON.parse(updatedFile.treatmentProcedures || "[]")
+                : updatedFile.treatmentProcedures || [];
+
+        const lastProcIndex = procedures.length - 1;
+        const lastProc = procedures[lastProcIndex];
+
+        if (lastProc?.status === "draft") {
+            procedures[lastProcIndex] = {
+                ...lastProc,
+                status: "pending",
+            };
+
+            updatedFile.treatmentProcedures = procedures;
+        }
+
+        const newErrors = validateFile(updatedFile);
+
+        const lastAfterUpdate = procedures[procedures.length - 1];
+        if (lastAfterUpdate?.status === "pending") {
+            if (!lastAfterUpdate.title?.trim()) newErrors.procedureTitle = "Procedure title is required";
+            if (!lastAfterUpdate.desc?.trim()) newErrors.procedureDesc = "Procedure description is required";
+            if (!lastAfterUpdate.date?.trim()) newErrors.procedureDate = "Procedure date is required";
         }
 
         setFormErrors(newErrors);
         if (Object.keys(newErrors).length > 0) return;
 
-        const fileId = file.fileId ?? file.id;
+        const fileId = updatedFile.fileId ?? updatedFile.id;
         if (!fileId) {
             alert("Cannot save: file ID is missing.");
             return;
@@ -79,14 +95,18 @@ export default function Header({ title, desc, page }) {
             setIsLoading(true);
             const formData = new FormData();
 
-            const updatedDepartmentData = file.department === "Periodontics"
-                ? { ...(file.departmentData ?? {}), periodontalChart: periodonticsData.periodontalChart }
-                : file.departmentData;
+            const updatedDepartmentData = updatedFile.department === "Periodontics"
+                ? { ...(updatedFile.departmentData ?? {}), periodontalChart: periodonticsData.periodontalChart }
+                : updatedFile.departmentData;
 
-            const fileToSave = { ...file, departmentData: updatedDepartmentData };
+            const fileToSave = {
+                ...updatedFile,
+                departmentData: updatedDepartmentData,
+            };
 
             Object.entries(fileToSave).forEach(([key, value]) => {
                 if (["prePatientImage", "postPatientImage", "xRay", "fileId", "id"].includes(key)) return;
+
                 if (typeof value === "object" && value !== null) {
                     formData.append(key, JSON.stringify(value));
                 } else {
@@ -105,6 +125,7 @@ export default function Header({ title, desc, page }) {
             currentPreImages.forEach((img) => {
                 if (img instanceof File) formData.append("PrePatientImages", img);
             });
+
             currentPostImages.forEach((img) => {
                 if (img instanceof File) formData.append("PostPatientImages", img);
             });
@@ -117,6 +138,7 @@ export default function Header({ title, desc, page }) {
 
             if (deletedPreUrls.length > 0)
                 formData.append("DeletedPreImageUrls", deletedPreUrls.join(","));
+
             if (deletedPostUrls.length > 0)
                 formData.append("DeletedPostImageUrls", deletedPostUrls.join(","));
 
@@ -134,6 +156,7 @@ export default function Header({ title, desc, page }) {
             );
 
             const raw = res.data?.data || res.data;
+
             const normalizedFile = {
                 ...fileToSave,
                 fileId: fileId,

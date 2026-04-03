@@ -133,6 +133,7 @@ const initialGeneralData = {
         comments: ""
     },
     isSubmitted: false,
+    gradedBy: null,
     treatmentProcedures: [],
     prePatientImage: [],
     postPatientImage: [],

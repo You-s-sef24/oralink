@@ -3,9 +3,11 @@
 import { PatientInfoContext } from "@/app/Contexts/PatientInfoContext";
 import { useContext, useState } from "react";
 import axios from "axios";
+import { UsersContext } from "@/app/Contexts/UsersContext";
 
 export default function ViewProcedures() {
   const { file, setFile } = useContext(PatientInfoContext);
+  const { currentUser } = useContext(UsersContext);
   const [loadingIndex, setLoadingIndex] = useState(null);
   const [rejectingIndex, setRejectingIndex] = useState(null);
   const [feedback, setFeedback] = useState("");
@@ -42,6 +44,7 @@ export default function ViewProcedures() {
         ...updated[index],
         status: newStatus,
         feedback: feedbackText,
+        supervisorName: currentUser.name,
       };
 
       await axios.patch(
