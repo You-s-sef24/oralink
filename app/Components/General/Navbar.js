@@ -17,6 +17,22 @@ const NAV_LINKS = {
             label: "Upload X-ray",
             icon: <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3v12" /><path d="m17 8-5-5-5 5" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /></svg>,
         },
+        {
+            href: "/dss-report",
+            label: "View DSS Reports",
+            icon: <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="" aria-hidden="true">
+                {/* Brain outline */}
+                <path d="M9 3a4 4 0 0 0-4 4c0 1.5.8 2.8 2 3.5V13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-2.5c1.2-.7 2-2 2-3.5a4 4 0 0 0-4-4" />
+                {/* Decision nodes */}
+                <circle cx="9" cy="10" r="1" fill="currentColor" />
+                <circle cx="15" cy="10" r="1" fill="currentColor" />
+                {/* Output line */}
+                <path d="M12 15v3" />
+                <path d="M9 18h6" />
+                {/* Checkmark - decision made */}
+                <path d="M10 21l1.5 1.5L14 20" />
+            </svg>,
+        },
     ],
     Supervisor: [
         {

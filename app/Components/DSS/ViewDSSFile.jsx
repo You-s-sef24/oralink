@@ -22,7 +22,7 @@ export default function ViewDSSFile({ fileId }) {
         setLoading(true);
         setError(null);
         const response = await axios.get(
-          `https://oralink.runasp.net/api/dss-reports/${fileId}`,
+          `https://oralink.runasp.net/api/dss-reports/$${fileId}`,
         );
         setReport(response.data);
       } catch (err) {
@@ -128,15 +128,15 @@ export default function ViewDSSFile({ fileId }) {
           >
             {report.patient?.name ?? "—"}
           </h2>
-          <div className="d-flex align-items-center gap-3 text-muted small">
+          <div className="d-flex align-items-center gap-2 text-muted small">
             <span>
               <i className="bi bi-activity me-1"></i>
               {report.diagnosis?.title ?? "—"}
             </span>
-            <span>•</span>
+            {/* <span>•</span>
             <span className="badge bg-primary-subtle text-primary fw-semibold rounded-pill px-3">
               AI Generated
-            </span>
+            </span> */}
           </div>
         </div>
         <button
