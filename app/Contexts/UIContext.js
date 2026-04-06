@@ -11,9 +11,11 @@ export default function UIProvider({ children }) {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showExelModal, setShowExelModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [showDeleteFileModal, setShowDeleteFileModal] = useState(false);
+
 
     return (
-        <UIContext.Provider value={{ showUsersModal, setShowUsersModal, showEditModal, setShowEditModal, showDeleteModal, setShowDeleteModal, selectedUser, setSelectedUser, showEditAdminModal, setShowEditAdminModal, showExelModal, setShowExelModal }}>
+        <UIContext.Provider value={{ showUsersModal, setShowUsersModal, showEditModal, setShowEditModal, showDeleteModal, setShowDeleteModal, selectedUser, setSelectedUser, showEditAdminModal, setShowEditAdminModal, showExelModal, setShowExelModal, showDeleteFileModal, setShowDeleteFileModal }}>
             {children}
         </UIContext.Provider>
     );
