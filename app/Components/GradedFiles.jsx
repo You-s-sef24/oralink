@@ -69,7 +69,14 @@ export default function GradedFiles() {
             {files.map((file, i) => (
               <tr key={file.fileId}>
                 <td>{i + 1}</td>
-                <td>{file.studentName}</td>
+                <td>
+                  <Link
+                    href={`/students/${file.studentId}`}
+                    className="text-decoration-none text-primary"
+                  >
+                    {file.studentName}
+                  </Link>
+                </td>
                 <td>{file.patientName}</td>
                 <td>{file.creationDate}</td>
                 <td>{file.submittedDate}</td>

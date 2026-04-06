@@ -113,7 +113,14 @@ export default function ViewPatientCases() {
                     <tr key={f.fileId}>
                       <td className="text-muted">{i + 1}</td>
                       <td className="fw-semibold">{f.patientName}</td>
-                      <td className="text-muted">{f.studentName}</td>
+                      <td className="text-muted">
+                        <Link
+                          href={`/view-students/${f.studentId}`}
+                          className="text-decoration-none text-primary"
+                        >
+                          {f.studentName}
+                        </Link>
+                      </td>
                       <td className="text-muted">
                         {f.lastProcedureName || "-"}
                       </td>

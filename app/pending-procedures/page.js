@@ -85,7 +85,11 @@ export default function PendingProceduresPage() {
                                         {procedures.map((proc) => (
                                             <tr key={`${proc.fileId}-${proc.stepNumber}`}>
                                                 <td className="fw-semibold">{proc.patientName}</td>
-                                                <td className="text-muted">{proc.studentName}</td>
+                                                <td className="text-muted">
+                                                    <Link href={`/view-students/${proc.studentId}`} className="text-decoration-none text-primary">
+                                                        {proc.studentName}
+                                                    </Link>
+                                                </td>
                                                 <td className="text-muted">{proc.procedureTitle}</td>
                                                 <td className="text-muted">Step {proc.stepNumber}</td>
                                                 <td className="text-muted">{formatDate(proc.stepDate)}</td>
