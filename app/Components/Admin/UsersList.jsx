@@ -7,12 +7,14 @@ import EditModal from "./EditModal";
 import UsersModal from "./UsersModal";
 import EditAdminModal from "./AdminModal";
 import ExcelModal from "./ExelModal";
+import DeleteAllStudentsModal from "./DeleteAllStudentsModal";
 import { UIContext } from "@/app/Contexts/UIContext";
 
 export default function UsersList() {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
 
   const {
     showUsersModal,
@@ -67,10 +69,12 @@ export default function UsersList() {
       user?.email?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
+  const studentCount = users.filter((u) => u.role === "Student").length;
+
   return (
     <div>
       <div className="row align-items-center g-3 my-3">
-        <div className="col-12 col-sm-8">
+        <div className="col-12 col-sm-6">
           <div className="input-group">
             <span className="input-group-text bg-white border-end-0">
               <i className="bi bi-search text-secondary"></i>
@@ -85,9 +89,9 @@ export default function UsersList() {
           </div>
         </div>
 
-        <div className="col-12 col-sm-4 text-md-end d-flex gap-2">
+        <div className="col-12 col-sm-6 d-flex gap-2 justify-content-sm-end">
           <button
-            className="btn btn-primary w-50 w-md-auto"
+            className="btn btn-primary"
             onClick={() => setShowUsersModal(true)}
           >
             <i className="bi bi-person-add me-2"></i>
@@ -95,7 +99,7 @@ export default function UsersList() {
           </button>
 
           <button
-            className="btn btn-success w-50 w-md-auto"
+            className="btn btn-success"
             onClick={() => setShowExelModal(true)}
           >
             <svg
@@ -103,6 +107,7 @@ export default function UsersList() {
               height="16"
               viewBox="0 0 64 64"
               xmlns="http://www.w3.org/2000/svg"
+              className="me-2"
             >
               <rect x="16" y="6" width="36" height="52" rx="4" fill="#E9ECEF" />
               <rect x="8" y="12" width="20" height="40" rx="3" fill="#198754" />
@@ -143,7 +148,16 @@ export default function UsersList() {
                 strokeWidth="2"
               />
             </svg>
-            Import Exel Sheet
+            Import Excel Sheet
+          </button>
+
+          <button
+            className="btn btn-danger"
+            onClick={() => setShowDeleteAllModal(true)}
+            title={`Delete all ${studentCount} student${studentCount !== 1 ? "s" : ""}`}
+          >
+            <i className="bi bi-people me-2"></i>
+            Delete All Students
           </button>
         </div>
       </div>
@@ -165,13 +179,13 @@ export default function UsersList() {
               <tbody className="text-center">
                 {loading ? (
                   <tr>
-                    <td colSpan={4} className="py-4">
+                    <td colSpan={5} className="py-4">
                       <span className="spinner-border spinner-border-sm text-primary"></span>
                     </td>
                   </tr>
                 ) : filteredUsers.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="py-4 text-muted">
+                    <td colSpan={5} className="py-4 text-muted">
                       No users found
                     </td>
                   </tr>
@@ -222,7 +236,6 @@ export default function UsersList() {
           refreshUsers={fetchUsers}
         />
       )}
-
       {showEditModal && (
         <EditModal
           selectedUser={selectedUser}
@@ -232,7 +245,6 @@ export default function UsersList() {
           refreshUsers={fetchUsers}
         />
       )}
-
       {showDeleteModal && (
         <DeleteModal
           selectedUser={selectedUser}
@@ -242,17 +254,22 @@ export default function UsersList() {
           refreshUsers={fetchUsers}
         />
       )}
-
       {showEditAdminModal && (
         <EditAdminModal
           show={showEditAdminModal}
           isClose={() => setShowEditAdminModal(false)}
         />
       )}
-
       {showExelModal && (
         <ExcelModal
           onClose={() => setShowExelModal(false)}
+          refreshUsers={fetchUsers}
+        />
+      )}
+      {showDeleteAllModal && (
+        <DeleteAllStudentsModal
+          show={showDeleteAllModal}
+          isClose={() => setShowDeleteAllModal(false)}
           refreshUsers={fetchUsers}
         />
       )}
