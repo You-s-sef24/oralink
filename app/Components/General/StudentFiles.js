@@ -1,34 +1,39 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { UIContext } from "@/app/Contexts/UIContext";
+import { UsersContext } from "@/app/Contexts/UsersContext";
+import DeleteFileModal from "./DeleteFileModal";
 
 export default function StudentFiles({ id }) {
     const [files, setFiles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [fileId, setFileId] = useState(null);
+    const { showDeleteFileModal, setShowDeleteFileModal } = useContext(UIContext);
+    const { currentUser } = useContext(UsersContext);
+
+    const fetchFiles = async () => {
+        try {
+            setLoading(true);
+
+            const response = await axios.get(
+                `https://oralink.runasp.net/api/students/${id}/files`
+            );
+            setFiles(response.data.sort((a, b) => new Date(a.creationDate) - new Date(b.creationDate)));
+        } catch (err) {
+            console.error(err);
+            setError("Failed to load files");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         if (!id) return;
 
-        const fetchFiles = async () => {
-            try {
-                setLoading(true);
-
-                const response = await axios.get(
-                    `https://oralink.runasp.net/api/students/${id}/files`
-                );
-
-                setFiles(response.data.sort((a, b) => new Date(a.creationDate) - new Date(b.creationDate)));
-            } catch (err) {
-                console.error(err);
-                setError("Failed to load files");
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchFiles();
-    }, [id]);
+    }, []);
 
     if (loading) {
         return (
@@ -69,7 +74,7 @@ export default function StudentFiles({ id }) {
                                     <th>Submission Date</th>
                                     <th className="d-none d-md-table-cell">Status</th>
                                     <th>Grade</th>
-                                    <th>Action</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -96,13 +101,26 @@ export default function StudentFiles({ id }) {
                                             {file.graded ? `${file.grade}` : "-"}/100
                                         </td>
                                         <td>
-                                            <Link
-                                                href={`/students/${id}/files/${file.fileId}`}
-                                                className="btn btn-sm btn-primary d-inline-flex align-items-center gap-1"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                                Open
-                                            </Link>
+                                            <div className="d-flex justify-content-center gap-1">
+                                                <Link
+                                                    href={`/students/${id}/files/${file.fileId}`}
+                                                    className="btn btn-sm btn-primary d-inline-flex align-items-center gap-1"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                                    
+                                                </Link>
+                                                {currentUser.role === "Head of Department" && (
+                                                    <button
+                                                        className="d-inline-flex align-items-center btn btn-sm btn-danger gap-1"
+                                                        onClick={() => {
+                                                            setFileId(file.fileId);
+                                                            setShowDeleteFileModal(true);
+                                                        }}
+                                                    >
+                                                        <i className="bi bi-trash"></i>
+                                                    </button>
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -111,6 +129,13 @@ export default function StudentFiles({ id }) {
                     </div>
                 </div>
             </div>
+
+            <DeleteFileModal
+                show={showDeleteFileModal}
+                isClose={() => setShowDeleteFileModal(false)}
+                id={fileId}
+                refreshFiles={fetchFiles}
+            />
         </div>
     );
 }
