@@ -1,3 +1,5 @@
+"use client";
+
 import { useContext, useState } from "react";
 import { UsersContext } from "../../Contexts/UsersContext";
 import axios from "axios";
@@ -6,10 +8,12 @@ import { useRouter } from "next/navigation";
 export default function SubmitModal({ show, isClose, file, setFile }) {
   const { token } = useContext(UsersContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
   async function handleSubmit() {
     try {
+      setError("");
       setIsLoading(true);
 
       await axios.put(
@@ -27,11 +31,16 @@ export default function SubmitModal({ show, isClose, file, setFile }) {
       isClose();
       router.replace("/my-files");
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to submit file");
+      setError(err.response?.data?.message || "Failed to submit file");
     } finally {
       setIsLoading(false);
     }
   }
+
+  const handleClose = () => {
+    setError("");
+    isClose();
+  };
 
   return (
     <>
@@ -46,7 +55,7 @@ export default function SubmitModal({ show, isClose, file, setFile }) {
             backgroundColor: "rgba(0, 0, 0, 0.5)",
             zIndex: 1040,
           }}
-          onClick={isClose}
+          onClick={handleClose}
         />
       )}
 
@@ -68,11 +77,17 @@ export default function SubmitModal({ show, isClose, file, setFile }) {
                 type="button"
                 className="btn-close"
                 aria-label="Close"
-                onClick={isClose}
+                onClick={handleClose}
                 disabled={isLoading}
               />
             </div>
             <div className="modal-body">
+              {error && (
+                <div className="alert alert-danger py-2 small" role="alert">
+                  {error}
+                </div>
+              )}
+
               <p>
                 Are you sure?{" "}
                 <small className="text-muted">
@@ -84,7 +99,7 @@ export default function SubmitModal({ show, isClose, file, setFile }) {
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={isClose}
+                onClick={handleClose}
                 disabled={isLoading}
               >
                 Cancel
