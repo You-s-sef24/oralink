@@ -1,122 +1,130 @@
 "use client";
 
 import { PatientInfoContext } from "@/app/Contexts/PatientInfoContext";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useCallback } from "react";
+import axios from "axios";
 
 export default function ViewPeriodonticsPage5() {
-    const { file, setFile, isEditing, formErrors } = useContext(PatientInfoContext);
+    const { file } = useContext(PatientInfoContext);
+
+    const [steps, setSteps] = useState([]);
+    const [isFetching, setIsFetching] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [hasDraft, setHasDraft] = useState(false);
+    const [draft, setDraft] = useState({ title: "", desc: "", date: "" });
+    const [draftErrors, setDraftErrors] = useState({});
+
+    const fileId = file?.fileId ?? file?.id;
+
+    const fetchSteps = useCallback(async () => {
+        if (!fileId) return;
+        setIsFetching(true);
+        try {
+            const res = await axios.get(
+                `https://oralink.runasp.net/api/patient-files/${fileId}/steps`
+            );
+            setSteps(res.data ?? []);
+        } catch (err) {
+            console.error("Failed to fetch steps:", err);
+        } finally {
+            setIsFetching(false);
+        }
+    }, [fileId]);
 
     useEffect(() => {
-        if (!isEditing) setHasDraft(false);
-    }, [isEditing]);
+        fetchSteps();
+    }, [fetchSteps]);
 
-    const proceduresRaw =
-        typeof file?.treatmentProcedures === "string"
-            ? (() => { try { return JSON.parse(file.treatmentProcedures); } catch { return []; } })()
-            : file?.treatmentProcedures || [];
-
-    const procedures = proceduresRaw.map((p) => ({
-        ...p,
-        status: p?.status || "draft",
-    }));
-
-    // ✅ hide draft from cards
-    const visibleProcedures = procedures.filter(p => p.status !== "draft");
-
-    const lastStep = procedures[procedures.length - 1];
-    const approvedCount = procedures.filter(p => p.status === "approved").length;
-
+    const lastStep = steps[steps.length - 1];
     const isLastStepPending = lastStep?.status === "pending";
-    const canShowAddButton = isEditing && !isLastStepPending && !hasDraft;
-    const canAddStep = isEditing && hasDraft && !isLastStepPending;
+    const approvedCount = steps.filter((s) => s.status === "approved").length;
 
-    const draftStep = hasDraft
-        ? (lastStep?.status === "draft" && !lastStep?.id ? lastStep : null)
-        : null;
-
-    function getStepNumber(proc, index) {
-        let step = 1;
-
-        for (let i = 0; i < index; i++) {
-            if (visibleProcedures[i].status === "approved") {
-                step++;
-            }
-        }
-
-        return step;
-    }
+    const canShowAddButton = !isLastStepPending && !hasDraft;
 
     function handleAddStep() {
         setHasDraft(true);
+        setDraft({ title: "", desc: "", date: "" });
+        setDraftErrors({});
     }
 
     function handleCancelDraft() {
-        setFile((prev) => {
-            const current =
-                typeof prev.treatmentProcedures === "string"
-                    ? JSON.parse(prev.treatmentProcedures || "[]")
-                    : [...(prev.treatmentProcedures || [])];
-
-            const last = current[current.length - 1];
-
-            // ✅ remove draft (not pending anymore)
-            if (last?.status === "draft" && !last?.id) {
-                return { ...prev, treatmentProcedures: current.slice(0, -1) };
-            }
-
-            return prev;
-        });
-
         setHasDraft(false);
+        setDraft({ title: "", desc: "", date: "" });
+        setDraftErrors({});
     }
 
-    function handleNewStepChange(field, value) {
-        setFile((prev) => {
-            const current =
-                typeof prev.treatmentProcedures === "string"
-                    ? JSON.parse(prev.treatmentProcedures || "[]")
-                    : [...(prev.treatmentProcedures || [])];
-
-            const last = current[current.length - 1];
-
-            // 🚫 prevent editing backend pending
-            if (last?.status === "pending" && last?.id) {
-                return prev;
-            }
-
-            let updated;
-
-            if (!last || last.status === "approved" || last.status === "rejected") {
-                updated = [
-                    ...current,
-                    {
-                        title: field === "title" ? value : "",
-                        desc: field === "desc" ? value : "",
-                        date: field === "date" ? value : "",
-                        status: "draft",
-                    },
-                ];
-            } else {
-                updated = current.map((p, i) =>
-                    i === current.length - 1 ? { ...p, [field]: value } : p
-                );
-            }
-
-            return { ...prev, treatmentProcedures: updated };
-        });
+    function handleDraftChange(field, value) {
+        setDraft((prev) => ({ ...prev, [field]: value }));
+        if (draftErrors[field]) {
+            setDraftErrors((prev) => ({ ...prev, [field]: "" }));
+        }
     }
 
-    const statusColor = { pending: "warning", approved: "success", rejected: "danger" };
+    function validateDraft() {
+        const errors = {};
+        if (!draft.title?.trim()) errors.title = "Title is required";
+        if (!draft.desc?.trim()) errors.desc = "Description is required";
+        if (!draft.date?.trim()) errors.date = "Date is required";
+        return errors;
+    }
+
+    async function handleSubmitStep() {
+        const errors = validateDraft();
+        if (Object.keys(errors).length > 0) {
+            setDraftErrors(errors);
+            return;
+        }
+
+        setIsSubmitting(true);
+        try {
+            const res = await axios.post(
+                `https://oralink.runasp.net/api/patient-files/${fileId}/add-step`,
+                {
+                    title: draft.title,
+                    description: draft.desc,
+                    date: draft.date,
+                }
+            );
+
+            const newStep = res.data?.step ?? res.data;
+            setSteps((prev) => [...prev, newStep]);
+
+            setHasDraft(false);
+            setDraft({ title: "", desc: "", date: "" });
+            setDraftErrors({});
+        } catch (err) {
+            alert(err.response?.data?.message || "Failed to add step");
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
+
+    const statusColor = {
+        pending: "warning",
+        approved: "success",
+        rejected: "danger",
+    };
+
     const statusIcon = {
         pending: "bi-hourglass-split",
         approved: "bi-check-circle-fill",
-        rejected: "bi-x-circle-fill"
+        rejected: "bi-x-circle-fill",
     };
 
-    const formatStatus = (s) => !s ? "Pending" : s.charAt(0).toUpperCase() + s.slice(1);
+    const formatStatus = (s) =>
+        !s ? "Pending" : s.charAt(0).toUpperCase() + s.slice(1);
+
     const getStatusColor = (s) => statusColor[s] || "secondary";
     const getStatusIcon = (s) => statusIcon[s] || "bi-question-circle";
+
+    function getStepNumber(step, index) {
+        let num = 1;
+        for (let i = 0; i < index; i++) {
+            if (steps[i].status === "approved") num++;
+        }
+        return num;
+    }
 
     return (
         <div className="p-3">
@@ -126,73 +134,80 @@ export default function ViewPeriodonticsPage5() {
                     Treatment Procedures
                 </span>
 
-                {visibleProcedures.length === 0 && !hasDraft && (
+                {isFetching && (
+                    <div className="d-flex align-items-center gap-2 text-muted mb-3">
+                        <span className="spinner-border spinner-border-sm" />
+                        Loading steps...
+                    </div>
+                )}
+
+                {!isFetching && steps.length === 0 && !hasDraft && (
                     <p className="text-muted mb-0">No procedures added yet.</p>
                 )}
 
-                {/* ===== LIST ===== */}
                 <div className="d-flex flex-column gap-3 mb-3">
-                    {visibleProcedures.map((proc, index) => (
-                        <div key={index} className={`card border-${getStatusColor(proc.status)}`}>
-
-                            <div className={`card-header d-flex justify-content-between align-items-center bg-${getStatusColor(proc.status)} bg-opacity-10`}>
+                    {steps.map((step, index) => (
+                        <div
+                            key={step.id ?? index}
+                            className={`card border-${getStatusColor(step.status)}`}
+                        >
+                            <div className="card-header d-flex justify-content-between align-items-center">
                                 <span className="fw-bold">
-                                    Step {getStepNumber(proc, index)}: {proc.title || "Untitled"}
+                                    Step {step.stepNumber ?? getStepNumber(step, index)}:{" "}
+                                    {step.title || "Untitled"}
                                 </span>
-                                <span className={`badge bg-${getStatusColor(proc.status)} d-flex align-items-center gap-1`}>
-                                    <i className={`bi ${getStatusIcon(proc.status)}`}></i>
-                                    {formatStatus(proc.status)}
+
+                                <span className={`badge bg-${getStatusColor(step.status)}`}>
+                                    <i className={`bi ${getStatusIcon(step.status)} me-1`}></i>
+                                    {formatStatus(step.status)}
                                 </span>
                             </div>
 
                             <div className="card-body">
                                 <div className="row g-2 mb-2">
-                                    <div className="col-12 col-md-4">
+                                    <div className="col-md-4">
                                         <p className="mb-0 small text-muted">Title</p>
-                                        <p className="mb-0 fw-medium">{proc.title || "-"}</p>
+                                        <p className="mb-0 fw-medium">{step.title || "-"}</p>
                                     </div>
-                                    <div className="col-12 col-md-4">
+                                    <div className="col-md-4">
                                         <p className="mb-0 small text-muted">Date</p>
-                                        <p className="mb-0 fw-medium">{proc.date || "-"}</p>
+                                        <p className="mb-0 fw-medium">{step.date || "-"}</p>
                                     </div>
-                                    <div className="col-12 col-md-4">
+                                    <div className="col-md-4">
                                         <p className="mb-0 small text-muted">Description</p>
-                                        <p className="mb-0 fw-medium">{proc.desc || "-"}</p>
+                                        <p className="mb-0 fw-medium">{step.description || "-"}</p>
                                     </div>
                                 </div>
 
-                                {proc.status === "rejected" && proc.feedback && (
-                                    <div className="alert alert-danger mt-2 py-2 small d-flex justify-content-between align-items-start">
+                                {step.status === "rejected" && step.rejectionReason && (
+                                    <div className="alert alert-danger mt-2 py-2 small">
+                                        <i className="bi bi-chat-left-text me-2"></i>
+                                        <strong>Feedback:</strong> {step.rejectionReason}
 
-                                        <div className="d-flex align-items-start">
-                                            <i className="bi bi-chat-left-text me-2 mt-1"></i>
-                                            <div>
-                                                <div>
-                                                    <strong>Supervisor Feedback:</strong> {proc.feedback}
-                                                </div>
+                                        {step.supervisorName && (
+                                            <div className="mt-1">
                                                 <small className="text-muted">
-                                                    Reviewed by Dr. {proc.supervisorName}
+                                                    Rejected by <strong>Dr. {step.supervisorName}</strong>
                                                 </small>
                                             </div>
-                                        </div>
-
+                                        )}
                                     </div>
                                 )}
 
-                                {proc.status === "pending" && (
+                                {step.status === "approved" && step.supervisorName && (
+                                    <div className="alert alert-success mt-2 py-2 small d-flex align-items-center">
+                                        <i className="bi bi-check-circle-fill me-2"></i>
+                                        Approved by{" "}
+                                        <strong className="ms-1">
+                                            Dr. {step.supervisorName}
+                                        </strong>
+                                    </div>
+                                )}
+
+                                {step.status === "pending" && (
                                     <div className="alert alert-warning mt-2 py-2 small d-flex align-items-center">
                                         <i className="bi bi-hourglass-split me-2"></i>
                                         Awaiting supervisor approval.
-                                    </div>
-                                )}
-
-                                {proc.status === "approved" && (
-                                    <div className="alert alert-success mt-2 py-2 small d-flex align-items-center">
-                                        <i className="bi bi-check-circle-fill me-2"></i>
-                                        <span>
-                                            Approved by&nbsp;
-                                            <strong>Dr.{proc.supervisorName}</strong>
-                                        </span>
                                     </div>
                                 )}
                             </div>
@@ -200,10 +215,9 @@ export default function ViewPeriodonticsPage5() {
                     ))}
                 </div>
 
-                {/* ===== ADD BUTTON ===== */}
                 {canShowAddButton && (
                     <button
-                        className="btn btn-outline-primary btn-sm mt-1"
+                        className="btn btn-outline-primary btn-sm"
                         onClick={handleAddStep}
                     >
                         <i className="bi bi-plus-circle me-1"></i>
@@ -211,64 +225,64 @@ export default function ViewPeriodonticsPage5() {
                     </button>
                 )}
 
-                {/* ===== DRAFT FORM ===== */}
-                {canAddStep && (
+                {hasDraft && !isLastStepPending && (
                     <div className="mt-3 p-3 border border-primary rounded">
-
-                        <div className="d-flex justify-content-between align-items-center mb-2">
-                            <p className="fw-semibold text-primary mb-0">
-                                Step {approvedCount + 1}
-                            </p>
-                            <button
-                                className="btn btn-sm btn-outline-secondary"
-                                onClick={handleCancelDraft}
-                            >
-                                <i className="bi bi-x me-1"></i>Cancel
-                            </button>
-                        </div>
+                        <p className="fw-semibold text-primary">
+                            Step {approvedCount + 1}
+                        </p>
 
                         <div className="row g-3">
-                            <div className="col-12 col-md-4">
-                                <label className="form-label">Title</label>
+                            <div className="col-md-4">
                                 <input
-                                    type="text"
-                                    className={`form-control ${formErrors?.procedureTitle ? "is-invalid" : ""}`}
-                                    value={draftStep?.title || ""}
-                                    onChange={(e) => handleNewStepChange("title", e.target.value)}
+                                    className="form-control"
+                                    placeholder="Title"
+                                    value={draft.title}
+                                    onChange={(e) => handleDraftChange("title", e.target.value)}
                                 />
                             </div>
-
-                            <div className="col-12 col-md-4">
-                                <label className="form-label">Description</label>
+                            <div className="col-md-4">
                                 <input
-                                    type="text"
-                                    className={`form-control ${formErrors?.procedureDesc ? "is-invalid" : ""}`}
-                                    value={draftStep?.desc || ""}
-                                    onChange={(e) => handleNewStepChange("desc", e.target.value)}
+                                    className="form-control"
+                                    placeholder="Description"
+                                    value={draft.desc}
+                                    onChange={(e) => handleDraftChange("desc", e.target.value)}
                                 />
                             </div>
-
-                            <div className="col-12 col-md-4">
-                                <label className="form-label">Date</label>
+                            <div className="col-md-4">
                                 <input
                                     type="date"
-                                    className={`form-control ${formErrors?.procedureDate ? "is-invalid" : ""}`}
-                                    value={draftStep?.date || ""}
-                                    onChange={(e) => handleNewStepChange("date", e.target.value)}
+                                    className="form-control"
+                                    value={draft.date}
+                                    onChange={(e) => handleDraftChange("date", e.target.value)}
                                 />
                             </div>
+                        </div>
+
+                        <div className="mt-3 d-flex gap-2">
+                            <button
+                                className="btn btn-primary btn-sm"
+                                onClick={handleSubmitStep}
+                                disabled={isSubmitting}
+                            >
+                                Submit
+                            </button>
+
+                            <button
+                                className="btn btn-outline-secondary btn-sm"
+                                onClick={handleCancelDraft}
+                            >
+                                Cancel
+                            </button>
                         </div>
                     </div>
                 )}
 
-                {/* ===== LOCK ===== */}
-                {isEditing && isLastStepPending && (
+                {isLastStepPending && (
                     <div className="alert alert-warning mt-3 mb-0 d-flex align-items-center">
                         <i className="bi bi-hourglass-split me-2"></i>
                         Waiting for supervisor approval before adding the next step.
                     </div>
                 )}
-
             </div>
         </div>
     );

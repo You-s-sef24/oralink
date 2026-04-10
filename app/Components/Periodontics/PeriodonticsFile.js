@@ -31,18 +31,6 @@ export default function PeriodonticsFile() {
         return;
     }
 
-    function handleSaveWithValidation() {
-        const procedures = generalData.treatmentProcedures;
-        const step1 = procedures?.[0];
-
-        if (!step1?.title?.trim() || !step1?.desc?.trim() || !step1?.date) {
-            setError("Please fill in all Treatment Procedure fields before saving.");
-            return;
-        }
-
-        handleSave('periodontics');
-    }
-
     return (
         <div className="bg-white rounded shadow p-3">
             <h1 className="fw-bold text-center text-primary">Department of Oral Medicine, Periodontology and Diagnosis</h1>
@@ -86,7 +74,7 @@ export default function PeriodonticsFile() {
 
                 {step === 5 ? (
                     <button className="btn btn-primary my-3" disabled={isLoading} onClick={() => {
-                        handleSaveWithValidation('periodontics');
+                        handleSave('periodontics');
                     }}>
                         {isLoading ? (<div className="d-flex align-items-center gap-1">
                             <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

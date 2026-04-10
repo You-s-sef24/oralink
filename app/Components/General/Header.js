@@ -1,5 +1,8 @@
 "use client";
 
+// Steps are now managed via their own endpoints — NOT part of the file update payload.
+// Header only handles saving the core patient file fields.
+
 import { useContext, useRef } from "react";
 import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
 import { UsersContext } from "../../Contexts/UsersContext";
@@ -56,32 +59,8 @@ export default function Header({ title, desc, page }) {
 
         let updatedFile = { ...file };
 
-        let procedures =
-            typeof updatedFile.treatmentProcedures === "string"
-                ? JSON.parse(updatedFile.treatmentProcedures || "[]")
-                : updatedFile.treatmentProcedures || [];
-
-        const lastProcIndex = procedures.length - 1;
-        const lastProc = procedures[lastProcIndex];
-
-        if (lastProc?.status === "draft") {
-            procedures[lastProcIndex] = {
-                ...lastProc,
-                status: "pending",
-            };
-
-            updatedFile.treatmentProcedures = procedures;
-        }
-
+        // ✅ Validate core file fields only (steps are separate)
         const newErrors = validateFile(updatedFile);
-
-        const lastAfterUpdate = procedures[procedures.length - 1];
-        if (lastAfterUpdate?.status === "pending") {
-            if (!lastAfterUpdate.title?.trim()) newErrors.procedureTitle = "Procedure title is required";
-            if (!lastAfterUpdate.desc?.trim()) newErrors.procedureDesc = "Procedure description is required";
-            if (!lastAfterUpdate.date?.trim()) newErrors.procedureDate = "Procedure date is required";
-        }
-
         setFormErrors(newErrors);
         if (Object.keys(newErrors).length > 0) return;
 
@@ -104,9 +83,11 @@ export default function Header({ title, desc, page }) {
                 departmentData: updatedDepartmentData,
             };
 
-            Object.entries(fileToSave).forEach(([key, value]) => {
-                if (["prePatientImage", "postPatientImage", "xRay", "fileId", "id"].includes(key)) return;
+            // ✅ Exclude steps — they are managed via /steps and /add-step endpoints
+            const EXCLUDED_KEYS = ["prePatientImage", "postPatientImage", "xRay", "fileId", "id", "steps", "treatmentProcedures"];
 
+            Object.entries(fileToSave).forEach(([key, value]) => {
+                if (EXCLUDED_KEYS.includes(key)) return;
                 if (typeof value === "object" && value !== null) {
                     formData.append(key, JSON.stringify(value));
                 } else {
@@ -132,13 +113,11 @@ export default function Header({ title, desc, page }) {
 
             const keptPreUrls = new Set(currentPreImages.filter(img => typeof img === "string"));
             const keptPostUrls = new Set(currentPostImages.filter(img => typeof img === "string"));
-
             const deletedPreUrls = originalPreImages.current.filter(url => !keptPreUrls.has(url));
             const deletedPostUrls = originalPostImages.current.filter(url => !keptPostUrls.has(url));
 
             if (deletedPreUrls.length > 0)
                 formData.append("DeletedPreImageUrls", deletedPreUrls.join(","));
-
             if (deletedPostUrls.length > 0)
                 formData.append("DeletedPostImageUrls", deletedPostUrls.join(","));
 
@@ -165,6 +144,8 @@ export default function Header({ title, desc, page }) {
                 departmentData: safeParseJSON(raw?.departmentData) ?? updatedDepartmentData,
                 medicalHistory: safeParseJSON(raw?.medicalHistory) ?? file.medicalHistory,
                 dentalHistory: safeParseJSON(raw?.dentalHistory) ?? file.dentalHistory,
+                // ✅ Preserve steps from local state — not returned by file update endpoint
+                steps: file.steps ?? [],
             };
 
             setFile(normalizedFile);

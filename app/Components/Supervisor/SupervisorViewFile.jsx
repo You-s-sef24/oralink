@@ -47,9 +47,7 @@ export default function SupervisorViewFile({ fileId }) {
           dentalHistory: data.dentalHistory
             ? JSON.parse(data.dentalHistory)
             : null,
-          treatmentProcedures: data.treatmentProcedures
-            ? JSON.parse(data.treatmentProcedures)
-            : [],
+          treatmentProcedures: data.treatmentSteps ?? [],
           grade:
             data.doctorGrade !== null && data.doctorGrade !== undefined
               ? Number(data.doctorGrade)

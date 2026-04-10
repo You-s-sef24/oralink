@@ -1,12 +1,16 @@
 "use client";
 
+// This component is used during NEW FILE CREATION.
+// The first step is submitted as part of the file creation payload (firstStep field).
+// Subsequent steps are added via POST /api/patient-files/{fileId}/add-step after file exists.
+
 export default function PeriodonticsPage5({ info, setInfo }) {
-    const step = info.treatmentProcedures?.[0] || { title: "", desc: "", date: "", status: "", feedback: "" };
+    const step = info.firstStep || { title: "", desc: "", date: "" };
 
     function handleChange(field, value) {
         setInfo((prev) => ({
             ...prev,
-            treatmentProcedures: [{ ...step, [field]: value }],
+            firstStep: { ...step, [field]: value },
         }));
     }
 

@@ -13,6 +13,7 @@ import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
 import { UsersContext } from "@/app/Contexts/UsersContext";
 import { useRouter } from "next/navigation";
 import ViewPeriodonticsPage5 from "../Periodontics/ViewPeriodonticsPage5";
+import DoctorViewProcedures from "./DoctorViewProcedures";
 
 export default function DoctorsViewFile({ fileId }) {
     const { state, setState } = useContext(StatesContext);
@@ -122,7 +123,7 @@ export default function DoctorsViewFile({ fileId }) {
                             : state === 3 ? <ViewPeriodonticsPage2 />
                                 : state === 4 ? <ViewPeriodonticsPage3 />
                                     : state === 5 ? <ViewPeriodonticsPage4 />
-                                        : <ViewPeriodonticsPage5 />
+                                        : <DoctorViewProcedures />
                     : file?.department === 'Endodontics' ?
                         state === 1 ? <ViewGeneralForm /> : <ViewEndodonticsFile />
                         : <></>
