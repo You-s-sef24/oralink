@@ -6,10 +6,10 @@ import { PatientInfoContext } from "@/app/Contexts/PatientInfoContext";
 export default function DoctorViewProcedures() {
   const { file } = useContext(PatientInfoContext);
 
-  const [steps, setSteps] = useState(file?.treatmentProcedures || []);
+  const [steps, setSteps] = useState(file?.treatmentSteps || []);
 
   useEffect(() => {
-    setSteps(file?.treatmentProcedures || []);
+    setSteps(file?.treatmentSteps || []);
   }, [file]);
 
   const statusColor = {

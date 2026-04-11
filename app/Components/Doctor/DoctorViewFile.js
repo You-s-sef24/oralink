@@ -41,7 +41,7 @@ export default function DoctorsViewFile({ fileId }) {
                     departmentData: data.departmentData ? JSON.parse(data.departmentData) : null,
                     medicalHistory: data.medicalHistory ? JSON.parse(data.medicalHistory) : null,
                     dentalHistory: data.dentalHistory ? JSON.parse(data.dentalHistory) : null,
-                    treatmentProcedures: data.treatmentProcedures ? JSON.parse(data.treatmentProcedures) : [],
+                    treatmentSteps: data.treatmentSteps || [],
                     grade: data.doctorGrade !== null && data.doctorGrade !== undefined ? Number(data.doctorGrade) : 0,
                     feedback: data.feedBack ?? "",
                     gradedBy: data.gradedBy ?? ""
