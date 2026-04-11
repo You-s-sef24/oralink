@@ -92,7 +92,7 @@ export default function Overview() {
             </svg>
           </span>
           <p className="text-info h5 fw-bold">{stats.totalSupervisors}</p>
-          <p className="text-muted m-0">Total SuperVisors</p>
+          <p className="text-muted m-0">Total Supervisors</p>
         </div>
       </div>
       <div className="col-6 col-sm-4 col-md-3 col-lg">
