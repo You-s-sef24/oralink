@@ -3,12 +3,11 @@ import { PatientInfoContext } from "@/app/Contexts/PatientInfoContext";
 import { useContext, useState } from "react";
 
 export default function PapillaryBleeding({ file, setFile }) {
-    const { isEditing, file: contextFile } = useContext(PatientInfoContext);
+    const { isEditing, file: contextFile, periodonticsData, setPeriodonticsData } = useContext(PatientInfoContext);
 
-    // Initialize from file.departmentData if available (edit mode), else fall back to periodonticsData
     const initialTeeth =
         contextFile?.departmentData?.periodontalExamination?.teeth ??
-        file?.departmentData?.periodontalExamination?.teeth ??
+        periodonticsData?.periodontalExamination?.teeth ??
         [];
 
     const [teeth, setTeeth] = useState(initialTeeth);
@@ -17,7 +16,6 @@ export default function PapillaryBleeding({ file, setFile }) {
         const num = Number(value);
         if (num < 0 || num > 4) return;
 
-        // Immutable update — never mutate objects in the array
         const updatedTeeth = teeth.map((t, index) =>
             index === i ? { ...t, [field]: num } : t
         );
@@ -33,6 +31,14 @@ export default function PapillaryBleeding({ file, setFile }) {
                         ...prev.departmentData.periodontalExamination,
                         teeth: updatedTeeth,
                     },
+                },
+            }));
+        } else {
+            setPeriodonticsData((prev) => ({
+                ...prev,
+                periodontalExamination: {
+                    ...prev.periodontalExamination,
+                    teeth: updatedTeeth,
                 },
             }));
         }
