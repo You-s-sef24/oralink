@@ -13,6 +13,7 @@ export default function SubmissionToggleModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [choice, setChoice] = useState(isEnabled ? "open" : "stop");
+  const [isAllowed, setIsAllowed] = useState(false); // For "Allow Late Submissions" checkbox
 
   const formatForInput = (dateStr) => {
     if (!dateStr) return "";
@@ -59,11 +60,13 @@ export default function SubmissionToggleModal({
       await axios.put("https://oralink.runasp.net/api/set-deadline", {
         isEnabled: deadlineActive,
         deadlineDate: finalDeadline,
+        isAllowed: isAllowed,
       });
 
       onSuccess({
         isEnabled: deadlineActive,
         deadlineDate: finalDeadline,
+        isAllowed: isAllowed,
       });
 
       handleClose();
@@ -233,9 +236,19 @@ export default function SubmissionToggleModal({
                       Deadline is required when stopping submissions.
                     </div>
                   )}
-                  <p className="text-muted small mt-1 mb-0">
-                    Select the exact date and time for the cutoff.
-                  </p>
+
+                  <div className="mt-2">
+                    <input
+                      type="checkbox"
+                      className="form-check-input me-2"
+                      id="allow-late-submissions"
+                      checked={isAllowed}
+                      onChange={(e) => setIsAllowed(e.target.checked)}
+                    />
+                    <label className="form-check-label" htmlFor="allow-late-submissions">
+                      Allow Late Submissions
+                    </label>
+                  </div>
                 </div>
               )}
 

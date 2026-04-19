@@ -1,47 +1,123 @@
 "use client";
 
 import { useContext, useState } from "react";
-import { StatesContext } from "../Contexts/StatesContext";
 import { PatientInfoContext } from "../Contexts/PatientInfoContext";
+import { StatesContext } from "../Contexts/StatesContext";
 import ImageUploadBox from "./ImageUploadBox";
 
+// ── Medical fields config — exported so ViewGeneralForm can reuse it ──────────
+export const MEDICAL_FIELDS = [
+    { field: "heartProblems", label: "Have you had heart problems? Or hypertensions?", placeholder: "e.g. Hypertension since 2018, on Amlodipine" },
+    { field: "liverProblems", label: "Have you had any liver problems?", placeholder: "e.g. Hepatitis B" },
+    { field: "kidneyProblems", label: "Have you had any kidney problems?", placeholder: "e.g. Chronic kidney disease" },
+    { field: "lungProblems", label: "Have you had any lungs problems?", placeholder: "e.g. Asthma, using inhaler" },
+    { field: "thyroidProblems", label: "Have you had any thyroid problems?", placeholder: "e.g. Hypothyroidism, on levothyroxine" },
+    { field: "pregnancy", label: "If female, are you pregnant?", placeholder: "e.g. 2nd trimester" },
+    { field: "medications", label: "Are you taking any medications? Which ones?", placeholder: "List all medications" },
+    { field: "surgeries", label: "Have you had any previous surgeries or hospitalization?", placeholder: "e.g. Appendectomy 2020" },
+    { field: "fainted", label: "Have you ever fainted in dental office?", placeholder: "e.g. Once, during extraction" },
+    { field: "prolongedBleeding", label: "Have you had prolonged bleeding from acute tooth extraction?", placeholder: "e.g. Bled for 2 days" },
+    { field: "allergies", label: "Are you allergic to anesthetics, antibiotics, other drugs?", placeholder: "e.g. Penicillin — rash" },
+];
+
+// ── Reusable checkbox + conditional input row ─────────────────────────────────
+function MedicalCheckRow({ fieldConfig, value, onChange }) {
+    const { field, label, placeholder } = fieldConfig;
+    const checked = value?.checked ?? false;
+    const details = value?.details ?? "";
+    return (
+        <div>
+            <div className="d-flex">
+                <input
+                    id={`mh-${field}`}
+                    className="form-check-input me-2"
+                    type="checkbox"
+                    checked={checked}
+                    onChange={(e) => onChange(field, { ...value, checked: e.target.checked })}
+                />
+                <label htmlFor={`mh-${field}`} className="form-check-label">{label}</label>
+            </div>
+            {checked && (
+                <input
+                    type="text"
+                    className="form-control form-control-sm mt-1 ms-4"
+                    style={{ width: "calc(100% - 1.75rem)" }}
+                    placeholder={placeholder}
+                    value={details}
+                    onChange={(e) => onChange(field, { ...value, details: e.target.value })}
+                />
+            )}
+        </div>
+    );
+}
+
+function DiabetesRow({ value, onChange }) {
+    const checked = value?.checked ?? false;
+    const hba1c = value?.hba1c ?? "";
+    return (
+        <div>
+            <div className="d-flex">
+                <input
+                    id="mh-diabetes"
+                    className="form-check-input me-2"
+                    type="checkbox"
+                    checked={checked}
+                    onChange={(e) => onChange("diabetes", { ...value, checked: e.target.checked })}
+                />
+                <label htmlFor="mh-diabetes" className="form-check-label">Are you diabetic?</label>
+            </div>
+            {checked && (
+                <input
+                    type="number"
+                    className="form-control form-control-sm mt-1 ms-4"
+                    style={{ width: "calc(100% - 1.75rem)" }}
+                    placeholder="HbA1c value (e.g. 7.2)"
+                    min="0"
+                    step="0.1"
+                    value={hba1c}
+                    onChange={(e) => {
+                        if (e.target.value >= 0)
+                            onChange("diabetes", { ...value, hba1c: e.target.value });
+                    }}
+                />
+            )}
+        </div>
+    );
+}
+
+// ── Main component ─────────────────────────────────────────────────────────────
 export default function GeneralForm() {
     const { generalData, setGeneralData } = useContext(PatientInfoContext);
     const { state, setState } = useContext(StatesContext);
     const [errors, setErrors] = useState({});
 
+    const mh = generalData.medicalHistory;
+
+    function updateMedicalField(field, newVal) {
+        setGeneralData({
+            ...generalData,
+            medicalHistory: { ...mh, [field]: newVal },
+        });
+    }
+
     function validate() {
         const newErrors = {};
-
-        if (!generalData.patientName?.trim())
-            newErrors.patientName = "Name is required";
-
-        if (!generalData.gender)
-            newErrors.gender = "Gender is required";
-
-        if (!generalData.birthDate)
-            newErrors.birthDate = "Birth date is required";
-
-        if (!generalData.address?.trim())
-            newErrors.address = "Address is required";
-
+        if (!generalData.patientName?.trim()) newErrors.patientName = "Name is required";
+        if (!generalData.gender) newErrors.gender = "Gender is required";
+        if (!generalData.birthDate) newErrors.birthDate = "Birth date is required";
+        if (!generalData.address?.trim()) newErrors.address = "Address is required";
         if (!generalData.phone?.trim()) {
             newErrors.phone = "Phone number is required";
         } else if (!/^\+?[\d\s\-()]{7,15}$/.test(generalData.phone.trim())) {
             newErrors.phone = "Please enter a valid phone number";
         }
-
         if (generalData.physicianPhone?.trim() &&
             !/^\+?[\d\s\-()]{7,15}$/.test(generalData.physicianPhone.trim())) {
             newErrors.physicianPhone = "Please enter a valid phone number";
         }
-
-        if (!generalData.occupation?.trim())
-            newErrors.occupation = "Occupation is required";
-
+        if (!generalData.occupation?.trim()) newErrors.occupation = "Occupation is required";
         if (!generalData.prePatientImage || generalData.prePatientImage.length === 0)
             newErrors.prePatientImage = "Pre Patient Image is required";
-
         return newErrors;
     }
 
@@ -49,13 +125,11 @@ export default function GeneralForm() {
         e.preventDefault();
         const newErrors = validate();
         setErrors(newErrors);
-        if (Object.keys(newErrors).length === 0) {
-            setState(state + 1);
-        }
+        if (Object.keys(newErrors).length === 0) setState(state + 1);
     }
 
     return (
-        <form className="p-4" onSubmit={(e) => { handleSubmit(e) }}>
+        <form className="p-4" onSubmit={handleSubmit}>
             <div className="row align-items-start d-flex g-3">
                 <div className="col-12 col-md-6">
                     <div className="position-relative border border-primary rounded-3 p-4  bg-white">
@@ -222,180 +296,35 @@ export default function GeneralForm() {
                     </div>
                 </div>
 
+                {/* ── Medical History — only this section changed ── */}
                 <div className="col-12 col-md-6">
                     <div className="position-relative border border-primary rounded-3 p-4 bg-white">
                         <span className="position-absolute top-0 start-0 translate-middle-y ms-4 px-2 bg-white text-primary fw-semibold">
                             Medical History
                         </span>
 
-                        <div className="d-flex flex-column">
+                        <div className="d-flex flex-column gap-2">
 
-                            <div className="d-flex">
-                                <input id="mh-heartProblems" className="form-check-input me-2" type="checkbox"
-                                    checked={generalData.medicalHistory.heartProblems}
-                                    onChange={(e) =>
-                                        setGeneralData({
-                                            ...generalData,
-                                            medicalHistory: { ...generalData.medicalHistory, heartProblems: e.target.checked }
-                                        })
-                                    }
+                            <DiabetesRow value={mh.diabetes} onChange={updateMedicalField} />
+
+                            {MEDICAL_FIELDS.map((cfg) => (
+                                <MedicalCheckRow
+                                    key={cfg.field}
+                                    fieldConfig={cfg}
+                                    value={mh[cfg.field]}
+                                    onChange={updateMedicalField}
                                 />
-                                <label htmlFor="mh-heartProblems" className="form-check-label">
-                                    Have you had heart problems? Or hypertensions?
-                                </label>
-                            </div>
+                            ))}
 
-                            <div className="d-flex">
-                                <input id="mh-liverProblems" className="form-check-input me-2" type="checkbox"
-                                    checked={generalData.medicalHistory.liverProblems}
-                                    onChange={(e) =>
-                                        setGeneralData({
-                                            ...generalData,
-                                            medicalHistory: { ...generalData.medicalHistory, liverProblems: e.target.checked }
-                                        })
-                                    }
-                                />
-                                <label htmlFor="mh-liverProblems" className="form-check-label">Have you had any liver problems?</label>
-                            </div>
-
-                            <div className="d-flex">
-                                <input id="mh-kidneyProblems" className="form-check-input me-2" type="checkbox"
-                                    checked={generalData.medicalHistory.kidneyProblems}
-                                    onChange={(e) =>
-                                        setGeneralData({
-                                            ...generalData,
-                                            medicalHistory: { ...generalData.medicalHistory, kidneyProblems: e.target.checked }
-                                        })
-                                    }
-                                />
-                                <label htmlFor="mh-kidneyProblems" className="form-check-label">Have you had any kidney problems?</label>
-                            </div>
-
-                            <div className="d-flex">
-                                <input id="mh-lungProblems" className="form-check-input me-2" type="checkbox"
-                                    checked={generalData.medicalHistory.lungProblems}
-                                    onChange={(e) =>
-                                        setGeneralData({
-                                            ...generalData,
-                                            medicalHistory: { ...generalData.medicalHistory, lungProblems: e.target.checked }
-                                        })
-                                    }
-                                />
-                                <label htmlFor="mh-lungProblems" className="form-check-label">Have you had any lungs problems?</label>
-                            </div>
-
-                            <div className="d-flex">
-                                <input id="mh-thyroidProblems" className="form-check-input me-2" type="checkbox"
-                                    checked={generalData.medicalHistory.thyroidProblems}
-                                    onChange={(e) =>
-                                        setGeneralData({
-                                            ...generalData,
-                                            medicalHistory: { ...generalData.medicalHistory, thyroidProblems: e.target.checked }
-                                        })
-                                    }
-                                />
-                                <label htmlFor="mh-thyroidProblems" className="form-check-label">Have you had any thyroid problems?</label>
-                            </div>
-
-                            <div className="d-flex">
-                                <input id="mh-pregnancy" className="form-check-input me-2" type="checkbox"
-                                    checked={generalData.medicalHistory.pregnancy}
-                                    onChange={(e) =>
-                                        setGeneralData({
-                                            ...generalData,
-                                            medicalHistory: { ...generalData.medicalHistory, pregnancy: e.target.checked }
-                                        })
-                                    }
-                                />
-                                <label htmlFor="mh-pregnancy" className="form-check-label">If female, are you pregnant?</label>
-                            </div>
-
-                            <div className="d-flex">
-                                <input id="mh-medications" className="form-check-input me-2" type="checkbox"
-                                    checked={generalData.medicalHistory.medications}
-                                    onChange={(e) =>
-                                        setGeneralData({
-                                            ...generalData,
-                                            medicalHistory: { ...generalData.medicalHistory, medications: e.target.checked }
-                                        })
-                                    }
-                                />
-                                <label htmlFor="mh-medications" className="form-check-label">
-                                    Are you taking any medications? Which ones?
-                                </label>
-                            </div>
-
-                            <div className="d-flex">
-                                <input id="mh-surgeries" className="form-check-input me-2" type="checkbox"
-                                    checked={generalData.medicalHistory.surgeries}
-                                    onChange={(e) =>
-                                        setGeneralData({
-                                            ...generalData,
-                                            medicalHistory: { ...generalData.medicalHistory, surgeries: e.target.checked }
-                                        })
-                                    }
-                                />
-                                <label htmlFor="mh-surgeries" className="form-check-label">
-                                    Have you had any previous surgeries or hospitalization?
-                                </label>
-                            </div>
-
-                            <div className="d-flex">
-                                <input id="mh-fainted" className="form-check-input me-2" type="checkbox"
-                                    checked={generalData.medicalHistory.fainted}
-                                    onChange={(e) =>
-                                        setGeneralData({
-                                            ...generalData,
-                                            medicalHistory: { ...generalData.medicalHistory, fainted: e.target.checked }
-                                        })
-                                    }
-                                />
-                                <label htmlFor="mh-fainted" className="form-check-label">
-                                    Have you ever fainted in dental office?
-                                </label>
-                            </div>
-
-                            <div className="d-flex">
-                                <input id="mh-prolongedBleeding" className="form-check-input me-2" type="checkbox"
-                                    checked={generalData.medicalHistory.prolongedBleeding}
-                                    onChange={(e) =>
-                                        setGeneralData({
-                                            ...generalData,
-                                            medicalHistory: { ...generalData.medicalHistory, prolongedBleeding: e.target.checked }
-                                        })
-                                    }
-                                />
-                                <label htmlFor="mh-prolongedBleeding" className="form-check-label">
-                                    Have you had prolonged bleeding from acute tooth extraction or other injury?
-                                </label>
-                            </div>
-
-                            <div className="d-flex">
-                                <input id="mh-allergies" className="form-check-input me-2" type="checkbox"
-                                    checked={generalData.medicalHistory.allergies}
-                                    onChange={(e) =>
-                                        setGeneralData({
-                                            ...generalData,
-                                            medicalHistory: { ...generalData.medicalHistory, allergies: e.target.checked }
-                                        })
-                                    }
-                                />
-                                <label htmlFor="mh-allergies" className="form-check-label">
-                                    Are you allergic to anesthetics, antibiotics, other drugs?
-                                </label>
-                            </div>
-
+                            {/* Other */}
                             <div>
                                 <div className="d-flex">
                                     <input id="mh-other" className="form-check-input me-2" type="checkbox"
-                                        checked={generalData.medicalHistory.other.found}
+                                        checked={mh.other.found}
                                         onChange={(e) =>
                                             setGeneralData({
                                                 ...generalData,
-                                                medicalHistory: {
-                                                    ...generalData.medicalHistory,
-                                                    other: { ...generalData.medicalHistory.other, found: e.target.checked }
-                                                }
+                                                medicalHistory: { ...mh, other: { ...mh.other, found: e.target.checked } }
                                             })
                                         }
                                     />
@@ -403,67 +332,42 @@ export default function GeneralForm() {
                                         Do you have any disease or condition not listed above?
                                     </label>
                                 </div>
-
-                                <input
-                                    type="text"
-                                    className="form-control mt-2"
-                                    value={generalData.medicalHistory.other.found ? generalData.medicalHistory.other.details : ""}
-                                    onChange={(e) =>
-                                        setGeneralData({
-                                            ...generalData,
-                                            medicalHistory: {
-                                                ...generalData.medicalHistory,
-                                                other: { ...generalData.medicalHistory.other, details: e.target.value }
-                                            }
-                                        })
-                                    }
-                                    disabled={!generalData.medicalHistory.other.found}
-                                    placeholder="If yes, please specify"
-                                />
-                            </div>
-
-                            <div className="mt-2">
-                                <div className="d-flex">
-                                    <input id="mh-diabetes" className="form-check-input me-2" type="checkbox"
-                                        checked={generalData.medicalHistory.diabetes}
-                                        onChange={(e) =>
-                                            setGeneralData({
-                                                ...generalData,
-                                                medicalHistory: { ...generalData.medicalHistory, diabetes: e.target.checked }
-                                            })
-                                        }
-                                    />
-                                    <label htmlFor="mh-diabetes" className="form-check-label">Are you diabetic?</label>
-                                </div>
-                                <div>
-                                    <input type="number"
-                                        className="form-control mt-2"
-                                        placeholder="HbA1c" disabled={!generalData.medicalHistory.diabetes}
-                                        value={generalData.medicalHistory.diabetes ? generalData.medicalHistory.hba1c : ""}
-                                        onChange={(e) => {
-                                            if (e.target.value >= 0) {
-                                                setGeneralData({ ...generalData, medicalHistory: { ...generalData.medicalHistory, hba1c: e.target.value } })
-                                            }
-                                        }} />
-                                </div>
-                            </div>
-
-
-                            <div className="mt-3">
-                                <label className="form-check-label fw-bold">Family & Social History</label>
-                                <div className="d-flex gap-2">
+                                {mh.other.found && (
                                     <input
                                         type="text"
-                                        className="form-control mt-2"
-                                        value={generalData.medicalHistory.familyAndSocialHistory.disease}
+                                        className="form-control form-control-sm mt-1 ms-4"
+                                        style={{ width: "calc(100% - 1.75rem)" }}
+                                        placeholder="If yes, please specify"
+                                        value={mh.other.details}
                                         onChange={(e) =>
                                             setGeneralData({
                                                 ...generalData,
                                                 medicalHistory: {
-                                                    ...generalData.medicalHistory,
+                                                    ...mh,
+                                                    other: { ...mh.other, details: e.target.value }
+                                                }
+                                            })
+                                        }
+                                    />
+                                )}
+                            </div>
+
+                            <div className="mt-2">
+                                <label className="form-check-label fw-bold">Family &amp; Social History</label>
+                                <div className="d-flex gap-2">
+                                    <input
+                                        type="text"
+                                        className="form-control mt-2"
+                                        value={mh.familyAndSocialHistory.disease ?? mh.familyAndSocialHistory.diseases ?? ""}
+                                        onChange={(e) =>
+                                            setGeneralData({
+                                                ...generalData,
+                                                medicalHistory: {
+                                                    ...mh,
                                                     familyAndSocialHistory: {
-                                                        ...generalData.medicalHistory.familyAndSocialHistory,
-                                                        disease: e.target.value
+                                                        ...mh.familyAndSocialHistory,
+                                                        disease: e.target.value,
+                                                        diseases: e.target.value,
                                                     }
                                                 }
                                             })
@@ -473,14 +377,14 @@ export default function GeneralForm() {
                                     <input
                                         type="text"
                                         className="form-control mt-2"
-                                        value={generalData.medicalHistory.familyAndSocialHistory.person}
+                                        value={mh.familyAndSocialHistory.person}
                                         onChange={(e) =>
                                             setGeneralData({
                                                 ...generalData,
                                                 medicalHistory: {
-                                                    ...generalData.medicalHistory,
+                                                    ...mh,
                                                     familyAndSocialHistory: {
-                                                        ...generalData.medicalHistory.familyAndSocialHistory,
+                                                        ...mh.familyAndSocialHistory,
                                                         person: e.target.value
                                                     }
                                                 }
@@ -653,6 +557,6 @@ export default function GeneralForm() {
                 <button type="submit" className="btn btn-primary">Continue to Department Selection</button>
             </div>
 
-        </form >
+        </form>
     );
 }

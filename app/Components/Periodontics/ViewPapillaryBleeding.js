@@ -12,7 +12,6 @@ export default function ViewPapillaryBleeding({ file }) {
             <h5 className="fw-bold">Papillary Bleeding Index = {pbi}</h5>
 
             <div className="d-flex align-items-center justify-content-center gap-3 mt-3 flex-wrap">
-                <div className="border fw-bold px-3 py-2">25</div>
 
                 {teeth.map((t, i) => (
                     <div
@@ -37,7 +36,6 @@ export default function ViewPapillaryBleeding({ file }) {
                     </div>
                 ))}
 
-                <div className="border fw-bold px-3 py-2">32</div>
             </div>
         </div>
     );

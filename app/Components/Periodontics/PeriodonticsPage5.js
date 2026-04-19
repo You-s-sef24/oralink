@@ -25,7 +25,7 @@ export default function PeriodonticsPage5({ info, setInfo }) {
 
                 <div className="row g-3">
                     <div className="col-12 col-md-4">
-                        <label className="form-label">Title</label>
+                        <label className="form-label">Phase</label>
                         <input
                             type="text"
                             className="form-control"

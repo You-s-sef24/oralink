@@ -2,6 +2,7 @@
 
 import { useContext, useState } from "react";
 import { PatientInfoContext } from "../Contexts/PatientInfoContext";
+import { MEDICAL_FIELDS } from "./GeneralForm";
 import ImageUploadBox from "./ImageUploadBox";
 import ImageLightbox from "./General/ImageLightBox";
 
@@ -15,7 +16,7 @@ function getUrl(img) {
 
 // ── Gallery shown in read-only mode ──────────────────────────────────────────
 function ImageGallery({ value, label }) {
-    const [lightbox, setLightbox] = useState(null); // index or null
+    const [lightbox, setLightbox] = useState(null);
 
     const images = Array.isArray(value)
         ? value.filter(Boolean)
@@ -42,7 +43,6 @@ function ImageGallery({ value, label }) {
                                 onMouseEnter={e => e.currentTarget.style.opacity = "0.82"}
                                 onMouseLeave={e => e.currentTarget.style.opacity = "1"}
                             />
-                            {/* Zoom icon overlay */}
                             <div style={{
                                 position: "absolute", inset: 0, display: "flex", alignItems: "center",
                                 justifyContent: "center", opacity: 0, transition: "opacity 0.15s",
@@ -52,11 +52,10 @@ function ImageGallery({ value, label }) {
                                 onMouseLeave={e => e.currentTarget.style.opacity = "0"}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
-                                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                                    <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+                                    <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                    <line x1="11" y1="8" x2="11" y2="14" /><line x1="8" y1="11" x2="14" y2="11" />
                                 </svg>
                             </div>
-
                             {images.length > 1 && (
                                 <span className="position-absolute bottom-0 start-0 m-1 badge bg-dark bg-opacity-75" style={{ fontSize: 10 }}>
                                     {idx + 1}
@@ -66,7 +65,6 @@ function ImageGallery({ value, label }) {
                     </div>
                 ))}
             </div>
-
             {lightbox !== null && (
                 <ImageLightbox
                     images={images}
@@ -78,11 +76,80 @@ function ImageGallery({ value, label }) {
     );
 }
 
+// ── Medical checkbox row (edit mode) ─────────────────────────────────────────
+function MedicalEditRow({ fieldConfig, value, onChange }) {
+    const { field, label, placeholder } = fieldConfig;
+    const checked = value?.checked ?? false;
+    const details = value?.details ?? "";
+    return (
+        <div className="mb-1">
+            <div className="d-flex">
+                <input
+                    id={`mh-${field}`}
+                    className="form-check-input me-2"
+                    type="checkbox"
+                    checked={checked}
+                    onChange={(e) => onChange(field, { ...value, checked: e.target.checked })}
+                />
+                <label htmlFor={`mh-${field}`} className="form-check-label">{label}</label>
+            </div>
+            {checked && (
+                <input
+                    type="text"
+                    className="form-control form-control-sm mt-1 ms-4"
+                    style={{ width: "calc(100% - 1.75rem)" }}
+                    placeholder={placeholder}
+                    value={details}
+                    onChange={(e) => onChange(field, { ...value, details: e.target.value })}
+                />
+            )}
+        </div>
+    );
+}
+
+function DiabetesEditRow({ value, onChange }) {
+    const checked = value?.checked ?? false;
+    const hba1c = value?.hba1c ?? "";
+    return (
+        <div className="mb-1">
+            <div className="d-flex">
+                <input
+                    id="mh-diabetes"
+                    className="form-check-input me-2"
+                    type="checkbox"
+                    checked={checked}
+                    onChange={(e) => onChange("diabetes", { ...value, checked: e.target.checked })}
+                />
+                <label htmlFor="mh-diabetes" className="form-check-label">Are you diabetic?</label>
+            </div>
+            {checked && (
+                <input
+                    type="number"
+                    className="form-control form-control-sm mt-1 ms-4"
+                    style={{ width: "calc(100% - 1.75rem)" }}
+                    placeholder="HbA1c value (e.g. 7.2)"
+                    min="0"
+                    step="0.1"
+                    value={hba1c}
+                    onChange={(e) => {
+                        if (e.target.value >= 0)
+                            onChange("diabetes", { ...value, hba1c: e.target.value });
+                    }}
+                />
+            )}
+        </div>
+    );
+}
+
 // ── Main component ────────────────────────────────────────────────────────────
 export default function ViewGeneralForm() {
     const { isEditing, file, setFile, formErrors: errors } = useContext(PatientInfoContext);
 
+    const mh = file.medicalHistory ?? {};
 
+    function updateMedicalField(field, newVal) {
+        setFile({ ...file, medicalHistory: { ...mh, [field]: newVal } });
+    }
 
     const ReadOnlyField = ({ label, value }) => (
         <div className="mb-2">
@@ -226,60 +293,57 @@ export default function ViewGeneralForm() {
                         </div>
                     </div>
 
+                    {/* ── Medical History (EDIT) — only this section changed ── */}
                     <div className="col-12 col-md-6">
                         <div className="position-relative border border-primary rounded-3 p-4 bg-white">
                             <span className="position-absolute top-0 start-0 translate-middle-y ms-4 px-2 bg-white text-primary fw-semibold">
                                 Medical History
                             </span>
                             <div className="d-flex flex-column gap-1">
-                                {[
-                                    { id: "mh-heartProblems", field: "heartProblems", label: "Have you had heart problems? Or hypertensions?" },
-                                    { id: "mh-diabetes", field: "diabetes", label: "Are you diabetic?" },
-                                    { id: "mh-liverProblems", field: "liverProblems", label: "Have you had any liver problems?" },
-                                    { id: "mh-kidneyProblems", field: "kidneyProblems", label: "Have you had any kidney problems?" },
-                                    { id: "mh-lungProblems", field: "lungProblems", label: "Have you had any lungs problems?" },
-                                    { id: "mh-thyroidProblems", field: "thyroidProblems", label: "Have you had any thyroid problems?" },
-                                    { id: "mh-pregnancy", field: "pregnancy", label: "If female, are you pregnant?" },
-                                    { id: "mh-medications", field: "medications", label: "Are you taking any medications? Which ones?" },
-                                    { id: "mh-surgeries", field: "surgeries", label: "Have you had any previous surgeries or hospitalization?" },
-                                    { id: "mh-fainted", field: "fainted", label: "Have you ever fainted in dental office?" },
-                                    { id: "mh-prolongedBleeding", field: "prolongedBleeding", label: "Have you had prolonged bleeding from acute tooth extraction?" },
-                                    { id: "mh-allergies", field: "allergies", label: "Are you allergic to anesthetics, antibiotics, other drugs?" },
-                                ].map(({ id, field, label }) => (
-                                    <div key={id} className="d-flex">
-                                        <input id={id} className="form-check-input me-2" type="checkbox"
-                                            checked={file.medicalHistory[field]}
-                                            onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, [field]: e.target.checked } })}
-                                        />
-                                        <label htmlFor={id} className="form-check-label">{label}</label>
-                                    </div>
+
+                                <DiabetesEditRow value={mh.diabetes} onChange={updateMedicalField} />
+
+                                {MEDICAL_FIELDS.map((cfg) => (
+                                    <MedicalEditRow
+                                        key={cfg.field}
+                                        fieldConfig={cfg}
+                                        value={mh[cfg.field]}
+                                        onChange={updateMedicalField}
+                                    />
                                 ))}
 
+                                {/* Other */}
                                 <div>
                                     <div className="d-flex">
                                         <input id="mh-other" className="form-check-input me-2" type="checkbox"
-                                            checked={file.medicalHistory.other.found}
-                                            onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, other: { ...file.medicalHistory.other, found: e.target.checked } } })}
+                                            checked={mh.other?.found ?? false}
+                                            onChange={(e) => setFile({ ...file, medicalHistory: { ...mh, other: { ...mh.other, found: e.target.checked } } })}
                                         />
                                         <label htmlFor="mh-other" className="form-check-label">Do you have any disease or condition not listed above?</label>
                                     </div>
-                                    <input type="text" className="form-control mt-2"
-                                        value={file.medicalHistory.other.details}
-                                        onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, other: { ...file.medicalHistory.other, details: e.target.value } } })}
-                                        disabled={!file.medicalHistory.other.found}
-                                        placeholder="If yes, please specify"
-                                    />
+                                    {mh.other?.found && (
+                                        <input
+                                            type="text"
+                                            className="form-control form-control-sm mt-1 ms-4"
+                                            style={{ width: "calc(100% - 1.75rem)" }}
+                                            placeholder="If yes, please specify"
+                                            value={mh.other?.details ?? ""}
+                                            onChange={(e) => setFile({ ...file, medicalHistory: { ...mh, other: { ...mh.other, details: e.target.value } } })}
+                                        />
+                                    )}
                                 </div>
 
                                 <div className="mt-3">
                                     <label className="form-check-label fw-bold">Family &amp; Social History</label>
                                     <div className="d-flex gap-2">
-                                        <input type="text" className="form-control mt-2" value={file.medicalHistory.familyAndSocialHistory.diseases}
-                                            onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, familyAndSocialHistory: { ...file.medicalHistory.familyAndSocialHistory, diseases: e.target.value } } })}
+                                        <input type="text" className="form-control mt-2"
+                                            value={mh.familyAndSocialHistory?.diseases ?? ""}
+                                            onChange={(e) => setFile({ ...file, medicalHistory: { ...mh, familyAndSocialHistory: { ...mh.familyAndSocialHistory, diseases: e.target.value } } })}
                                             placeholder="Diabetes"
                                         />
-                                        <input type="text" className="form-control mt-2" value={file.medicalHistory.familyAndSocialHistory.person}
-                                            onChange={(e) => setFile({ ...file, medicalHistory: { ...file.medicalHistory, familyAndSocialHistory: { ...file.medicalHistory.familyAndSocialHistory, person: e.target.value } } })}
+                                        <input type="text" className="form-control mt-2"
+                                            value={mh.familyAndSocialHistory?.person ?? ""}
+                                            onChange={(e) => setFile({ ...file, medicalHistory: { ...mh, familyAndSocialHistory: { ...mh.familyAndSocialHistory, person: e.target.value } } })}
                                             placeholder="Father"
                                         />
                                     </div>
@@ -437,35 +501,69 @@ export default function ViewGeneralForm() {
                         </div>
                     </div>
 
+                    {/* ── Medical History (READ-ONLY) — only this section changed ── */}
                     <div className="col-12 col-md-6">
                         <div className="position-relative border border-primary rounded-3 p-4 bg-white">
                             <span className="position-absolute top-0 start-0 translate-middle-y ms-4 px-2 bg-white text-primary fw-semibold">
                                 Medical History
                             </span>
                             <div className="row">
-                                {[
-                                    ["Heart Problems", file.medicalHistory?.heartProblems],
-                                    ["Diabetes", file.medicalHistory?.diabetes],
-                                    ["Liver Problems", file.medicalHistory?.liverProblems],
-                                    ["Kidney Problems", file.medicalHistory?.kidneyProblems],
-                                    ["Lung Problems", file.medicalHistory?.lungProblems],
-                                    ["Thyroid Problems", file.medicalHistory?.thyroidProblems],
-                                    ["Pregnant", file.medicalHistory?.pregnancy],
-                                    ["Medications", file.medicalHistory?.medications],
-                                    ["Surgeries", file.medicalHistory?.surgeries],
-                                    ["Fainted in Dental Office", file.medicalHistory?.fainted],
-                                    ["Prolonged Bleeding", file.medicalHistory?.prolongedBleeding],
-                                    ["Allergies", file.medicalHistory?.allergies],
-                                ].map(([label, val]) => (
-                                    <div key={label} className="col-sm-6 col-md-4">
-                                        <ReadOnlyField label={`${label}:`} value={val ? "Yes" : "No"} />
+                                {/* Diabetes */}
+                                <div className="col-sm-6 col-md-4">
+                                    <div className="mb-2">
+                                        <label className="form-label fw-semibold">Diabetes:</label>
+                                        <p className="form-control-plaintext border rounded px-2 py-1 bg-light mb-0">
+                                            {mh.diabetes?.checked ? "Yes" : "No"}
+                                        </p>
+                                        {mh.diabetes?.checked && mh.diabetes?.hba1c && (
+                                            <p className="form-control-plaintext border rounded px-2 py-1 bg-light mt-1 small text-muted">
+                                                HbA1c: {mh.diabetes.hba1c}
+                                            </p>
+                                        )}
                                     </div>
-                                ))}
-                                <div className="col-sm-6">
-                                    <ReadOnlyField label="Other Medical Condition:" value={file.medicalHistory?.other?.found ? file.medicalHistory.other.details : "No"} />
                                 </div>
+
+                                {/* All other fields */}
+                                {MEDICAL_FIELDS.map(({ field, label }) => {
+                                    const val = mh[field];
+                                    return (
+                                        <div key={field} className="col-sm-6 col-md-4">
+                                            <div className="mb-2">
+                                                <label className="form-label fw-semibold">{label.replace(/\?$/, "")}:</label>
+                                                <p className="form-control-plaintext border rounded px-2 py-1 bg-light mb-0">
+                                                    {val?.checked ? "Yes" : "No"}
+                                                </p>
+                                                {val?.checked && val?.details && (
+                                                    <p className="form-control-plaintext border rounded px-2 py-1 bg-light mt-1 small text-muted">
+                                                        {val.details}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+
+                                {/* Other condition */}
                                 <div className="col-sm-6">
-                                    <ReadOnlyField label="Family & Social History:" value={`${file.medicalHistory?.familyAndSocialHistory?.diseases || "-"} (${file.medicalHistory?.familyAndSocialHistory?.person || "-"})`} />
+                                    <div className="mb-2">
+                                        <label className="form-label fw-semibold">Other Medical Condition:</label>
+                                        <p className="form-control-plaintext border rounded px-2 py-1 bg-light mb-0">
+                                            {mh.other?.found ? "Yes" : "No"}
+                                        </p>
+                                        {mh.other?.found && mh.other?.details && (
+                                            <p className="form-control-plaintext border rounded px-2 py-1 bg-light mt-1 small text-muted">
+                                                {mh.other.details}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Family & Social */}
+                                <div className="col-sm-6">
+                                    <ReadOnlyField
+                                        label="Family & Social History:"
+                                        value={`${mh.familyAndSocialHistory?.diseases || "-"} (${mh.familyAndSocialHistory?.person || "-"})`}
+                                    />
                                 </div>
                             </div>
                         </div>

@@ -145,7 +145,7 @@ export default function ViewProcedures() {
                 <div className="card-body">
                   <div className="row g-2 mb-2">
                     <div className="col-12 col-md-4">
-                      <p className="mb-0 small text-muted">Title</p>
+                      <p className="mb-0 small text-muted">Phase</p>
                       <p className="mb-0 fw-medium">{step.title || "-"}</p>
                     </div>
                     <div className="col-12 col-md-4">

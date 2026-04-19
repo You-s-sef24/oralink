@@ -54,7 +54,6 @@ export default function PapillaryBleeding({ file, setFile }) {
             </h5>
 
             <div className="d-flex align-items-center justify-content-center gap-3 mt-3 flex-wrap">
-                <div className="border fw-bold px-3 py-2">25</div>
 
                 {teeth.map((t, i) => (
                     <div key={i} className="d-flex flex-column align-items-center">
@@ -79,8 +78,6 @@ export default function PapillaryBleeding({ file, setFile }) {
                         />
                     </div>
                 ))}
-
-                <div className="border fw-bold px-3 py-2">32</div>
             </div>
         </div>
     );

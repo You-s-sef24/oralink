@@ -44,10 +44,6 @@ export default function ViewPeriodonticsPage2() {
         });
     };
 
-    const xrayUrl = file.xRay instanceof File
-        ? URL.createObjectURL(file.xRay)
-        : typeof file.xRay === "string" ? file.xRay : null;
-
     return (
         isEditing ? (
             <div className="position-relative border border-primary rounded-3 p-4 mt-4 bg-white">
@@ -126,7 +122,6 @@ export default function ViewPeriodonticsPage2() {
 
                     <PapillaryBleeding file={file} setFile={setFile} />
                     <TableIndicators />
-                    <ImageUploadBox type="xray" fileData={file} setFileData={setFile} />
                 </div>
             </div>
         ) : (
@@ -169,15 +164,6 @@ export default function ViewPeriodonticsPage2() {
 
                     <ViewPapillaryBleeding file={file} />
                     <TableIndicators />
-                    <hr />
-                    <h3>X-Ray:</h3>
-                    <div className="d-flex justify-content-center">
-                        {xrayUrl ? (
-                            <img className="rounded img-fluid w-50" src={xrayUrl} alt="X-ray" />
-                        ) : (
-                            <p className="text-muted small">No X-ray uploaded.</p>
-                        )}
-                    </div>
                 </div>
             </div>
         )

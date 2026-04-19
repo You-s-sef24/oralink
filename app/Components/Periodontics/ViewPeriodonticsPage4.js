@@ -2,6 +2,7 @@
 
 import { PatientInfoContext } from "@/app/Contexts/PatientInfoContext";
 import { useContext } from "react";
+import ImageUploadBox from "../ImageUploadBox";
 
 export default function ViewPeriodonticsPage4() {
     const { file, setFile, isEditing } = useContext(PatientInfoContext);
@@ -22,6 +23,10 @@ export default function ViewPeriodonticsPage4() {
         </div>
     );
 
+    const xrayUrl = file.xRay instanceof File
+        ? URL.createObjectURL(file.xRay)
+        : typeof file.xRay === "string" ? file.xRay : null;
+
     return (
         isEditing ?
             <div className="p-3">
@@ -29,6 +34,10 @@ export default function ViewPeriodonticsPage4() {
                     <span className="position-absolute top-0 start-0 translate-middle-y ms-4 px-2 bg-white text-primary fw-semibold">
                         Radiographic Interpretation
                     </span>
+
+                    <ImageUploadBox type="xray" fileData={file} setFileData={setFile} />
+
+                    <hr />
 
                     <div>
                         <div>
@@ -54,10 +63,12 @@ export default function ViewPeriodonticsPage4() {
                     <div className="col-md-6">
                         <div className="position-relative border border-primary rounded-3 p-4 mt-4 bg-white">
                             <span className="position-absolute top-0 start-0 translate-middle-y ms-4 px-2 bg-white text-primary fw-semibold">
-                                Diagnosis
+                                Diagnosis (in points)
                             </span>
                             <div>
-                                <textarea className="form-control" rows={4} value={file.departmentData.diagnosis} onChange={(e) => setFile({ ...file, departmentData: { ...file.departmentData, diagnosis: e.target.value } })} />
+                                <textarea className="form-control" rows={4} value={file.departmentData.diagnosis} onChange={(e) => setFile({ ...file, departmentData: { ...file.departmentData, diagnosis: e.target.value } })} 
+                                    placeholder={`1- Chief complaint\n2- Summary of findings (clinical and radiographic)\n3- Diagnosis (include staging and grading if applicable)`}
+                                    />
                             </div>
                         </div>
                     </div>
@@ -115,6 +126,17 @@ export default function ViewPeriodonticsPage4() {
                     <span className="position-absolute top-0 start-0 translate-middle-y ms-4 px-2 bg-white text-primary fw-semibold">
                         Radiographic Interpretation
                     </span>
+
+                    <h3>X-Ray:</h3>
+                    <div className="d-flex justify-content-center">
+                        {xrayUrl ? (
+                            <img className="rounded img-fluid w-50" src={xrayUrl} alt="X-ray" />
+                        ) : (
+                            <p className="text-muted small">No X-ray uploaded.</p>
+                        )}
+                    </div>
+
+                    <hr />
 
                     <ReadOnlyField
                         label="Horizontal bone loss"

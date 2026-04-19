@@ -6,6 +6,7 @@ import { UsersContext } from "./UsersContext";
 import axios from "axios";
 
 export const PatientInfoContext = createContext();
+
 const createTooth = (toothNumber) => ({
     tooth: toothNumber,
     mobility: "",
@@ -22,6 +23,8 @@ const teethNumbers = [
     48, 47, 46, 45, 44, 43, 42, 41,
     31, 32, 33, 34, 35, 36, 37, 38
 ];
+
+const mkField = (extraKeys = {}) => ({ checked: false, details: "", ...extraKeys });
 
 const initialGeneralData = {
     patientName: "",
@@ -47,21 +50,20 @@ const initialGeneralData = {
     associatedSymptoms: "",
     previousTreatment: "",
     medicalHistory: {
-        heartProblems: false,
-        diabetes: false,
-        hba1c: "",
-        liverProblems: false,
-        kidneyProblems: false,
-        lungProblems: false,
-        thyroidProblems: false,
-        pregnancy: false,
-        medications: false,
-        surgeries: false,
-        fainted: false,
-        prolongedBleeding: false,
-        allergies: false,
-        other: { found: false, details: "" },
-        familyAndSocialHistory: { diseases: "", person: "" }
+        heartProblems:     mkField(),
+        diabetes:          { checked: false, hba1c: "" },
+        liverProblems:     mkField(),
+        kidneyProblems:    mkField(),
+        lungProblems:      mkField(),
+        thyroidProblems:   mkField(),
+        pregnancy:         mkField(),
+        medications:       mkField({ details: "" }),
+        surgeries:         mkField(),
+        fainted:           mkField(),
+        prolongedBleeding: mkField(),
+        allergies:         mkField({ details: "" }),
+        other:             { found: false, details: "" },
+        familyAndSocialHistory: { diseases: "", person: "" },
     },
     dentalHistory: {
         senstivity: false,
@@ -87,7 +89,7 @@ const initialGeneralData = {
         lastDentalAppointmentOperation: "",
         lastDentalXray: "",
         smoking: { isSmoking: false, sinceWhen: "", howManyPerDay: "" },
-        comments: ""
+        comments: "",
     },
     isSubmitted: false,
     gradedBy: null,
@@ -95,6 +97,23 @@ const initialGeneralData = {
     prePatientImage: [],
     postPatientImage: [],
     xRay: null,
+};
+
+const initialFileMedicalHistory = {
+    heartProblems:     mkField(),
+    diabetes:          { checked: false, hba1c: "" },
+    liverProblems:     mkField(),
+    kidneyProblems:    mkField(),
+    lungProblems:      mkField(),
+    thyroidProblems:   mkField(),
+    pregnancy:         mkField(),
+    medications:       mkField(),
+    surgeries:         mkField(),
+    fainted:           mkField(),
+    prolongedBleeding: mkField(),
+    allergies:         mkField(),
+    other:             { found: false, details: "" },
+    familyAndSocialHistory: { diseases: "", person: "" },
 };
 
 const initialPeriodonticsData = {
@@ -176,6 +195,24 @@ const initialEndodonticsData = {
     },
 };
 
+function flattenMedicalHistory(mh) {
+    const SIMPLE_FIELDS = [
+        "heartProblems", "liverProblems", "kidneyProblems", "lungProblems",
+        "thyroidProblems", "pregnancy", "medications", "surgeries",
+        "fainted", "prolongedBleeding", "allergies",
+    ];
+    const flat = {};
+    SIMPLE_FIELDS.forEach((f) => {
+        flat[f] = mh[f]?.checked ?? false;
+        if (mh[f]?.details) flat[`${f}Details`] = mh[f].details;
+    });
+    flat.diabetes = mh.diabetes?.checked ?? false;
+    flat.hba1c = mh.diabetes?.hba1c ?? "";
+    flat.other = mh.other ?? { found: false, details: "" };
+    flat.familyAndSocialHistory = mh.familyAndSocialHistory ?? { diseases: "", person: "" };
+    return flat;
+}
+
 export default function PatientInfoProvider({ children }) {
     const { currentUser, token } = useContext(UsersContext);
     const router = useRouter();
@@ -207,14 +244,7 @@ export default function PatientInfoProvider({ children }) {
         locationAndRadiation: "",
         associatedSymptoms: "",
         previousTreatment: "",
-        medicalHistory: {
-            heartProblems: false, diabetes: false, liverProblems: false,
-            kidneyProblems: false, lungProblems: false, thyroidProblems: false,
-            pregnancy: false, medications: false, surgeries: false,
-            fainted: false, prolongedBleeding: false, allergies: false,
-            other: { found: false, details: "" },
-            familyAndSocialHistory: { disease: "", person: "" }
-        },
+        medicalHistory: initialFileMedicalHistory,
         dentalHistory: {
             senstivity: false, chewingDifficulty: false, bleedingGums: false,
             mouthUlcers: false, foodCatch: false, headaches: false,
@@ -264,13 +294,9 @@ export default function PatientInfoProvider({ children }) {
     async function handleSave(dept) {
         setIsLoading(true);
         try {
-            if (!currentUser?.id) {
-                alert("User not authenticated");
-                return;
-            }
+            if (!currentUser?.id) { alert("User not authenticated"); return; }
 
             const formData = new FormData();
-
             const payload = {
                 patientName: generalData.patientName ?? "",
                 gender: generalData.gender ?? "Male",
@@ -295,7 +321,7 @@ export default function PatientInfoProvider({ children }) {
                 associatedSymptoms: generalData.associatedSymptoms ?? "",
                 previousTreatment: generalData.previousTreatment ?? "",
                 departmentData: dept === "periodontics" ? periodonticsData ?? {} : endodonticsData ?? {},
-                medicalHistory: generalData.medicalHistory ?? {},
+                medicalHistory: flattenMedicalHistory(generalData.medicalHistory),
                 dentalHistory: generalData.dentalHistory ?? {},
             };
 
@@ -313,20 +339,14 @@ export default function PatientInfoProvider({ children }) {
             const preImages = Array.isArray(generalData.prePatientImage)
                 ? generalData.prePatientImage
                 : generalData.prePatientImage ? [generalData.prePatientImage] : [];
-            preImages.forEach((img) => {
-                if (img instanceof File) formData.append("PrePatientImages", img);
-            });
+            preImages.forEach((img) => { if (img instanceof File) formData.append("PrePatientImages", img); });
 
             const postImages = Array.isArray(generalData.postPatientImage)
                 ? generalData.postPatientImage
                 : generalData.postPatientImage ? [generalData.postPatientImage] : [];
-            postImages.forEach((img) => {
-                if (img instanceof File) formData.append("PostPatientImages", img);
-            });
+            postImages.forEach((img) => { if (img instanceof File) formData.append("PostPatientImages", img); });
 
-            if (generalData.xRay instanceof File) {
-                formData.append("XRay", generalData.xRay);
-            }
+            if (generalData.xRay instanceof File) formData.append("XRay", generalData.xRay);
 
             await axios.post(
                 "https://oralink.runasp.net/api/patient-files/create-patient-file",
@@ -342,21 +362,15 @@ export default function PatientInfoProvider({ children }) {
             const serverData = err.response?.data;
             console.error("Status:", err.response?.status);
             console.error("Server response:", JSON.stringify(serverData, null, 2));
-
             const msg =
-                serverData?.Message ||
-                serverData?.message ||
-                serverData?.title ||
-                (typeof serverData === "string" ? serverData : null) ||
-                "Failed to create file";
-
+                serverData?.Message || serverData?.message || serverData?.title ||
+                (typeof serverData === "string" ? serverData : null) || "Failed to create file";
             const validationErrors = serverData?.errors;
             const validationMsg = validationErrors
                 ? "\n\nValidation errors:\n" + Object.entries(validationErrors)
                     .map(([field, msgs]) => `\u2022 ${field}: ${Array.isArray(msgs) ? msgs.join(", ") : msgs}`)
                     .join("\n")
                 : "";
-
             alert(msg + validationMsg);
         } finally {
             setIsLoading(false);
@@ -367,12 +381,7 @@ export default function PatientInfoProvider({ children }) {
         const handleVisibilityChange = () => {
             if (document.visibilityState === "hidden" && isDirty) {
                 localStorage.setItem("formDraft", JSON.stringify({
-                    generalData: {
-                        ...generalData,
-                        prePatientImage: null,
-                        postPatientImage: null,
-                        xRay: null,
-                    },
+                    generalData: { ...generalData, prePatientImage: null, postPatientImage: null, xRay: null },
                     periodonticsData,
                     endodonticsData,
                 }));

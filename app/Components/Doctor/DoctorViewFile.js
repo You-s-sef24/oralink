@@ -173,7 +173,7 @@ export default function DoctorsViewFile({ fileId }) {
 
                             <div className="mb-3">
                                 <label className="form-label fw-semibold">
-                                    Grade <span className="text-muted">(0 - 100)</span>
+                                    Grade <span className="text-muted">(0 - 10)</span>
                                 </label>
 
                                 <input
@@ -183,7 +183,7 @@ export default function DoctorsViewFile({ fileId }) {
                                     onChange={(e) => {
                                         if (!canAddGrade && !canEditGrade) return;
                                         const value = Number(e.target.value);
-                                        if (value >= 0 && value <= 100) {
+                                        if (value >= 0 && value <= 10) {
                                             setGrade({ ...grade, score: value });
                                         }
                                     }}
