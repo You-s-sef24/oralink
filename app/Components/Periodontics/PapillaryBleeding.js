@@ -45,8 +45,8 @@ export default function PapillaryBleeding({ file, setFile }) {
     };
 
     const total = teeth.reduce((s, t) => s + (t.top || 0) + (t.bottom || 0), 0);
-    const pbi = teeth.length > 0 ? (total / 32).toFixed(1) : "0.0";
-
+    const papillaeCount = teeth.length * 2;
+    const pbi = papillaeCount > 0 ? (total / papillaeCount).toFixed(2) : "0.00";
     return (
         <div className="container mt-4">
             <h5 className="fw-bold">

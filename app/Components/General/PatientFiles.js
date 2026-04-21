@@ -129,14 +129,11 @@ export default function PatientFiles() {
                                     <td>{file.submittedDate}</td>
                                     <td>
                                         {file.grade ? (
-                                            <span className={`badge rounded-pill px-3 py-2 ${file.grade >= 90 ? "bg-success" :
-                                                file.grade >= 75 ? "bg-primary" :
-                                                    file.grade >= 60 ? "bg-warning" : "bg-danger"
-                                                }`}>
-                                                {file.grade}/100
+                                            <span className="">
+                                                {file.grade}/10
                                             </span>
                                         ) : (
-                                            <span className="badge rounded-pill bg-secondary px-3 py-2">—</span>
+                                            <span>—</span>
                                         )}
                                     </td>
                                     <td>

@@ -81,19 +81,7 @@ export default function GradedFiles() {
                 <td>{file.creationDate}</td>
                 <td>{file.submittedDate}</td>
                 <td>
-                  <span
-                    className={`badge rounded-pill px-3 py-2 ${
-                      file.grade >= 90
-                        ? "bg-success"
-                        : file.grade >= 75
-                          ? "bg-primary"
-                          : file.grade >= 60
-                            ? "bg-warning"
-                            : "bg-danger"
-                    }`}
-                  >
-                    {file.grade}
-                  </span>
+                  <span>{file.grade}/10</span>
                 </td>
                 <td>
                   <Link

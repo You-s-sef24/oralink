@@ -172,7 +172,7 @@ export default function DSSFiles() {
                         {file.submittedDate?.split("T")[0] || "-"}
                       </td>
                       <td className="text-muted">
-                        {file.doctorGrade || "-"}/100
+                        {file.doctorGrade || "-"}/10
                       </td>
                       <td>
                         <Link

@@ -3,8 +3,9 @@
 export default function ViewPapillaryBleeding({ file }) {
     const teeth = file.departmentData.periodontalExamination.teeth || [];
 
-    const total = teeth.reduce((s, t) => s + t.top + t.bottom, 0);
-    const pbi = (total / 32).toFixed(1);
+    const total = teeth.reduce((s, t) => s + (t.top || 0) + (t.bottom || 0), 0);
+    const papillaeCount = teeth.length * 2;
+    const pbi = papillaeCount > 0 ? (total / papillaeCount).toFixed(2) : "0.00";
 
     return (
         <div className="container mt-4">

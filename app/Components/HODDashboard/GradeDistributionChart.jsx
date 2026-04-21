@@ -32,13 +32,14 @@ export default function GradeDistributionChart() {
         const res = await axios.get(
           "https://oralink.runasp.net/api/students/grade-distribution",
         );
+        console.log(res.data);
+        
 
         setDistribution({
-          "90-100": res.data.count90to100 ?? 0,
-          "80-89": res.data.count80to89 ?? 0,
-          "70-79": res.data.count70to79 ?? 0,
-          "60-69": res.data.count60to69 ?? 0,
-          "0-59": res.data.count0to59 ?? 0,
+          "10": res.data.count10 ?? 0,
+          "8-9": res.data.count8to9 ?? 0,
+          "6-7": res.data.count6to7 ?? 0,
+          "0-5": res.data.count0to5 ?? 0,
         });
       } catch (error) {
         console.error("Error fetching grade distribution:", error);
@@ -63,7 +64,6 @@ export default function GradeDistributionChart() {
             "#4caf50",
             "#2196f3",
             "#ff9800",
-            "#ff5722",
             "#f44336",
           ],
           borderRadius: 6,

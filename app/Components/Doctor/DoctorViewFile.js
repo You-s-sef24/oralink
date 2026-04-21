@@ -254,7 +254,7 @@ export default function DoctorsViewFile({ fileId }) {
 
                             <div className="text-center my-4">
                                 <div className="display-5 fw-bold text-primary">
-                                    {file.doctorGrade}
+                                    {file.doctorGrade}/10
                                 </div>
                                 <small className="text-muted">Final Score</small>
                             </div>

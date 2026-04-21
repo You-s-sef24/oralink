@@ -98,7 +98,7 @@ export default function StudentFiles({ id }) {
                                             )}
                                         </td>
                                         <td className="text-muted">
-                                            {file.graded ? `${file.grade}` : "-"}/100
+                                            {file.graded ? `${file.grade}` : "-"}/10
                                         </td>
                                         <td>
                                             <div className="d-flex justify-content-center gap-1">

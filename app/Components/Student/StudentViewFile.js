@@ -150,7 +150,7 @@ export default function StudentViewFile({ fileId }) {
 
                         {/* Grade */}
                         <div className="text-center mb-3">
-                            <div className="display-5 fw-bold text-primary">{file.doctorGrade}</div>
+                            <div className="display-5 fw-bold text-primary">{file.doctorGrade}/10</div>
                             <small className="text-muted">Score</small>
                         </div>
 

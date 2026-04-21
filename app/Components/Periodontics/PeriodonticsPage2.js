@@ -120,7 +120,6 @@ export default function PeriodonticsPage2({ info, setInfo }) {
                     <PapillaryBleeding />
                     <TableIndicators />
 
-                    <ImageUploadBox type={'xray'} />
                 </div>
             </div>
         </div>

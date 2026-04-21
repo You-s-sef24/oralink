@@ -34,7 +34,7 @@ export default function ImageUploadBox({ time, type, fileData, setFileData, read
     const fieldName = isXray ? "xRay" : time === "pre" ? "prePatientImage" : "postPatientImage";
 
     const label = isXray
-        ? "X-Ray Image (Optional)"
+        ? "X-Ray Image"
         : time === "pre" ? "Pre-Patient Images" : "Post-Patient Images";
 
     // In edit mode (fileData provided): read directly from fileData prop so React re-renders drive the UI.

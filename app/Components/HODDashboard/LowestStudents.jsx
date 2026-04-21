@@ -79,7 +79,7 @@ export default function LowestStudents() {
               <tr key={index}>
                 <th scope="row">{index + 1}</th>
                 <td className="text-truncate">{student.name}</td>
-                <td>{student.avgGrade.toFixed(2)}/100</td>
+                <td>{student.avgGrade.toFixed(2)}/10</td>
                 <td>{student.totalFiles}</td>
               </tr>
             ))}

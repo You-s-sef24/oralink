@@ -124,7 +124,7 @@ export default function ViewPatientCases() {
                       <td className="text-muted">
                         {f.lastProcedureName || "-"}
                       </td>
-                      <td className="text-muted">Step {f.stepNumber}</td>
+                      <td className="text-muted">Step {f.totalStepsCount}</td>
                       <td>
                         <Link
                           href={`/view-students/${f.studentId}/files/${f.fileId}`}

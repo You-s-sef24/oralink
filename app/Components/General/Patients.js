@@ -129,7 +129,7 @@ export default function Patients() {
                                             <td className="text-muted">{file.phone}</td>
                                             <td className="text-muted">{file.creationDate?.split("T")[0]}</td>
                                             <td className="text-muted">{file.submittedDate?.split("T")[0] || '-'}</td>
-                                            <td className="text-muted">{file.doctorGrade || '-'}/100</td>
+                                            <td className="text-muted">{file.doctorGrade || '-'}/10</td>
                                             <td>
                                                 <Link
                                                     href={`my-files/${file.fileId}`}

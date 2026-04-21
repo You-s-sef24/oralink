@@ -1,6 +1,10 @@
+import ImageUploadBox from "../ImageUploadBox";
+
 export default function PeriodonticsPage4({ info, setInfo }) {
     return (
         <div className="p-3">
+
+            <ImageUploadBox type={'xray'} />
 
             <div className="position-relative border border-primary rounded-3 p-4 mt-4 bg-white">
                 <span className="position-absolute top-0 start-0 translate-middle-y ms-4 px-2 bg-white text-primary fw-semibold">
@@ -34,9 +38,9 @@ export default function PeriodonticsPage4({ info, setInfo }) {
                             Diagnosis ( in points)
                         </span>
                         <div>
-                            <textarea className="form-control" rows={4} value={info.diagnosis} onChange={(e) => setInfo({ ...info, diagnosis: e.target.value })} 
+                            <textarea className="form-control" rows={4} value={info.diagnosis} onChange={(e) => setInfo({ ...info, diagnosis: e.target.value })}
                                 placeholder={`1- Chief complaint\n2- Summary of findings (clinical and radiographic)\n3- Diagnosis (include staging and grading if applicable)`}
-                                />
+                            />
                         </div>
                     </div>
                 </div>
