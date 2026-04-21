@@ -55,7 +55,7 @@ export default function HodHome() {
 
                 <p>Quick Actions</p>
                 <div className="row align-items-center g-3">
-                    <div className="col-12 col-sm-6 col-lg-4">
+                    <div className="col-12 col-sm-6 col-lg-3">
                         <QuickAction
                             title={'View All Students'}
                             desc={'Manage and review registered students.'}
@@ -64,7 +64,7 @@ export default function HodHome() {
                             link={'/students'}
                         />
                     </div>
-                    <div className="col-12 col-sm-6 col-lg-4">
+                    <div className="col-12 col-sm-6 col-lg-3">
                         <QuickAction
                             title={'View All Patient Files'}
                             desc={'Search and filter patient files by student or department.'}
@@ -73,13 +73,22 @@ export default function HodHome() {
                             link={'/patientfiles'}
                         />
                     </div>
-                    <div className="col-12 col-sm-6 col-lg-4">
+                    <div className="col-12 col-sm-6 col-lg-3">
                         <QuickAction
                             title={'Grading Panel'}
                             desc={'Review and grade student submissions.'}
                             svg={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="m9 14 2 2 4-4"></path></svg>}
                             spanColor={'warning'}
                             link={'/grading'}
+                        />
+                    </div>
+                    <div className="col-12 col-sm-6 col-lg-3">
+                        <QuickAction
+                            title={'Upload X-ray for AI Diagnosis'}
+                            desc={'Upload dental X-rays for automated AI analysis.'}
+                            svg={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" className="lucide lucide-upload w-7 h-7 text-white" aria-hidden="true"><path d="M12 3v12"></path><path d="m17 8-5-5-5 5"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path></svg>}
+                            spanColor={'secondary'}
+                            link={'/upload-xray'}
                         />
                     </div>
                 </div>

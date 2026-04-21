@@ -7,7 +7,7 @@ import ProtectedRoute from "../Components/General/ProtectedRoute";
 
 export default function UploadXrayPage() {
     return (
-        <ProtectedRoute allowedRoles={["Student"]}>
+        <ProtectedRoute allowedRoles={["Student", "Supervisor", "Doctor", "Head of Department"]}>
             <div className="container-fluid">
                 <Header title={'X-ray AI Diagnosis'} desc={'Upload dental X-rays for automated AI analysis'} />
 

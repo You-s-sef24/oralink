@@ -7,7 +7,7 @@ export default function SupervisorHome() {
             <div className="p-4">
                 <p>Quick Actions</p>
                 <div className="row align-items-center g-3">
-                    <div className="col-12 col-sm-6 col-lg-4">
+                    <div className="col-12 col-sm-6 col-lg-3">
                         <QuickAction
                             title={'Review Pending Procedure Steps'}
                             desc={'Review procedure steps requiring supervisor approval.'}
@@ -17,7 +17,7 @@ export default function SupervisorHome() {
                         />
                     </div>
 
-                    <div className="col-12 col-sm-6 col-lg-4">
+                    <div className="col-12 col-sm-6 col-lg-3">
                         <QuickAction
                             title={'View All Students'}
                             desc={'View all student and review thier files and performance.'}
@@ -27,13 +27,23 @@ export default function SupervisorHome() {
                         />
                     </div>
 
-                    <div className="col-12 col-sm-6 col-lg-4">
+                    <div className="col-12 col-sm-6 col-lg-3">
                         <QuickAction
                             title={'View All Patient Cases'}
                             desc={'Browse all patient files and monitor student work.'}
                             svg={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-folder-open w-6 h-6 text-white" data-fg-d07u4="1.23:1.956:/src/app/components/quick-action-card.tsx:25:13:684:39:e:Icon"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"></path></svg>}
                             spanColor={'warning'}
                             link={'/view-cases'}
+                        />
+                    </div>
+
+                    <div className="col-12 col-sm-6 col-lg-3">
+                        <QuickAction
+                            title={'Upload X-ray for AI Diagnosis'}
+                            desc={'Upload dental X-rays for automated AI analysis.'}
+                            svg={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" className="lucide lucide-upload w-7 h-7 text-white" aria-hidden="true"><path d="M12 3v12"></path><path d="m17 8-5-5-5 5"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path></svg>}
+                            spanColor={'secondary'}
+                            link={'/upload-xray'}
                         />
                     </div>
                 </div>
