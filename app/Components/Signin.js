@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import '../globals.css';
 import { UsersContext } from "../Contexts/UsersContext";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Signin() {
     const { handleLogin, loading, loginData, setLoginData, loginError, setLoginError } = useContext(UsersContext);
@@ -77,6 +78,16 @@ export default function Signin() {
                                     : <i className="bi bi-eye-fill"></i>}
                             </button>
                         </div>
+                    </div>
+
+                    <div className="text-end">
+                        <Link
+                            href="/forgot-password"
+                            className="text-decoration-none small fw-medium"
+                            style={{ color: '#0d6efd' }} // Standard Bootstrap primary or your brand color
+                        >
+                            Forgot Password?
+                        </Link>
                     </div>
 
                     <button
