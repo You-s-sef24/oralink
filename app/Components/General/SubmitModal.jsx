@@ -9,6 +9,7 @@ export default function SubmitModal({ show, isClose, file, setFile }) {
   const { token } = useContext(UsersContext);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const router = useRouter();
 
   async function handleSubmit() {
@@ -16,7 +17,7 @@ export default function SubmitModal({ show, isClose, file, setFile }) {
       setError("");
       setIsLoading(true);
 
-      await axios.put(
+      const res = await axios.put(
         `https://oralink.runasp.net/api/patient-files/${file.fileId}/Submit`,
         {},
         {
@@ -27,9 +28,15 @@ export default function SubmitModal({ show, isClose, file, setFile }) {
         },
       );
 
+      const msg =
+        res.data?.message || res.data || "File submitted successfully!";
+      setSuccessMsg(msg);
       setFile((prev) => ({ ...prev, isSubmitted: true }));
-      isClose();
-      router.replace("/my-files");
+
+      setTimeout(() => {
+        isClose();
+        router.replace("/my-files");
+      }, 3500);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to submit file");
     } finally {
@@ -38,6 +45,7 @@ export default function SubmitModal({ show, isClose, file, setFile }) {
   }
 
   const handleClose = () => {
+    if (isLoading || successMsg) return;
     setError("");
     isClose();
   };
@@ -78,9 +86,10 @@ export default function SubmitModal({ show, isClose, file, setFile }) {
                 className="btn-close"
                 aria-label="Close"
                 onClick={handleClose}
-                disabled={isLoading}
+                disabled={isLoading || !!successMsg}
               />
             </div>
+
             <div className="modal-body">
               {error && (
                 <div className="alert alert-danger py-2 small" role="alert">
@@ -88,38 +97,66 @@ export default function SubmitModal({ show, isClose, file, setFile }) {
                 </div>
               )}
 
-              <p>
-                Are you sure?{" "}
-                <small className="text-muted">
-                  Once submitted you will not be able to edit it again.
-                </small>
-              </p>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={handleClose}
-                disabled={isLoading}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleSubmit}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <div className="d-flex align-items-center gap-2">
-                    <span className="spinner-border spinner-border-sm" />
-                    Submitting...
+              {successMsg ? (
+                <div className="text-center py-2">
+                  <div className="mb-2 text-success">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="40"
+                      height="40"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="m9 12 2 2 4-4" />
+                    </svg>
                   </div>
-                ) : (
-                  "Submit"
-                )}
-              </button>
+                  <p className="mb-1 fw-medium">{successMsg}</p>
+                  <small className="text-muted">
+                    Redirecting you to your files...
+                  </small>
+                </div>
+              ) : (
+                <p>
+                  Are you sure?{" "}
+                  <small className="text-muted">
+                    Once submitted you will not be able to edit it again.
+                  </small>
+                </p>
+              )}
             </div>
+
+            {!successMsg && (
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleClose}
+                  disabled={isLoading}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <div className="d-flex align-items-center gap-2">
+                      <span className="spinner-border spinner-border-sm" />
+                      Submitting...
+                    </div>
+                  ) : (
+                    "Submit"
+                  )}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
