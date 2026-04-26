@@ -20,7 +20,7 @@ export default function File() {
     return (
         <ProtectedRoute allowedRoles={["Head of Department", "Doctor"]}>
             <div className="container-fluid">
-                <Header title="Patient File Review" desc={`File ID: ${fileId}`} />
+                <Header title="Patient File Review" desc={`File ID: ${fileId}`} page={"Patient File"} />
                 <hr className="m-0" />
                 <DoctorsViewFile fileId={fileId} />
             </div>

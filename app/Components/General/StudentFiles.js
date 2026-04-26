@@ -79,7 +79,7 @@ export default function StudentFiles({ id }) {
                             </thead>
                             <tbody>
                                 {files.map((file, i) => (
-                                    <tr key={file.fileId}>
+                                    <tr key={file.fileId} style={{ borderLeft: `3px solid ${file.isLate ? "#E24B4A" : "#639922"}` }}>
                                         <td className="text-muted">{i + 1}</td>
                                         <td className="fw-bold">{file.patientName}</td>
                                         <td className="text-muted">{file.creationDate?.split("T")[0]}</td>
@@ -107,7 +107,7 @@ export default function StudentFiles({ id }) {
                                                     className="btn btn-sm btn-primary d-inline-flex align-items-center gap-1"
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                                    
+
                                                 </Link>
                                                 {currentUser.role === "Head of Department" && (
                                                     <button

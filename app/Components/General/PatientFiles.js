@@ -27,7 +27,8 @@ export default function PatientFiles() {
                 patientName: file.patientName || "-",
                 creationDate: file.creationDate || "-",
                 submittedDate: file.submittedDate || "-",
-                grade: file.grade
+                grade: file.grade,
+                isLate: file.isLate ?? false,
             }));
             setFiles(formattedFiles.sort((a, b) => new Date(a.submittedDate) - new Date(b.submittedDate)));
         } catch (error) {
@@ -117,8 +118,10 @@ export default function PatientFiles() {
                     <tbody>
                         {filteredFiles.length > 0 ? (
                             filteredFiles.map((file, i) => (
-                                <tr key={i}>
-                                    <td>{i + 1}</td>
+                                <tr key={i} style={{ borderLeft: `3px solid ${file.isLate ? "#E24B4A" : "#639922"}` }}>
+                                    <td>
+                                        {i + 1}
+                                    </td>
                                     <td>
                                         <Link href={`/students/${file.studentId}`} className="text-decoration-none text-primary">
                                             {file.studentName}
@@ -126,7 +129,9 @@ export default function PatientFiles() {
                                     </td>
                                     <td>{file.patientName}</td>
                                     <td>{file.creationDate}</td>
-                                    <td>{file.submittedDate}</td>
+                                    <td>
+                                        {file.submittedDate}
+                                    </td>
                                     <td>
                                         {file.grade ? (
                                             <span className="">

@@ -20,9 +20,9 @@ export default function StudentFile() {
     return (
         <ProtectedRoute allowedRoles={["Supervisor"]}>
             <div className="container-fluid">
-                <Header title="Patient File Review" desc={`File ID: ${fileId}`} />
+                <Header title="Patient File Review" desc={`File ID: ${fileId}`} page={"Patient File"} />
                 <hr className="m-0" />
-                <SupervisorViewFile fileId={fileId}/>
+                <SupervisorViewFile fileId={fileId} />
             </div>
         </ProtectedRoute>
     );

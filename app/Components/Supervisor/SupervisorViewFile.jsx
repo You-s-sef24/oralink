@@ -95,9 +95,6 @@ export default function SupervisorViewFile({ fileId }) {
 
   return (
     <div className="row">
-      <h4 className="d-block d-md-none text-center text-primary mt-2">
-        Student Name: {file?.student?.name}
-      </h4>
       <div className="col">
         {file?.department === "Periodontics" ? (
           state === 1 ? (

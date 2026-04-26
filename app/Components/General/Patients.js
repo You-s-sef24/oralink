@@ -123,7 +123,7 @@ export default function Patients() {
                                     </tr>
                                 ) : (
                                     filteredFiles.map((file, i) => (
-                                        <tr key={file.fileId}>
+                                        <tr key={file.fileId} style={file.isSubmitted ? { borderLeft: `3px solid ${file.isLate ? "#E24B4A" : "#639922"}` } : {}}>
                                             <td className="text-muted">{i + 1}</td>
                                             <td className="fw-bold">{file.patientName}</td>
                                             <td className="text-muted">{file.phone}</td>

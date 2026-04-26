@@ -1,9 +1,6 @@
 "use client";
 
-// Steps are now managed via their own endpoints — NOT part of the file update payload.
-// Header only handles saving the core patient file fields.
-
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { PatientInfoContext } from "../../Contexts/PatientInfoContext";
 import { UsersContext } from "../../Contexts/UsersContext";
 import axios from "axios";
@@ -27,14 +24,20 @@ export default function Header({ title, desc, page }) {
 
     const { currentUser } = useContext(UsersContext);
     const { setShowEditAdminModal } = useContext(UIContext);
+    const [toast, setToast] = useState({ show: false, msg: "", type: "success" });
     const router = useRouter();
 
     const originalPreImages = useRef([]);
     const originalPostImages = useRef([]);
 
+    function showToast(msg, type = "success") {
+        setToast({ show: true, msg, type });
+        setTimeout(() => setToast({ show: false, msg: "", type: "success" }), 3000);
+    }
+
     async function handleEdit() {
         if (!currentUser?.id) {
-            alert("You must be logged in to edit.");
+            showToast("You must be logged in to edit.");
             return;
         }
 
@@ -53,20 +56,19 @@ export default function Header({ title, desc, page }) {
         }
 
         if (file.isSubmitted) {
-            alert("Submitted files cannot be edited.");
+            showToast("Submitted files cannot be edited.");
             return;
         }
 
         let updatedFile = { ...file };
 
-        // ✅ Validate core file fields only (steps are separate)
         const newErrors = validateFile(updatedFile);
         setFormErrors(newErrors);
         if (Object.keys(newErrors).length > 0) return;
 
         const fileId = updatedFile.fileId ?? updatedFile.id;
         if (!fileId) {
-            alert("Cannot save: file ID is missing.");
+            showToast("Cannot save: file ID is missing.");
             return;
         }
 
@@ -83,7 +85,6 @@ export default function Header({ title, desc, page }) {
                 departmentData: updatedDepartmentData,
             };
 
-            // ✅ Exclude steps — they are managed via /steps and /add-step endpoints
             const EXCLUDED_KEYS = ["prePatientImage", "postPatientImage", "xRay", "fileId", "id", "steps", "treatmentProcedures"];
 
             Object.entries(fileToSave).forEach(([key, value]) => {
@@ -144,7 +145,6 @@ export default function Header({ title, desc, page }) {
                 departmentData: safeParseJSON(raw?.departmentData) ?? updatedDepartmentData,
                 medicalHistory: safeParseJSON(raw?.medicalHistory) ?? file.medicalHistory,
                 dentalHistory: safeParseJSON(raw?.dentalHistory) ?? file.dentalHistory,
-                // ✅ Preserve steps from local state — not returned by file update endpoint
                 steps: file.steps ?? [],
             };
 
@@ -160,12 +160,12 @@ export default function Header({ title, desc, page }) {
                 }));
             }
 
-            alert("File updated successfully!");
+            showToast("File updated successfully!");
             setIsEditing(false);
 
         } catch (err) {
             console.error(err.response?.data || err);
-            alert(err.response?.data?.message || "Failed to update file");
+            showToast(err.response?.data?.message || "Failed to update file");
         } finally {
             setIsLoading(false);
         }
@@ -185,7 +185,7 @@ export default function Header({ title, desc, page }) {
     }
 
     return (
-        <div className="p-4">
+        <div className={page === "Patient File" ? "py-4" : "p-4"}>
             {page === "Student Profile" && (
                 <button
                     className="d-flex align-items-center text-decoration-none text-primary mb-2 btn p-0"
@@ -198,57 +198,159 @@ export default function Header({ title, desc, page }) {
                 </button>
             )}
 
-            <div className="d-flex align-items-center justify-content-between">
-                <div>
-                    <h3>{title}</h3>
-                    <p className="m-0">
-                        {page === "Patient File" ? `File Id: ${file?.fileId ?? file?.id}` : desc}
-                    </p>
-                </div>
-
-                {page === "Admin" && (
-                    <button className="btn btn-primary d-flex gap-1" onClick={() => setShowEditAdminModal(true)}>
-                        <i className="bi bi-pencil" /> Edit Profile
-                    </button>
-                )}
-
-                {page === "Patient File" && !file.isSubmitted && (
-                    <div className="d-flex gap-2">
-                        {isEditing && (
-                            <button className="btn btn-secondary" onClick={handleCancel} disabled={isLoading}>
-                                Cancel
-                            </button>
-                        )}
-
-                        <button
-                            className={`btn ${isEditing ? "btn-primary" : "btn-secondary"}`}
-                            onClick={handleEdit}
-                            disabled={isLoading}
-                        >
-                            {isEditing ? (
-                                isLoading ? (
-                                    <div className="d-flex align-items-center gap-1">
-                                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
-                                        Saving Changes
-                                    </div>
-                                ) : (
-                                    <div className="d-flex gap-1">
-                                        <i className="bi bi-floppy" /> Save Changes
-                                    </div>
-                                )
-                            ) : (
-                                <><i className="bi bi-pencil" /> Edit File</>
-                            )}
-                        </button>
-
-                        {!isEditing && (
-                            <button className="btn btn-primary" onClick={() => setSubmitModal(true)}>
-                                <i className="bi bi-upload" /> Submit File
-                            </button>
-                        )}
+            {page !== "Patient File" ? (
+                <div className="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h3>{title}</h3>
+                        <p className="m-0">{desc}</p>
                     </div>
-                )}
-            </div>
+                    {page === "Admin" && (
+                        <button className="btn btn-primary d-flex gap-1" onClick={() => setShowEditAdminModal(true)}>
+                            <i className="bi bi-pencil" /> Edit Profile
+                        </button>
+                    )}
+                </div>
+            ) : (
+                <div className="px-4">
+                    <div>
+
+                        <div className="d-flex align-items-start justify-content-between gap-3 flex-wrap mb-3">
+                            <div className="d-flex align-items-center gap-3">
+                                <div
+                                    className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 bg-primary bg-opacity-10 text-primary fw-medium"
+                                    style={{ width: 48, height: 48, fontSize: 15 }}
+                                >
+                                    {file?.patientName?.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase() || "?"}
+                                </div>
+                                <div>
+                                    <p className="mb-0 text-muted" style={{ fontSize: 12 }}>Patient File</p>
+                                    <h5 className="mb-0 fw-medium">{file?.patientName || "—"}</h5>
+                                    <p className="mb-0 text-muted" style={{ fontSize: 12 }}>
+                                        File ID: {file?.fileId ?? file?.id}
+                                        {file?.department && <> &nbsp;·&nbsp; {file.department}</>}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {!file.isSubmitted && currentUser.role === "Student" && (
+                                <div className="d-flex gap-2 align-items-center flex-wrap">
+                                    {isEditing && (
+                                        <button className="btn btn-secondary btn-sm" onClick={handleCancel} disabled={isLoading}>
+                                            Cancel
+                                        </button>
+                                    )}
+                                    <button
+                                        className={`btn btn-sm ${isEditing ? "btn-primary" : "btn-outline-secondary"}`}
+                                        onClick={handleEdit}
+                                        disabled={isLoading}
+                                    >
+                                        {isEditing ? (
+                                            isLoading ? (
+                                                <span className="d-flex align-items-center gap-1">
+                                                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                                                    Saving...
+                                                </span>
+                                            ) : (
+                                                <span className="d-flex align-items-center gap-1">
+                                                    <i className="bi bi-floppy" /> Save Changes
+                                                </span>
+                                            )
+                                        ) : (
+                                            <span className="d-flex align-items-center gap-1">
+                                                <i className="bi bi-pencil" /> Edit File
+                                            </span>
+                                        )}
+                                    </button>
+                                    {!isEditing && (
+                                        <button className="btn btn-primary btn-sm d-flex align-items-center gap-1" onClick={() => setSubmitModal(true)}>
+                                            <i className="bi bi-upload" /> Submit File
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="row g-2 mt-1">
+                            <div className="col-sm-6 col-md-auto d-flex align-items-center gap-1 text-muted" style={{ fontSize: 12 }}>
+                                <i className="bi bi-calendar-plus" style={{ fontSize: 13 }} />
+                                <span>Created</span>
+                                <span className="text-dark fw-medium ms-1">{file?.creationDate?.split("T")[0] || "—"}</span>
+                            </div>
+
+                            <div className="col-sm-6 col-md-auto d-flex align-items-center gap-1 text-muted" style={{ fontSize: 12 }}>
+                                {file?.isSubmitted ? (
+                                    <>
+                                        <i className="bi bi-calendar-check" style={{ fontSize: 13 }} />
+                                        <span>Submitted</span>
+                                        <span className="text-dark fw-medium ms-1">{file?.submittedDate?.split("T")[0] || "—"}</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="bi bi-clock" style={{ fontSize: 13 }} />
+                                        <span>Not submitted yet</span>
+                                    </>
+                                )}
+                            </div>
+
+                            {file?.student?.name && (
+                                <div className="col-6 col-md-auto d-flex align-items-center gap-1 text-muted" style={{ fontSize: 12 }}>
+                                    <i className="bi bi-person" style={{ fontSize: 13 }} />
+                                    <span>Student</span>
+                                    <span className="text-dark fw-medium ms-1">{file.student.name}</span>
+                                </div>
+                            )}
+
+                            {file?.isSubmitted && (
+                                <div className="col-6 col-md-auto d-flex align-items-center">
+                                    <span
+                                        className="badge rounded-pill"
+                                        style={{
+                                            fontSize: 11,
+                                            padding: "4px 10px",
+                                            background: file.isLate ? "#FCEBEB" : "#EAF3DE",
+                                            color: file.isLate ? "#A32D2D" : "#3B6D11",
+                                        }}
+                                    >
+                                        <i className={`bi ${file.isLate ? "bi-clock-history" : "bi-check-circle"} me-1`} />
+                                        {file.isLate ? "Late submission" : "On time"}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+
+                    </div>
+                </div>
+            )}
+            {toast.show && (
+                <div
+                    style={{
+                        position: "fixed",
+                        bottom: 24,
+                        right: 24,
+                        zIndex: 9999,
+                        minWidth: 260,
+                        maxWidth: 360,
+                    }}
+                >
+                    <div className={`alert alert-${toast.type} d-flex align-items-center gap-2 shadow mb-0 py-2 px-3`} role="alert">
+                        {toast.type === "success" ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                                <circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" />
+                            </svg>
+                        ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                                <circle cx="12" cy="12" r="10" /><path d="m15 9-6 6M9 9l6 6" />
+                            </svg>
+                        )}
+                        <span style={{ fontSize: 13 }}>{toast.msg}</span>
+                        <button
+                            className="btn-close ms-auto"
+                            style={{ fontSize: 10 }}
+                            onClick={() => setToast({ show: false, msg: "", type: "success" })}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

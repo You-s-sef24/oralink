@@ -67,7 +67,12 @@ export default function GradedFiles() {
           </thead>
           <tbody>
             {files.map((file, i) => (
-              <tr key={file.fileId}>
+              <tr
+                key={file.fileId}
+                style={{
+                  borderLeft: `3px solid ${file.isLate ? "#E24B4A" : "#639922"}`,
+                }}
+              >
                 <td>{i + 1}</td>
                 <td>
                   <Link
