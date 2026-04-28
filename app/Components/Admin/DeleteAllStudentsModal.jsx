@@ -48,7 +48,6 @@ export default function DeleteAllStudentsModal({
 
   return (
     <>
-      {/* Backdrop */}
       <div
         style={{
           position: "fixed",
@@ -59,7 +58,6 @@ export default function DeleteAllStudentsModal({
         onClick={handleClose}
       />
 
-      {/* Modal */}
       <div
         className="modal show d-block"
         style={{ zIndex: 1045 }}
@@ -68,7 +66,6 @@ export default function DeleteAllStudentsModal({
       >
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content border-0 shadow-lg overflow-hidden">
-            {/* Red top bar */}
             <div
               style={{
                 height: 5,
@@ -129,9 +126,20 @@ export default function DeleteAllStudentsModal({
               <div className="alert alert-warning py-2 small mb-3">
                 <i className="bi bi-exclamation-triangle me-2"></i>
                 <strong>Warning:</strong> This will permanently delete{" "}
-                <strong>all student accounts</strong> and their associated data
-                from the system. This is typically done at the end of an
-                academic year.
+                <strong>all student accounts</strong> from the system.
+                <br />
+                <span className="d-block mt-1">
+                  However,{" "}
+                  <strong className="text-primary">
+                    all student files will be archived
+                  </strong>
+                  and will remain accessible to the{" "}
+                  <strong>Head of Department</strong> for review.
+                </span>
+                <span className="d-block mt-1 text-muted">
+                  This action is typically performed at the end of an academic
+                  year.
+                </span>
               </div>
 
               <p className="small text-muted mb-2">
