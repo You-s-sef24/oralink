@@ -87,8 +87,17 @@ export default function HodHome() {
                             title={'Upload X-ray for AI Diagnosis'}
                             desc={'Upload dental X-rays for automated AI analysis.'}
                             svg={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" className="lucide lucide-upload w-7 h-7 text-white" aria-hidden="true"><path d="M12 3v12"></path><path d="m17 8-5-5-5 5"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path></svg>}
-                            spanColor={'secondary'}
+                            spanColor={'info'}
                             link={'/upload-xray'}
+                        />
+                    </div>
+                    <div className="col-12 col-sm-6 col-lg-3">
+                        <QuickAction
+                            title={'View All Archived Files'}
+                            desc={'Access and review archived student files and information.'}
+                            svg={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-archive" viewBox="0 0 16 16"><path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5zm13-3H1v2h14zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" /></svg>}
+                            spanColor={'secondary'}
+                            link={'/archive'}
                         />
                     </div>
                 </div>
