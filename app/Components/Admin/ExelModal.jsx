@@ -39,6 +39,8 @@ export default function ExcelModal({ onClose = () => {}, refreshUsers }) {
   };
 
   const handleSubmit = async () => {
+    setError("This is just a Demo u can't add users  :)");
+    return;
     if (!selectedRole) {
       setError("Please select a role.");
       return;

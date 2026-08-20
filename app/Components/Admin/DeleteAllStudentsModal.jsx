@@ -23,6 +23,8 @@ export default function DeleteAllStudentsModal({
 
   async function handleDeleteAll() {
     if (confirmText !== CONFIRM_PHRASE) return;
+    setError("This is just a Demo u can't delete students  :)");
+    return;
 
     setLoading(true);
     setError("");

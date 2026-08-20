@@ -5,15 +5,17 @@ import '../globals.css';
 import { UsersContext } from "../Contexts/UsersContext";
 import Image from "next/image";
 import Link from "next/link";
+import Accounts from "./Accounts";
 
 export default function Signin() {
     const { handleLogin, loading, loginData, setLoginData, loginError, setLoginError } = useContext(UsersContext);
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+        <div className="container min-vh-100 d-flex flex-column justify-content-center align-items-center py-5">
 
-            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5" style={{ width: "100%", maxWidth: "480px" }}>
+            {/* Sign In Card */}
+            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5 mb-4" style={{ width: "100%", maxWidth: "480px" }}>
                 <div className="text-center mb-3">
                     <Image width={200} height={60} src="/OraLink (1).png" alt="OraLink" />
                     <p className="text-muted small mt-2 mb-0">
@@ -23,7 +25,7 @@ export default function Signin() {
 
                 <hr className="mb-4" />
 
-                {loginError.status && (
+                {loginError?.status && (
                     <div className="alert alert-danger d-flex justify-content-between align-items-center py-2">
                         <small className="fw-semibold">{loginError.msg}</small>
                         <button
@@ -43,7 +45,7 @@ export default function Signin() {
                             type="email"
                             id="email"
                             className="form-control"
-                            value={loginData?.email}
+                            value={loginData?.email || ""}
                             onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                             placeholder="123456789@o6u.edu.eg"
                             required
@@ -60,7 +62,7 @@ export default function Signin() {
                                 type={showPassword ? "text" : "password"}
                                 id="password"
                                 className="form-control"
-                                value={loginData.password}
+                                value={loginData?.password || ""}
                                 onChange={(e) =>
                                     setLoginData({ ...loginData, password: e.target.value })
                                 }
@@ -73,9 +75,11 @@ export default function Signin() {
                                 className="btn btn-outline-secondary"
                                 onClick={() => setShowPassword(!showPassword)}
                             >
-                                {showPassword
-                                    ? <i className="bi bi-eye-slash-fill"></i>
-                                    : <i className="bi bi-eye-fill"></i>}
+                                {showPassword ? (
+                                    <i className="bi bi-eye-slash-fill"></i>
+                                ) : (
+                                    <i className="bi bi-eye-fill"></i>
+                                )}
                             </button>
                         </div>
                     </div>
@@ -84,7 +88,7 @@ export default function Signin() {
                         <Link
                             href="/forgot-password"
                             className="text-decoration-none small fw-medium"
-                            style={{ color: '#0d6efd' }} // Standard Bootstrap primary or your brand color
+                            style={{ color: '#0d6efd' }}
                         >
                             Forgot Password?
                         </Link>
@@ -106,9 +110,13 @@ export default function Signin() {
                     <p className="text-center text-muted small m-0">
                         Accounts are pre-registered by administrators
                     </p>
-
                 </form>
             </div>
+
+            <div style={{ width: "100%", maxWidth: "800px" }}>
+                <Accounts />
+            </div>
+
         </div>
     );
 }

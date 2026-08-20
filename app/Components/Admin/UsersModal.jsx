@@ -20,6 +20,8 @@ export default function UsersModal({ show, isClose, refreshUsers }) {
   );
 
   async function handleSave() {
+    setError("This is just a Demo u can't add user  :)");
+    return;
     if (emptyFields) {
       setError("Please fill in all fields.");
       return;

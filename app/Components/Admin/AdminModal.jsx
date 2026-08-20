@@ -32,6 +32,10 @@ export default function EditAdminModal({ show, isClose }) {
   const emptyFields = !userData.name || !userData.email;
 
   async function handleSave() {
+    // Prevent Data Change
+    setError("This is just a Demo u can't change admin data  :)");
+    return;
+
     if (emptyFields) {
       setError("Please fill in all required fields.");
       return;

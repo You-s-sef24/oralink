@@ -36,6 +36,9 @@ export default function EditModal({
   const emptyFields = !userData.name || !userData.role || !userData.email;
 
   async function handleSave() {
+    setError("This is just a Demo u can't edit user's data :)");
+    return;
+
     if (emptyFields) {
       setError("Please fill in all required fields.");
       return;
@@ -219,9 +222,12 @@ export default function EditModal({
               </div>
 
               <div className="modal-footer d-flex justify-content-between">
-                <Link href={"/help"} onClick={()=>{
-                  isClose();
-                }}>
+                <Link
+                  href={"/help"}
+                  onClick={() => {
+                    isClose();
+                  }}
+                >
                   <div className="btn border-0">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

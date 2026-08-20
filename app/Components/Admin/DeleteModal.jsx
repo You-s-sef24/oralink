@@ -15,6 +15,8 @@ export default function DeleteModal({
 
   async function handleDelete() {
     if (!selectedUser) return;
+    setError("This is just a Demo u can't delete user  :)");
+    return;
 
     setLoading(true);
     setError("");
